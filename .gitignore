@@ -1,0 +1,79 @@
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# IDE
+/.idea/*
+!/.idea/runConfigurations
+.vscode/
+*.swp
+*.swo
+
+# Testing
+/coverage
+
+# Next.js
+/.next/
+/out/
+
+# Build output
+/build
+/dist
+
+# Environment variables
+.env
+.env*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime data
+*.pid
+*.seed
+*.pid.lock
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.pem
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Vercel
+.vercel
+
+# Cache
+.cache
+.eslintcache
+.stylelintcache
+
+# Payload CMS specific
+build/
+*.tgz
+
+# Media uploads - keep structure but ignore uploaded files
+media/*
+!media/.gitkeep
+
+# Payload generated files
+src/payload-types.ts
+
+# Database
+*.sqlite
+*.db
