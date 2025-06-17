@@ -38,6 +38,9 @@ export default buildConfig({
         'http://localhost:3000',
         'http://localhost:4173',
         process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3001',
+        'https://labrassee.cafe',
+        'https://www.labrassee.cafe',
+        // Ajoutez votre domaine Plesk ici si différent
       ].filter(Boolean),
   collections: [Users, Media, Events, EventGenres, MenuItems],
   globals: [BusinessInfo, FacebookConfig, SystemConfig],
