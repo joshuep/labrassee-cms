@@ -41,7 +41,10 @@ export default buildConfig({
         'https://labrassee.cafe',
         'https://www.labrassee.cafe',
         'https://jolly-chebyshev.74-208-77-27.plesk.page',
-        'http://jolly-chebyshev.74-208-77-27.plesk.page'
+        'http://jolly-chebyshev.74-208-77-27.plesk.page',
+        'https://labrassee-cms-426g.vercel.app',
+        'https://labrassee-cms-426g-*.vercel.app',
+        'https://*.vercel.app'
         // Ajoutez votre domaine Plesk ici si différent
       ].filter(Boolean),
   collections: [Users, Media, Events, EventGenres, MenuItems],
