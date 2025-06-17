@@ -23,6 +23,7 @@ import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { default as default_a2e95831722116ee41e3b014022fe2b8 } from '../../../../admin/components/ImportFacebookEvents.js'
 import { default as default_7f30d10fb140cf95846fd5d83eeae978 } from '../../../../admin/components/SeedData.js'
+import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 
 export const importMap = {
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
@@ -49,5 +50,6 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "../admin/components/ImportFacebookEvents.js#default": default_a2e95831722116ee41e3b014022fe2b8,
-  "../admin/components/SeedData.js#default": default_7f30d10fb140cf95846fd5d83eeae978
+  "../admin/components/SeedData.js#default": default_7f30d10fb140cf95846fd5d83eeae978,
+  "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e
 }

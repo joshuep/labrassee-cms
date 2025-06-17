@@ -228,10 +228,10 @@ export async function POST(request: Request) {
           
           if (bestRule && bestRule.poster) {
             if (typeof bestRule.poster === 'object' && 'id' in bestRule.poster) {
-              assignedPosterId = bestRule.poster.id
+              assignedPosterId = String(bestRule.poster.id)
               console.log(`Affiche assignée par règle (priorité ${highestPriority}): ${('filename' in bestRule.poster ? bestRule.poster.filename : 'ID ' + assignedPosterId)}`)
             } else {
-              assignedPosterId = bestRule.poster as string
+              assignedPosterId = String(bestRule.poster)
               console.log(`Affiche assignée par règle (priorité ${highestPriority}): ID ${assignedPosterId}`)
             }
           }
@@ -248,8 +248,8 @@ export async function POST(request: Request) {
           slug: `${slug}-${fbEvent.id}`, // Ajouter l'ID FB pour l'unicité
           date: fbEvent.start_time ? fbEvent.start_time.split('T')[0] : new Date().toISOString().split('T')[0],
           time: eventTime,
-          genre: foundGenreId, // Assigner le genre trouvé
-          image: foundPosterId as number | null, // Assigner l'affiche selon les règles
+          genre: foundGenreId ? Number(foundGenreId) : null, // Assigner le genre trouvé
+          image: foundPosterId ? Number(foundPosterId) : null, // Assigner l'affiche selon les règles
           facebookCover: facebookCoverId, // Cover Facebook
           facebookLink: `https://www.facebook.com/events/${fbEvent.id}`,
           status: (fbEvent.is_canceled ? 'archived' : 'published') as 'published' | 'draft' | 'archived',

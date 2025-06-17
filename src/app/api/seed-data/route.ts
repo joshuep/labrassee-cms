@@ -287,74 +287,69 @@ async function seedEventGenres(payload: Payload) {
 async function seedMenuItems(payload: Payload) {
   try {
     // Définition des pages de menu basées sur votre JSON
-    const menuItems = [
+    const menuItems: Array<{
+      title: string
+      slug: string
+      order: number
+      status: 'published' | 'draft' | 'archived'
+    }> = [
       {
         title: 'Page de garde',
         slug: 'page-de-garde',
-        description: 'Au coeur de Rosepatrie',
         order: 1,
         status: 'published',
       },
       {
         title: 'C\'est nouveau',
         slug: 'cest-nouveau',
-        description: 'Nos nouveautés et dernières créations',
         order: 2,
-        status: 'published',
+        status: 'published' as const,
       },
       {
         title: 'Nos plats du jour',
         slug: 'plats-du-jour',
-        description: 'Découvrez nos plats du jour préparés avec amour',
         order: 3,
         status: 'published',
       },
       {
         title: 'Nos repas',
         slug: 'nos-repas',
-        description: 'Une sélection de repas savoureux',
         order: 4,
         status: 'published',
       },
       {
         title: 'Nos pâtisseries',
         slug: 'nos-patisseries',
-        description: 'Pâtisseries artisanales et gourmandises',
         order: 5,
         status: 'published',
       },
       {
         title: 'Nos cafés',
         slug: 'nos-cafes',
-        description: 'Une sélection de cafés d\'exception',
         order: 6,
         status: 'published',
       },
       {
         title: 'Nos thés',
         slug: 'nos-thes',
-        description: 'Thés fins et infusions maison',
         order: 7,
         status: 'published',
       },
       {
         title: 'Nos alcools',
         slug: 'nos-alcools',
-        description: 'Bières artisanales et spiritueux',
         order: 8,
         status: 'published',
       },
       {
         title: 'Nos rafraîchissements',
         slug: 'nos-rafraichissements',
-        description: 'Boissons fraîches et naturelles',
         order: 9,
         status: 'published',
       },
       {
         title: 'Nos cocktails',
         slug: 'nos-cocktails',
-        description: 'Cocktails créatifs et signatures',
         order: 10,
         status: 'published',
       },
