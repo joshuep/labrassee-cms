@@ -40,6 +40,8 @@ export default buildConfig({
         process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3001',
         'https://labrassee.cafe',
         'https://www.labrassee.cafe',
+        'https://jolly-chebyshev.74-208-77-27.plesk.page',
+        'http://jolly-chebyshev.74-208-77-27.plesk.page'
         // Ajoutez votre domaine Plesk ici si différent
       ].filter(Boolean),
   collections: [Users, Media, Events, EventGenres, MenuItems],
