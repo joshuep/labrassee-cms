@@ -30,7 +30,8 @@ export default buildConfig({
     },
   },
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3001',
-  cors: process.env.NODE_ENV === 'development' 
+  cors: '*', // Temporairement ouvert pour débugger
+  /* cors: process.env.NODE_ENV === 'development' 
     ? '*' 
     : [
         'http://localhost:5173',
@@ -43,10 +44,10 @@ export default buildConfig({
         'https://jolly-chebyshev.74-208-77-27.plesk.page',
         'http://jolly-chebyshev.74-208-77-27.plesk.page',
         'https://labrassee-cms-426g.vercel.app',
-        'https://labrassee-cms-426g-*.vercel.app',
-        'https://*.vercel.app'
-        // Ajoutez votre domaine Plesk ici si différent
-      ].filter(Boolean),
+        // Accepter toutes les URLs de preview Vercel
+        ...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : []),
+        ...(process.env.VERCEL_BRANCH_URL ? [`https://${process.env.VERCEL_BRANCH_URL}`] : [])
+      ].filter(Boolean), */
   collections: [Users, Media, Events, EventGenres, MenuItems],
   globals: [BusinessInfo, FacebookConfig, SystemConfig],
   editor: lexicalEditor(),
