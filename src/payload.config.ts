@@ -30,8 +30,7 @@ export default buildConfig({
     },
   },
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3001',
-  cors: '*', // Temporairement ouvert pour débugger
-  /* cors: process.env.NODE_ENV === 'development' 
+  cors: process.env.NODE_ENV === 'development' 
     ? '*' 
     : [
         'http://localhost:5173',
@@ -47,7 +46,7 @@ export default buildConfig({
         // Accepter toutes les URLs de preview Vercel
         ...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : []),
         ...(process.env.VERCEL_BRANCH_URL ? [`https://${process.env.VERCEL_BRANCH_URL}`] : [])
-      ].filter(Boolean), */
+      ].filter(Boolean),
   collections: [Users, Media, Events, EventGenres, MenuItems],
   globals: [BusinessInfo, FacebookConfig, SystemConfig],
   editor: lexicalEditor(),
