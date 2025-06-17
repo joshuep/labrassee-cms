@@ -171,7 +171,7 @@ export async function POST(request: Request) {
         })
         
         // Fonction pour trouver le genre approprié et l'affiche selon les règles
-        let genreId: number | null = null
+        let genreId: string | number | null = null
         let assignedPosterId: string | null = null
         
         const findGenreAndPoster = async (title: string) => {
@@ -205,7 +205,7 @@ export async function POST(request: Request) {
             let ruleMatches = false
             
             // Vérifier si la règle s'applique par genre
-            if (rule.genre && genreId && (rule.genre as any).id === genreId) {
+            if (rule.genre && genreId && typeof rule.genre === 'object' && 'id' in rule.genre && rule.genre.id === genreId) {
               ruleMatches = true
             }
             
@@ -227,8 +227,13 @@ export async function POST(request: Request) {
           }
           
           if (bestRule && bestRule.poster) {
-            assignedPosterId = (bestRule.poster as any).id || bestRule.poster
-            console.log(`Affiche assignée par règle (priorité ${highestPriority}): ${(bestRule.poster as any).filename || 'ID ' + assignedPosterId}`)
+            if (typeof bestRule.poster === 'object' && 'id' in bestRule.poster) {
+              assignedPosterId = bestRule.poster.id
+              console.log(`Affiche assignée par règle (priorité ${highestPriority}): ${('filename' in bestRule.poster ? bestRule.poster.filename : 'ID ' + assignedPosterId)}`)
+            } else {
+              assignedPosterId = bestRule.poster as string
+              console.log(`Affiche assignée par règle (priorité ${highestPriority}): ID ${assignedPosterId}`)
+            }
           }
           
           return { genreId, assignedPosterId }

@@ -4,8 +4,8 @@ export const FacebookConfig: GlobalConfig = {
   slug: 'facebook-config',
   label: 'Configuration Facebook',
   access: {
-    read: ({ req: { user } }: any) => !!user,
-    update: ({ req: { user } }: any) => !!user,
+    read: ({ req: { user } }) => !!user,
+    update: ({ req: { user } }) => !!user,
   },
   fields: [
     {

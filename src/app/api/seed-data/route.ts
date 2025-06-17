@@ -1,4 +1,4 @@
-import { getPayload } from 'payload'
+import { getPayload, Payload } from 'payload'
 import configPromise from '@payload-config'
 import { NextResponse } from 'next/server'
 
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
   }
 }
 
-async function seedEventGenres(payload: any) {
+async function seedEventGenres(payload: Payload) {
   try {
     // Définition des 18 genres avec leurs mots-clés
     const genres = [
@@ -284,7 +284,7 @@ async function seedEventGenres(payload: any) {
   }
 }
 
-async function seedMenuItems(payload: any) {
+async function seedMenuItems(payload: Payload) {
   try {
     // Définition des pages de menu basées sur votre JSON
     const menuItems = [
@@ -412,7 +412,7 @@ async function seedMenuItems(payload: any) {
   }
 }
 
-async function seedAll(payload: any) {
+async function seedAll(payload: Payload) {
   try {
     let totalCreated = 0
 

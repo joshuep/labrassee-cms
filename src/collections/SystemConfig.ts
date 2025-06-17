@@ -7,8 +7,8 @@ export const SystemConfig: GlobalConfig = {
     group: 'Administration',
   },
   access: {
-    read: ({ req: { user } }: any) => !!user,
-    update: ({ req: { user } }: any) => !!user,
+    read: ({ req: { user } }) => !!user,
+    update: ({ req: { user } }) => !!user,
   },
   fields: [
     {
