@@ -58,21 +58,85 @@ export async function POST(request: Request) {
     let skipped = 0
     let errors = 0
 
-    // Fonction pour formater l'heure (inspirée du script)
+    // Fonction pour formater l'heure avec fuseau horaire America/Montreal
     const formatTime = (facebookStartTime: string) => {
       if (!facebookStartTime) return null
       
       try {
         const date = new Date(facebookStartTime)
-        const hours = date.getHours()
-        const minutes = date.getMinutes()
         
-        const formattedHours = hours.toString()
-        const formattedMinutes = minutes.toString().padStart(2, '0')
+        // Approche plus robuste avec Intl.DateTimeFormat
+        const timeFormatter = new Intl.DateTimeFormat('en-US', {
+          timeZone: 'America/Montreal',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: false
+        })
         
-        return `${formattedHours}h${formattedMinutes}`
+        const formatted = timeFormatter.format(date)
+        
+        // Le format devrait être "HH:MM"
+        const [hours, minutes] = formatted.split(':')
+        return `${hours}h${minutes}`
       } catch (_error) {
-        return null
+        // Fallback : calcul manuel de l'offset Montreal avec DST
+        try {
+          const utcHours = date.getUTCHours()
+          const utcMinutes = date.getUTCMinutes()
+          
+          // Détecter l'heure d'été (DST) au Canada
+          // DST : 2e dimanche de mars au 1er dimanche de novembre
+          const year = date.getFullYear()
+          const month = date.getMonth()
+          const dayOfMonth = date.getDate()
+          const dayOfWeek = date.getDay()
+          
+          let isDST = false
+          
+          if (month > 2 && month < 10) { // Avril à octobre
+            isDST = true
+          } else if (month === 2) { // Mars
+            // 2e dimanche de mars
+            const secondSunday = 14 - new Date(year, 2, 14).getDay()
+            isDST = dayOfMonth >= secondSunday
+          } else if (month === 10) { // Novembre  
+            // 1er dimanche de novembre
+            const firstSunday = 7 - new Date(year, 10, 7).getDay()
+            isDST = dayOfMonth < firstSunday
+          }
+          
+          // UTC-4 en été, UTC-5 en hiver
+          const offset = isDST ? 4 : 5
+          let montrealHours = utcHours - offset
+          if (montrealHours < 0) montrealHours += 24
+          
+          return `${montrealHours}h${utcMinutes.toString().padStart(2, '0')}`
+        } catch {
+          return null
+        }
+      }
+    }
+
+    // Fonction pour formater la date avec fuseau horaire America/Montreal
+    const formatDate = (facebookStartTime: string) => {
+      if (!facebookStartTime) return new Date().toISOString()
+      
+      try {
+        const date = new Date(facebookStartTime)
+        
+        // Obtenir la date en fuseau Montreal
+        const montrealDate = date.toLocaleDateString('en-CA', { 
+          timeZone: 'America/Montreal',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        })
+        
+        // Retourner la date avec l'heure à midi UTC pour éviter les décalages
+        // Cela garantit que la date reste correcte peu importe le fuseau horaire d'affichage
+        return `${montrealDate}T12:00:00.000Z`
+      } catch (_error) {
+        return new Date().toISOString()
       }
     }
 
@@ -246,7 +310,7 @@ export async function POST(request: Request) {
         const eventData = {
           title: fbEvent.name,
           slug: `${slug}-${fbEvent.id}`, // Ajouter l'ID FB pour l'unicité
-          date: fbEvent.start_time ? fbEvent.start_time.split('T')[0] : new Date().toISOString().split('T')[0],
+          date: formatDate(fbEvent.start_time),
           time: eventTime,
           genre: foundGenreId ? Number(foundGenreId) : null, // Assigner le genre trouvé
           image: foundPosterId ? Number(foundPosterId) : null, // Assigner l'affiche selon les règles

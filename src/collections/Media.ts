@@ -39,18 +39,21 @@ export const Media: CollectionConfig = {
         width: 768,
         height: undefined,
         position: 'centre',
+        fit: 'inside', // Preserve aspect ratio
       },
       {
         name: 'tablet',
         width: 1024,
         height: undefined,
         position: 'centre',
+        fit: 'inside',
       },
       {
         name: 'desktop',
         width: 1920,
         height: undefined,
         position: 'centre',
+        fit: 'inside',
       },
     ],
     adminThumbnail: 'thumbnail',
