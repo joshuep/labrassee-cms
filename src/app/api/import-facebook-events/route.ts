@@ -62,9 +62,9 @@ export async function POST(request: Request) {
     const formatTime = (facebookStartTime: string) => {
       if (!facebookStartTime) return null
       
+      const date = new Date(facebookStartTime)
+      
       try {
-        const date = new Date(facebookStartTime)
-        
         // Approche plus robuste avec Intl.DateTimeFormat
         const timeFormatter = new Intl.DateTimeFormat('en-US', {
           timeZone: 'America/Montreal',
@@ -89,7 +89,6 @@ export async function POST(request: Request) {
           const year = date.getFullYear()
           const month = date.getMonth()
           const dayOfMonth = date.getDate()
-          const dayOfWeek = date.getDay()
           
           let isDST = false
           
