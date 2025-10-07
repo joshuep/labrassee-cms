@@ -203,29 +203,19 @@ export async function POST(request: Request) {
     // Traitement de chaque événement
     for (const fbEvent of events) {
       try {
-        // Vérifier si l'événement existe déjà
-        const exists = await eventExists(fbEvent.id)
-        if (exists) {
-          skipped++
-          continue
-        }
-
-        // Upload du cover Facebook si disponible
+        // Upload du cover Facebook si disponible (une seule fois par événement)
         let facebookCoverId = null
         if (fbEvent.cover && fbEvent.cover.source) {
           facebookCoverId = await uploadImageToPayload(fbEvent.cover.source, fbEvent.name)
         }
 
-        // Générer un slug unique (comme dans le script)
-        const slug = fbEvent.name
+        // Générer un slug de base (comme dans le script)
+        const baseSlug = fbEvent.name
           .toLowerCase()
           .normalize('NFD')
           .replace(/[\u0300-\u036f]/g, '') // Supprimer les accents
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/(^-|-$)+/g, '')
-
-        // Extraire l'heure de start_time
-        const eventTime = formatTime(fbEvent.start_time)
 
         // Récupérer la configuration Facebook avec les règles d'affiches
         const facebookConfig = await payload.findGlobal({
@@ -302,32 +292,69 @@ export async function POST(request: Request) {
           return { genreId, assignedPosterId }
         }
         
-        // Trouver le genre et l'affiche selon les règles
+        // Trouver le genre et l'affiche selon les règles (une seule fois par événement)
         const { genreId: foundGenreId, assignedPosterId: foundPosterId } = await findGenreAndPoster(fbEvent.name)
 
-        // Préparer les données de l'événement
-        const eventData = {
-          title: fbEvent.name,
-          slug: `${slug}-${fbEvent.id}`, // Ajouter l'ID FB pour l'unicité
-          date: formatDate(fbEvent.start_time),
-          time: eventTime,
-          genre: foundGenreId ? Number(foundGenreId) : null, // Assigner le genre trouvé
-          image: foundPosterId ? Number(foundPosterId) : null, // Assigner l'affiche selon les règles
-          facebookCover: facebookCoverId, // Cover Facebook
-          facebookLink: `https://www.facebook.com/events/${fbEvent.id}`,
-          status: (fbEvent.is_canceled ? 'archived' : 'published') as 'published' | 'draft' | 'archived',
+        // Traiter les dates multiples : event_times ou fallback sur start_time
+        const eventTimes = fbEvent.event_times && fbEvent.event_times.length > 0 
+          ? fbEvent.event_times 
+          : [{ start_time: fbEvent.start_time, end_time: fbEvent.end_time }]
+
+        console.log(`Événement "${fbEvent.name}" a ${eventTimes.length} date(s)`)
+
+        // Créer un événement pour chaque date
+        for (let i = 0; i < eventTimes.length; i++) {
+          const eventTime = eventTimes[i]
+          const eventDate = eventTime.start_time
+          
+          // Vérifier si un événement avec cette date spécifique existe déjà
+          const dateSlug = new Date(eventDate).toISOString().split('T')[0] // YYYY-MM-DD
+          const uniqueSlug = `${baseSlug}-${fbEvent.id}-${dateSlug}`
+          
+          const exists = await payload.find({
+            collection: 'events',
+            where: {
+              slug: {
+                equals: uniqueSlug,
+              },
+            },
+            limit: 1,
+          })
+          
+          if (exists.docs && exists.docs.length > 0) {
+            console.log(`Événement déjà existant pour la date ${dateSlug}, ignoré`)
+            skipped++
+            continue
+          }
+
+          // Extraire l'heure de cette occurrence spécifique
+          const formattedTime = formatTime(eventDate)
+
+          // Préparer les données de l'événement pour cette date
+          const eventData = {
+            title: fbEvent.name,
+            slug: uniqueSlug,
+            date: formatDate(eventDate),
+            time: formattedTime,
+            genre: foundGenreId ? Number(foundGenreId) : null,
+            image: foundPosterId ? Number(foundPosterId) : null,
+            facebookCover: facebookCoverId,
+            facebookLink: `https://www.facebook.com/events/${fbEvent.id}`,
+            status: (fbEvent.is_canceled ? 'archived' : 'published') as 'published' | 'draft' | 'archived',
+          }
+
+          // Créer l'événement pour cette date
+          await payload.create({
+            collection: 'events',
+            data: eventData,
+          })
+
+          imported++
+          console.log(`Créé: ${eventData.title} le ${formatDate(eventDate)} à ${formattedTime}`)
+
+          // Pause pour éviter de surcharger l'API
+          await new Promise(resolve => setTimeout(resolve, 200))
         }
-
-        // Créer l'événement
-        await payload.create({
-          collection: 'events',
-          data: eventData,
-        })
-
-        imported++
-
-        // Pause pour éviter de surcharger l'API
-        await new Promise(resolve => setTimeout(resolve, 500))
 
       } catch (error) {
         console.error(`Erreur traitement ${fbEvent.name}:`, error)
