@@ -59,7 +59,7 @@ const HeroTitle = styled(motion.h1)`
   }
   
   @media (max-width: 480px) {
-    font-size: 19vw;
+    font-size: 22vw;
   }
 `;
 

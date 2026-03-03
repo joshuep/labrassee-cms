@@ -21,6 +21,10 @@ const FooterContainer = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 40px 3% 60px 0;
+
+  @media (max-width: 480px) {
+    padding-bottom: 140px;
+  }
 `;
 
 const LocationBlock = styled(motion.div)`
@@ -56,7 +60,7 @@ const AddressLink = styled(motion.a)`
   }
   
   @media (max-width: 480px) {
-    font-size: 6vw;
+    font-size: 7vw;
   }
 `;
 
@@ -91,6 +95,10 @@ const WelcomeText = styled(motion.h1)`
   @media (max-width: 768px) {
     font-size: 19vw;
   }
+
+  @media (max-width: 480px) {
+    font-size: 22vw;
+  }
 `;
 
 const SocialMessage = styled(motion.p)`
@@ -103,8 +111,9 @@ const SocialMessage = styled(motion.p)`
   margin: 0 auto;
   
   @media (max-width: 480px) {
-    text-align: left;
+    text-align: center;
     width: 80vw;
+    font-size: 14px;
   }
 `;
 

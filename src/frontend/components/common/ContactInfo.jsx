@@ -31,6 +31,10 @@ const ContactHeader = styled.div`
   justify-content: center;
   width: 100%;
   margin-bottom: 20px;
+
+  @media (max-width: 480px) {
+    flex-wrap: wrap;
+  }
 `;
 
 const IconWrapper = styled.div`
@@ -62,8 +66,10 @@ const ContactTitle = styled.span`
   }
   
   @media (max-width: 480px) {
-    font-size: 24px;
+    font-size: 20px;
     white-space: normal;
+    text-align: center;
+    line-height: 1.2;
   }
 `;
 

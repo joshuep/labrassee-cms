@@ -92,6 +92,11 @@ const InfoBlock = styled(motion.div)`
     border-color: rgba(247, 209, 53, 0.3);
     transform: translateY(-2px);
   }
+
+  @media (max-width: 480px) {
+    max-width: 90%;
+    padding: 10px 16px;
+  }
 `;
 
 const InfoIcon = styled.div`
