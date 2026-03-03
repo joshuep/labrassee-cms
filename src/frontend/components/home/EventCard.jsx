@@ -53,13 +53,17 @@ const DayBadge = styled.div`
   background: var(--color-brand);
   color: var(--color-dark);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 400;
   padding: 6px 12px;
   border-radius: 6px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   z-index: 2;
+
+  strong {
+    font-weight: 700;
+  }
 
   @media (max-width: 768px) {
     font-size: 10px;
@@ -159,7 +163,7 @@ const EventCard = ({ event, index }) => {
     if (eventDate >= startOfWeek && eventDate <= endOfWeek) {
       const days = ['DIMANCHE', 'LUNDI', 'MARDI', 'MERCREDI', 'JEUDI', 'VENDREDI', 'SAMEDI'];
       const eventDayIndex = eventDate.getDay();
-      return `CE ${days[eventDayIndex]}`;
+      return { prefix: 'CE', day: days[eventDayIndex] };
     }
     
     return null;
@@ -185,7 +189,7 @@ const EventCard = ({ event, index }) => {
       />
       
       {/* Badge du jour pour les événements de la semaine en cours */}
-      {dayBadge && <DayBadge>{dayBadge}</DayBadge>}
+      {dayBadge && <DayBadge>{dayBadge.prefix} <strong>{dayBadge.day}</strong></DayBadge>}
       
       {/* Afficher le texte overlay sur toutes les affiches */}
       <TextOverlay>
