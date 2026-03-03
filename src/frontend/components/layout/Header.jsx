@@ -49,7 +49,7 @@ const HeaderContainer = styled.div`
   }
 
   @media (max-width: 480px) {
-    width: 85vw;
+    width: 75vw;
   }
 `;
 
@@ -90,7 +90,7 @@ const Header = ({ businessInfo: providedBusinessInfo }) => {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
+
       // Si on est tout en haut, toujours montrer le header
       if (currentScrollY < 10) {
         setIsHidden(false);
@@ -106,13 +106,13 @@ const Header = ({ businessInfo: providedBusinessInfo }) => {
           setIsHidden(false);
         }
       }
-      
+
       setLastScrollY(currentScrollY);
     };
 
     // Écouter les événements de scroll (compatible avec Lenis)
     window.addEventListener('scroll', handleScroll, { passive: true });
-    
+
     // Cleanup
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
@@ -133,16 +133,16 @@ const Header = ({ businessInfo: providedBusinessInfo }) => {
         >
           {businessInfo.tagline}
         </Tagline>
-        
+
         <Logo onClick={() => {
           if (pathname !== '/') {
             router.push('/');
           }
         }} />
-        
-        <MenuLink 
-          href="/menu" 
-          className="cursor-menu" 
+
+        <MenuLink
+          href="/menu"
+          className="cursor-menu"
           onClick={(e) => {
             if (pathname === '/menu') {
               e.preventDefault();

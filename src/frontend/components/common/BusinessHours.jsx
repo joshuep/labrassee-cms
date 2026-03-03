@@ -121,7 +121,7 @@ const TimeText = styled.span`
   }
   
   @media (max-width: 480px) {
-    font-size: 16px;
+    font-size: 20px;
     min-width: 45px;
   }
 `;
@@ -151,7 +151,7 @@ const BusinessHours = ({ businessInfo }) => {
         <HoursTitle>HORAIRE</HoursTitle>
         <Divider />
       </HoursHeader>
-      
+
       {hoursData.map((schedule, index) => (
         <HoursRow
           key={schedule.day}
@@ -167,7 +167,7 @@ const BusinessHours = ({ businessInfo }) => {
           </TimeBlock>
         </HoursRow>
       ))}
-      
+
     </HoursContainer>
   );
 };
