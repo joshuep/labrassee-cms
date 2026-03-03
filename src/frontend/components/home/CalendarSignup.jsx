@@ -13,7 +13,7 @@ const StickyWrapper = styled.div`
   padding: 0;
   pointer-events: none;
 
-  @media (min-width: 640px) {
+  @media (min-width: 768px) {
     padding: 16px;
   }
 `;
@@ -28,7 +28,7 @@ const SignupBar = styled(motion.div)`
   box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
   pointer-events: auto;
 
-  @media (min-width: 640px) {
+  @media (min-width: 768px) {
     max-width: 780px;
     margin: 0 auto;
     padding: 20px 28px;
@@ -44,7 +44,7 @@ const Container = styled.div`
   align-items: stretch;
   gap: 14px;
 
-  @media (min-width: 640px) {
+  @media (min-width: 768px) {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
@@ -59,7 +59,7 @@ const TextContent = styled.div`
   flex: 1;
   min-width: 0;
 
-  @media (min-width: 640px) {
+  @media (min-width: 768px) {
     flex-shrink: 0;
     flex: none;
     gap: 14px;
@@ -78,7 +78,7 @@ const IconWrapper = styled.div`
   font-size: 18px;
   flex-shrink: 0;
 
-  @media (min-width: 640px) {
+  @media (min-width: 768px) {
     width: 44px;
     height: 44px;
     border-radius: 14px;
@@ -93,7 +93,7 @@ const Title = styled.span`
   letter-spacing: -0.01em;
   line-height: 1.3;
 
-  @media (min-width: 640px) {
+  @media (min-width: 768px) {
     font-size: 18px;
   }
 `;
@@ -104,7 +104,7 @@ const Form = styled.form`
   gap: 10px;
   width: 100%;
 
-  @media (min-width: 640px) {
+  @media (min-width: 768px) {
     width: auto;
     gap: 10px;
     flex-shrink: 0;
@@ -132,7 +132,7 @@ const EmailInput = styled.input`
     box-shadow: 0 0 0 3px rgba(247, 209, 53, 0.1);
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 768px) {
     flex: none;
     width: 200px;
     padding: 14px 18px;
@@ -164,7 +164,7 @@ const SubmitButton = styled(motion.button)`
     cursor: not-allowed;
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 768px) {
     width: auto;
     height: auto;
     padding: 14px 24px;
@@ -177,7 +177,7 @@ const SubmitButton = styled(motion.button)`
 const ButtonText = styled.span`
   display: none;
 
-  @media (min-width: 640px) {
+  @media (min-width: 768px) {
     display: inline;
   }
 `;
@@ -185,7 +185,7 @@ const ButtonText = styled.span`
 const ButtonIcon = styled.span`
   display: inline;
 
-  @media (min-width: 640px) {
+  @media (min-width: 768px) {
     display: none;
   }
 `;
@@ -198,7 +198,7 @@ const SuccessMessage = styled(motion.div)`
   font-size: 14px;
   font-weight: 500;
 
-  @media (min-width: 640px) {
+  @media (min-width: 768px) {
     gap: 10px;
     font-size: 15px;
   }
