@@ -1,0 +1,204 @@
+/* Custom Fonts */
+@font-face {
+  font-family: 'din-1451-lt-pro-engschrift';
+  src: url('/fonts/DIN Engschrift LT Pro Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Colors */
+  --color-brand: #f7d135;
+  --color-dark: #100f09;
+  --color-dark-alt: #181716;
+  --color-accent: #cdc49d;
+  --color-white: #f1efe4;
+  --color-fb: #359df8;
+  --color-insta: #f14179;
+  
+  /* Typography */
+  --font-din: 'din-1451-lt-pro-engschrift', 'Arial Narrow', sans-serif;
+  --font-din-condensed: 'din-1451-lt-pro-engschrift', 'Arial Narrow', sans-serif;
+  --font-acumin: 'Arial', sans-serif;
+  
+  /* Spacing */
+  --header-space: 2rem;
+  --hauteur-logo-svg: 80px;
+  --header-height: calc(var(--hauteur-logo-svg) + var(--header-space) + 15px);
+  
+  /* Breakpoints */
+  --breakpoint-mobile-portrait: 480px;
+  --breakpoint-mobile-landscape: 768px;
+  --breakpoint-tablet-portrait: 834px;
+  --breakpoint-big-phone: 960px;
+}
+
+/* Base reset (replacement for Tailwind preflight spacing reset) */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+/* Global styles */
+html,
+body {
+  background-color: var(--color-dark);
+  color: var(--color-white);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-din);
+  overflow-x: hidden;
+}
+
+/* Cacher le curseur seulement sur desktop et pas sur Safari */
+@media (min-width: 769px) {
+  @supports not (-webkit-touch-callout: none) {
+    body {
+      cursor: none;
+    }
+  }
+}
+
+/* View Transitions API - Simple crossfade */
+@supports (view-transition-name: none) {
+  footer {
+    view-transition-name: site-footer;
+  }
+  
+  ::view-transition-old(root) {
+    animation: fade-out 0.3s ease-out;
+  }
+
+  ::view-transition-new(root) {
+    animation: fade-in 0.3s ease-out;
+  }
+  
+  /* Le footer, logo et curseur restent stables */
+  ::view-transition-group(site-footer),
+  ::view-transition-group(main-logo),
+  ::view-transition-group(custom-cursor) {
+    animation: none;
+    isolation: isolate;
+  }
+  
+  /* Désactiver mix-blend-mode pendant les transitions */
+  ::view-transition-old(main-logo),
+  ::view-transition-new(main-logo),
+  ::view-transition-image-pair(main-logo) {
+    mix-blend-mode: normal !important;
+  }
+  
+  /* Forcer l'isolation du logo pour éviter les effets de blend */
+  ::view-transition-group(main-logo) {
+    isolation: isolate;
+  }
+  
+  /* Garder le curseur toujours visible et stable */
+  ::view-transition-group(custom-cursor) {
+    z-index: 99999;
+  }
+
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/* Animation pulse pour les skeletons */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* Animation slide in simple pour le header */
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Curseur par défaut sur mobile */
+@media (max-width: 768px) {
+  body {
+    cursor: default;
+  }
+}
+
+/* Forcer la suppression du curseur sur tous les éléments desktop */
+/* Sauf pour Safari qui a des problèmes avec cursor: none */
+@media (min-width: 769px) {
+  @supports not (-webkit-touch-callout: none) {
+    *, *::before, *::after {
+      cursor: none !important;
+    }
+  }
+  
+  /* Pour Safari, utiliser un curseur transparent */
+  @supports (-webkit-touch-callout: none) {
+    *, *::before, *::after {
+      cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='), auto !important;
+    }
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
