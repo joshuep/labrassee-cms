@@ -15,7 +15,7 @@ const StickyWrapper = styled.div`
 `;
 
 const SignupBar = styled(motion.div)`
-  max-width: 720px;
+  max-width: 780px;
   margin: 0 auto;
   padding: 20px 28px;
   background: rgba(20, 20, 20, 0.95);
@@ -24,6 +24,7 @@ const SignupBar = styled(motion.div)`
   border-radius: 24px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
   pointer-events: auto;
+  overflow: hidden;
 `;
 
 const Container = styled.div`
@@ -75,6 +76,7 @@ const Form = styled.form`
   align-items: center;
   gap: 10px;
   width: 100%;
+  flex-shrink: 0;
 
   @media (min-width: 640px) {
     width: auto;
