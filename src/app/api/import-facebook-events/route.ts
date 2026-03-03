@@ -139,24 +139,6 @@ export async function POST(request: Request) {
       }
     }
 
-    // Fonction pour vérifier si un événement existe déjà
-    const eventExists = async (facebookEventId: string) => {
-      try {
-        const existing = await payload.find({
-          collection: 'events',
-          where: {
-            facebookLink: {
-              contains: facebookEventId,
-            },
-          },
-          limit: 1,
-        })
-        return existing.docs && existing.docs.length > 0
-      } catch (_error) {
-        return false
-      }
-    }
-
     // Fonction pour uploader une image Facebook vers Payload
     const uploadImageToPayload = async (imageUrl: string, eventName: string) => {
       if (!imageUrl) return null

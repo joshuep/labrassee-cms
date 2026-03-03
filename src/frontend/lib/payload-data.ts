@@ -56,6 +56,32 @@ export type FrontendBusinessInfo = {
 const getPayloadClient = cache(async () => getPayload({ config: configPromise }))
 
 type MediaSizeKey = 'card' | 'desktop' | 'tablet' | 'thumbnail'
+const PUBLIC_SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL?.replace(/\/$/, '')
+
+const normalizeMediaURL = (rawURL: string) => {
+  if (!rawURL) return null
+
+  if (!rawURL.startsWith('http://') && !rawURL.startsWith('https://')) {
+    return rawURL.startsWith('/') ? rawURL : `/${rawURL}`
+  }
+
+  try {
+    const parsed = new URL(rawURL)
+    const isLocalhost = ['localhost', '127.0.0.1', '0.0.0.0'].includes(parsed.hostname)
+
+    if (isLocalhost) {
+      if (PUBLIC_SERVER_URL) {
+        return `${PUBLIC_SERVER_URL}${parsed.pathname}${parsed.search}${parsed.hash}`
+      }
+
+      return `${parsed.pathname}${parsed.search}${parsed.hash}`
+    }
+
+    return rawURL
+  } catch {
+    return rawURL
+  }
+}
 
 const toMediaURL = (media: number | Media | null | undefined, size?: MediaSizeKey) => {
   if (!media || typeof media !== 'object') return null
@@ -65,8 +91,7 @@ const toMediaURL = (media: number | Media | null | undefined, size?: MediaSizeKe
   const rawURL = sizedURL || mediaDoc.url
 
   if (!rawURL) return null
-  if (rawURL.startsWith('http://') || rawURL.startsWith('https://')) return rawURL
-  return rawURL.startsWith('/') ? rawURL : `/${rawURL}`
+  return normalizeMediaURL(rawURL)
 }
 
 const todayISO = () => {
