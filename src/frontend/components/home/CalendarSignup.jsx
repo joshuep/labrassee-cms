@@ -24,7 +24,7 @@ const SignupBar = styled(motion.div)`
   background: rgba(16, 15, 9, 0.98);
   backdrop-filter: blur(20px);
   border-top: 1px solid rgba(247, 209, 53, 0.3);
-  border-radius: 0;
+  border-radius: 16px 16px 0 0;
   box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
   pointer-events: auto;
 
@@ -40,11 +40,13 @@ const SignupBar = styled(motion.div)`
 
 const Container = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
 
   @media (min-width: 640px) {
+    flex-direction: row;
+    align-items: center;
     justify-content: space-between;
     gap: 40px;
   }
@@ -99,16 +101,18 @@ const Title = styled.span`
 const Form = styled.form`
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
+  gap: 10px;
+  width: 100%;
 
   @media (min-width: 640px) {
+    width: auto;
     gap: 10px;
+    flex-shrink: 0;
   }
 `;
 
 const EmailInput = styled.input`
-  width: 130px;
+  flex: 1;
   padding: 12px 14px;
   font-size: 14px;
   background: rgba(255, 255, 255, 0.08);
@@ -129,6 +133,7 @@ const EmailInput = styled.input`
   }
 
   @media (min-width: 640px) {
+    flex: none;
     width: 200px;
     padding: 14px 18px;
     font-size: 15px;
