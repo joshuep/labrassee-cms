@@ -20,11 +20,7 @@ const FooterContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 3% 60px 0;
-
-  @media (max-width: 480px) {
-    padding-bottom: 140px;
-  }
+  padding: 40px 3% 140px 0;
 `;
 
 const LocationBlock = styled(motion.div)`
