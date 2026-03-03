@@ -1,7 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
+
+import { ROUTE_LOADING_DONE_EVENT, ROUTE_LOADING_START_EVENT } from '@/frontend/lib/routeLoadingEvents';
+
+const INITIAL_PROGRESS = 6;
+const ROUTE_MIN_DURATION = 350;
+const ROUTE_SHOW_DELAY = 500;
+const MAX_PENDING_PROGRESS = 92;
 
 const pulse = keyframes`
   0%, 100% {
@@ -69,49 +76,154 @@ const LoadingProgress = styled(motion.div)`
 `;
 
 const LoadingScreen = ({ minDuration = 800 }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [progress, setProgress] = useState(0);
+  const [isVisible, setIsVisible] = useState(true);
+  const [progress, setProgress] = useState(INITIAL_PROGRESS);
   const [mounted, setMounted] = useState(false);
+  const [cycleStartedAt, setCycleStartedAt] = useState(() => Date.now());
+  const [cycleMinDuration, setCycleMinDuration] = useState(minDuration);
+
+  const progressRef = useRef(INITIAL_PROGRESS);
+  const pendingCountRef = useRef(1);
+  const isVisibleRef = useRef(true);
+  const routeRevealTimerRef = useRef(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   useEffect(() => {
-    // Simulate loading progress
-    const progressInterval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(progressInterval);
-          return 100;
-        }
-        return prev + Math.random() * 15 + 5;
-      });
-    }, 100);
+    progressRef.current = progress;
+  }, [progress]);
 
-    // Ensure minimum display time
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, minDuration);
+  useEffect(() => {
+    isVisibleRef.current = isVisible;
+  }, [isVisible]);
 
-    return () => {
-      clearTimeout(timer);
-      clearInterval(progressInterval);
-    };
-  }, [minDuration]);
+  const startCycle = useCallback((nextMinDuration, nextStartProgress = INITIAL_PROGRESS) => {
+    setCycleStartedAt(Date.now());
+    setCycleMinDuration(nextMinDuration);
+    progressRef.current = nextStartProgress;
+    setProgress(nextStartProgress);
+    setIsVisible(true);
+  }, []);
+
+  const clearRouteRevealTimer = useCallback(() => {
+    if (routeRevealTimerRef.current) {
+      clearTimeout(routeRevealTimerRef.current);
+      routeRevealTimerRef.current = null;
+    }
+  }, []);
 
   useEffect(() => {
     if (!mounted) {
       return undefined;
     }
 
-    const { body, documentElement } = document;
-    if (!isLoading) {
-      body.classList.remove('app-loading');
-      documentElement.classList.remove('app-loading');
+    if (document.readyState === 'complete') {
+      pendingCountRef.current = 0;
       return undefined;
     }
 
+    const handleWindowLoaded = () => {
+      pendingCountRef.current = Math.max(0, pendingCountRef.current - 1);
+    };
+
+    window.addEventListener('load', handleWindowLoaded, { once: true });
+
+    return () => {
+      window.removeEventListener('load', handleWindowLoaded);
+    };
+  }, [mounted]);
+
+  useEffect(() => {
+    if (!mounted) {
+      return undefined;
+    }
+
+    const handleRouteLoadingStart = () => {
+      const wasIdle = pendingCountRef.current === 0;
+      pendingCountRef.current += 1;
+
+      if (wasIdle) {
+        clearRouteRevealTimer();
+        routeRevealTimerRef.current = setTimeout(() => {
+          routeRevealTimerRef.current = null;
+          if (pendingCountRef.current > 0 && !isVisibleRef.current) {
+            startCycle(ROUTE_MIN_DURATION, INITIAL_PROGRESS);
+          }
+        }, ROUTE_SHOW_DELAY);
+      }
+    };
+
+    const handleRouteLoadingDone = () => {
+      pendingCountRef.current = Math.max(0, pendingCountRef.current - 1);
+      if (pendingCountRef.current === 0) {
+        clearRouteRevealTimer();
+      }
+    };
+
+    window.addEventListener(ROUTE_LOADING_START_EVENT, handleRouteLoadingStart);
+    window.addEventListener(ROUTE_LOADING_DONE_EVENT, handleRouteLoadingDone);
+
+    return () => {
+      clearRouteRevealTimer();
+      window.removeEventListener(ROUTE_LOADING_START_EVENT, handleRouteLoadingStart);
+      window.removeEventListener(ROUTE_LOADING_DONE_EVENT, handleRouteLoadingDone);
+    };
+  }, [clearRouteRevealTimer, mounted, startCycle]);
+
+  useEffect(() => {
+    if (!isVisible) {
+      return undefined;
+    }
+
+    let rafId;
+
+    const animate = () => {
+      const elapsed = Date.now() - cycleStartedAt;
+      const hasPendingWork = pendingCountRef.current > 0;
+      let targetProgress;
+
+      if (hasPendingWork) {
+        const curve = 1 - Math.exp(-elapsed / 1600);
+        targetProgress = Math.min(MAX_PENDING_PROGRESS, 18 + curve * (MAX_PENDING_PROGRESS - 18));
+      } else if (elapsed < cycleMinDuration) {
+        const ratio = cycleMinDuration === 0 ? 1 : elapsed / cycleMinDuration;
+        targetProgress = 92 + ratio * 4;
+      } else {
+        targetProgress = 100;
+      }
+
+      const smoothing = targetProgress >= 99 ? 0.2 : 0.08;
+      const nextProgress =
+        progressRef.current + (targetProgress - progressRef.current) * smoothing;
+
+      progressRef.current = nextProgress;
+      setProgress(nextProgress);
+
+      if (targetProgress === 100 && nextProgress >= 99.6) {
+        progressRef.current = 100;
+        setProgress(100);
+        setIsVisible(false);
+        return;
+      }
+
+      rafId = requestAnimationFrame(animate);
+    };
+
+    rafId = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+    };
+  }, [cycleMinDuration, cycleStartedAt, isVisible]);
+
+  useEffect(() => {
+    if (!mounted || !isVisible) {
+      return undefined;
+    }
+
+    const { body, documentElement } = document;
     const lockScrollY = window.scrollY;
     const previousBodyOverflow = body.style.overflow;
     const previousBodyTouchAction = body.style.touchAction;
@@ -176,11 +288,13 @@ const LoadingScreen = ({ minDuration = 800 }) => {
       documentElement.style.overscrollBehavior = previousHtmlOverscroll;
       window.scrollTo(0, lockScrollY);
     };
-  }, [isLoading, mounted]);
+  }, [isVisible, mounted]);
+
+  const progressWidth = `${Math.max(0, Math.min(progress, 100))}%`;
 
   const overlay = (
     <AnimatePresence>
-      {isLoading && (
+      {isVisible && (
         <Overlay
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -191,15 +305,15 @@ const LoadingScreen = ({ minDuration = 800 }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
           >
-            <LogoImage 
-              src="/images/brand/full_logo_white.svg" 
+            <LogoImage
+              src="/images/brand/full_logo_white.svg"
               alt="La Brassée"
             />
             <LoadingBar>
               <LoadingProgress
                 initial={{ width: '0%' }}
-                animate={{ width: `${Math.min(progress, 100)}%` }}
-                transition={{ duration: 0.1, ease: 'linear' }}
+                animate={{ width: progressWidth }}
+                transition={{ duration: 0.12, ease: 'linear' }}
               />
             </LoadingBar>
           </LogoContainer>

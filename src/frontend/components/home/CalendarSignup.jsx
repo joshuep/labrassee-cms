@@ -7,14 +7,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const StickyWrapper = styled.div`
   position: fixed;
-  bottom: max(0px, env(safe-area-inset-bottom));
+  bottom: 0;
   left: 0;
   right: 0;
   z-index: 1200;
   padding: 0;
   pointer-events: none;
-  transform: translateZ(0);
-  will-change: transform;
 
   @media (min-width: 640px) {
     padding: 16px;
@@ -23,7 +21,7 @@ const StickyWrapper = styled.div`
 
 const SignupBar = styled(motion.div)`
   width: 100%;
-  padding: 16px 20px;
+  padding: 16px 20px calc(16px + max(0px, env(safe-area-inset-bottom)));
   background: rgba(16, 15, 9, 0.98);
   backdrop-filter: blur(20px);
   border-top: 1px solid rgba(247, 209, 53, 0.3);
