@@ -227,7 +227,7 @@ const CalendarSignup = () => {
                 <IconWrapper>
                   <i className="far fa-calendar-alt"></i>
                 </IconWrapper>
-                <Title>Reçois le calendrier mensuel des événements</Title>
+                <Title>REÇOIS LE CALENDRIER MENSUEL DES ÉVÉNEMENTS</Title>
               </TextContent>
 
               <AnimatePresence mode="wait">
