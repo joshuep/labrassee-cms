@@ -35,7 +35,7 @@ const Container = styled.div`
   @media (min-width: 640px) {
     flex-direction: row;
     justify-content: space-between;
-    gap: 24px;
+    gap: 40px;
   }
 `;
 
