@@ -49,7 +49,7 @@ const HeaderContainer = styled.div`
   }
 
   @media (max-width: 480px) {
-    width: 92vw;
+    width: 85vw;
   }
 `;
 
