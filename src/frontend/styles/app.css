@@ -1,8 +1,8 @@
 /* Custom Fonts */
 @font-face {
-  font-family: 'din-1451-lt-pro-engschrift';
-  src: url('/fonts/DIN Engschrift LT Pro Regular.ttf') format('truetype');
-  font-weight: normal;
+  font-family: 'DIN Condensed Variable';
+  src: url('/fonts/DIN-Condensed-Variable.woff2') format('woff2-variations');
+  font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
@@ -18,8 +18,8 @@
   --color-insta: #f14179;
   
   /* Typography */
-  --font-din: 'din-1451-lt-pro-engschrift', 'Arial Narrow', sans-serif;
-  --font-din-condensed: 'din-1451-lt-pro-engschrift', 'Arial Narrow', sans-serif;
+  --font-din: 'DIN Condensed Variable', 'Arial Narrow', sans-serif;
+  --font-din-condensed: 'DIN Condensed Variable', 'Arial Narrow', sans-serif;
   --font-acumin: 'Arial', sans-serif;
   
   /* Spacing */
