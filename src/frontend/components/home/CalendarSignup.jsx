@@ -10,31 +10,41 @@ const StickyWrapper = styled.div`
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: 16px;
+  padding: 0;
   pointer-events: none;
+
+  @media (min-width: 640px) {
+    padding: 16px;
+  }
 `;
 
 const SignupBar = styled(motion.div)`
-  max-width: 780px;
-  margin: 0 auto;
-  padding: 20px 28px;
-  background: rgba(20, 20, 20, 0.95);
+  width: 100%;
+  padding: 16px 20px;
+  background: rgba(16, 15, 9, 0.98);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(247, 209, 53, 0.25);
-  border-radius: 24px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  border-top: 1px solid rgba(247, 209, 53, 0.3);
+  border-radius: 0;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
   pointer-events: auto;
-  overflow: hidden;
+
+  @media (min-width: 640px) {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 20px 28px;
+    border: 1px solid rgba(247, 209, 53, 0.25);
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  }
 `;
 
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 
   @media (min-width: 640px) {
-    flex-direction: row;
     justify-content: space-between;
     gap: 40px;
   }
@@ -43,54 +53,67 @@ const Container = styled.div`
 const TextContent = styled.div`
   display: flex;
   align-items: center;
-  gap: 14px;
-  flex-shrink: 0;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+
+  @media (min-width: 640px) {
+    flex-shrink: 0;
+    flex: none;
+    gap: 14px;
+  }
 `;
 
 const IconWrapper = styled.div`
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(247, 209, 53, 0.12);
-  border-radius: 14px;
+  border-radius: 12px;
   color: var(--color-brand);
-  font-size: 20px;
+  font-size: 18px;
+  flex-shrink: 0;
+
+  @media (min-width: 640px) {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    font-size: 20px;
+  }
 `;
 
 const Title = styled.span`
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--color-white);
   letter-spacing: -0.01em;
+  line-height: 1.3;
 
-  @media (max-width: 480px) {
-    font-size: 16px;
-    text-align: center;
+  @media (min-width: 640px) {
+    font-size: 18px;
   }
 `;
 
 const Form = styled.form`
   display: flex;
   align-items: center;
-  gap: 10px;
-  width: 100%;
+  gap: 8px;
   flex-shrink: 0;
 
   @media (min-width: 640px) {
-    width: auto;
+    gap: 10px;
   }
 `;
 
 const EmailInput = styled.input`
-  flex: 1;
-  min-width: 0;
-  padding: 14px 18px;
-  font-size: 15px;
+  width: 130px;
+  padding: 12px 14px;
+  font-size: 14px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 14px;
+  border-radius: 12px;
   color: var(--color-white);
   outline: none;
   transition: all 0.25s ease;
@@ -107,20 +130,24 @@ const EmailInput = styled.input`
 
   @media (min-width: 640px) {
     width: 200px;
-    flex: none;
+    padding: 14px 18px;
+    font-size: 15px;
+    border-radius: 14px;
   }
 `;
 
 const SubmitButton = styled(motion.button)`
-  padding: 14px 24px;
-  font-size: 15px;
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
   background: var(--color-brand);
   color: var(--color-dark);
   border: none;
-  border-radius: 14px;
+  border-radius: 12px;
   cursor: pointer;
-  white-space: nowrap;
   transition: background 0.2s ease;
 
   &:hover {
@@ -131,15 +158,45 @@ const SubmitButton = styled(motion.button)`
     opacity: 0.6;
     cursor: not-allowed;
   }
+
+  @media (min-width: 640px) {
+    width: auto;
+    height: auto;
+    padding: 14px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 14px;
+  }
+`;
+
+const ButtonText = styled.span`
+  display: none;
+
+  @media (min-width: 640px) {
+    display: inline;
+  }
+`;
+
+const ButtonIcon = styled.span`
+  display: inline;
+
+  @media (min-width: 640px) {
+    display: none;
+  }
 `;
 
 const SuccessMessage = styled(motion.div)`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   color: var(--color-brand);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
+
+  @media (min-width: 640px) {
+    gap: 10px;
+    font-size: 15px;
+  }
 `;
 
 const CalendarSignup = () => {
@@ -189,7 +246,7 @@ const CalendarSignup = () => {
                     exit={{ opacity: 0, scale: 0.9 }}
                   >
                     <i className="fas fa-check-circle"></i>
-                    Inscription confirmée!
+                    Confirmé!
                   </SuccessMessage>
                 ) : (
                   <Form key="form" onSubmit={handleSubmit}>
@@ -207,7 +264,12 @@ const CalendarSignup = () => {
                       whileTap={{ scale: 0.97 }}
                       whileHover={{ scale: 1.02 }}
                     >
-                      {status === 'loading' ? 'Envoi...' : "S'inscrire"}
+                      <ButtonIcon>
+                        <i className={status === 'loading' ? 'fas fa-spinner fa-spin' : 'fas fa-paper-plane'}></i>
+                      </ButtonIcon>
+                      <ButtonText>
+                        {status === 'loading' ? 'Envoi...' : "S'inscrire"}
+                      </ButtonText>
                     </SubmitButton>
                   </Form>
                 )}
