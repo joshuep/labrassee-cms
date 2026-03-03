@@ -29,12 +29,17 @@ const SignupBar = styled(motion.div)`
   pointer-events: auto;
 
   @media (min-width: 640px) {
-    max-width: 780px;
+    max-width: 680px;
     margin: 0 auto;
-    padding: 20px 28px;
+    padding: 18px 24px;
     border: 1px solid rgba(247, 209, 53, 0.25);
     border-radius: 24px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  }
+
+  @media (min-width: 900px) {
+    max-width: 780px;
+    padding: 20px 28px;
   }
 `;
 
@@ -97,9 +102,13 @@ const Title = styled.span`
   text-align: center;
 
   @media (min-width: 640px) {
-    font-size: 18px;
+    font-size: 14px;
     width: auto;
     text-align: left;
+  }
+
+  @media (min-width: 900px) {
+    font-size: 18px;
   }
 `;
 
