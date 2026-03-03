@@ -72,9 +72,6 @@ build/
 media/*
 !media/.gitkeep
 
-# Payload generated files
-src/payload-types.ts
-
 # Database
 *.sqlite
 *.db
