@@ -53,7 +53,6 @@ const DayBadge = styled.div`
   background: var(--color-brand);
   color: var(--color-dark);
   font-size: 12px;
-  font-weight: 300;
   padding: 6px 12px;
   border-radius: 6px;
   text-transform: uppercase;
@@ -61,14 +60,18 @@ const DayBadge = styled.div`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   z-index: 2;
 
-  strong {
-    font-weight: 700;
-  }
-
   @media (max-width: 768px) {
     font-size: 10px;
     padding: 5px 10px;
   }
+`;
+
+const BadgePrefix = styled.span`
+  font-weight: 300;
+`;
+
+const BadgeDay = styled.span`
+  font-weight: 900;
 `;
 
 const EventTitle = styled.h3`
@@ -189,7 +192,7 @@ const EventCard = ({ event, index }) => {
       />
 
       {/* Badge du jour pour les événements de la semaine en cours */}
-      {dayBadge && <DayBadge>{dayBadge.prefix} <strong>{dayBadge.day}</strong></DayBadge>}
+      {dayBadge && <DayBadge><BadgePrefix>{dayBadge.prefix}</BadgePrefix> <BadgeDay>{dayBadge.day}</BadgeDay></DayBadge>}
 
       {/* Afficher le texte overlay sur toutes les affiches */}
       <TextOverlay>
