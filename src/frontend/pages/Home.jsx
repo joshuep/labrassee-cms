@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Hero from '../components/home/Hero';
+import CalendarSignup from '../components/home/CalendarSignup';
 import EventsCarousel from '../components/home/EventsCarousel';
 import Testimonials from '../components/home/Testimonials';
 
@@ -12,6 +13,7 @@ const Home = ({ events = [] }) => {
   return (
     <div style={{ width: '100%', background: 'var(--color-dark)' }}>
       <Hero />
+      <CalendarSignup />
       <EventsCarousel events={events} />
       <Testimonials />
     </div>
