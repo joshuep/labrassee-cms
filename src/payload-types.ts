@@ -72,6 +72,7 @@ export interface Config {
     events: Event;
     'event-genres': EventGenre;
     'menu-items': MenuItem;
+    'calendar-subscribers': CalendarSubscriber;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -83,6 +84,7 @@ export interface Config {
     events: EventsSelect<false> | EventsSelect<true>;
     'event-genres': EventGenresSelect<false> | EventGenresSelect<true>;
     'menu-items': MenuItemsSelect<false> | MenuItemsSelect<true>;
+    'calendar-subscribers': CalendarSubscribersSelect<false> | CalendarSubscribersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -333,6 +335,16 @@ export interface MenuItem {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "calendar-subscribers".
+ */
+export interface CalendarSubscriber {
+  id: number;
+  email: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -357,6 +369,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'menu-items';
         value: number | MenuItem;
+      } | null)
+    | ({
+        relationTo: 'calendar-subscribers';
+        value: number | CalendarSubscriber;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -524,6 +540,15 @@ export interface MenuItemsSelect<T extends boolean = true> {
   order?: T;
   description?: T;
   status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "calendar-subscribers_select".
+ */
+export interface CalendarSubscribersSelect<T extends boolean = true> {
+  email?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -201,24 +201,91 @@ const SuccessMessage = styled(motion.div)`
   }
 `;
 
+const ErrorMessage = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ff8f8f;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 8px;
+`;
+
+const HoneypotInput = styled.input`
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+`;
+
+const COOKIE_NAME = 'calendar_signup_subscribed';
+const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365; // 1 year
+
+const hasSignupCookie = () => {
+  if (typeof document === 'undefined') return false;
+  return document.cookie.split('; ').some((cookie) => cookie.startsWith(`${COOKIE_NAME}=`));
+};
+
+const setSignupCookie = () => {
+  if (typeof document === 'undefined') return;
+  document.cookie = `${COOKIE_NAME}=1; path=/; max-age=${COOKIE_MAX_AGE_SECONDS}; samesite=lax`;
+};
+
 const CalendarSignup = () => {
   const [email, setEmail] = useState('');
+  const [website, setWebsite] = useState('');
   const [status, setStatus] = useState('idle');
-  const [isVisible, setIsVisible] = useState(true);
+  const [message, setMessage] = useState('');
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(!hasSignupCookie());
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email) return;
 
     setStatus('loading');
+    setMessage('');
 
-    setTimeout(() => {
-      setStatus('success');
+    try {
+      const response = await fetch('/api/calendar-signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, website }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        setStatus('error');
+        setMessage(result?.message || 'Erreur serveur, réessaie plus tard.');
+        return;
+      }
+
+      if (result?.status === 'exists') {
+        setStatus('exists');
+        setMessage('Déjà inscrit!');
+      } else {
+        setStatus('success');
+        setMessage('Inscription confirmée!');
+      }
+
+      setSignupCookie();
       setEmail('');
+
       setTimeout(() => {
         setIsVisible(false);
-      }, 1500);
-    }, 800);
+      }, 1400);
+    } catch (_error) {
+      setStatus('error');
+      setMessage('Erreur réseau, réessaie plus tard.');
+    }
   };
 
   return (
@@ -240,18 +307,27 @@ const CalendarSignup = () => {
               </TextContent>
 
               <AnimatePresence mode="wait">
-                {status === 'success' ? (
+                {status === 'success' || status === 'exists' ? (
                   <SuccessMessage
                     key="success"
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
                   >
-                    <i className="fas fa-check-circle"></i>
-                    Confirmé!
+                    <i className="fas fa-check"></i>
+                    {message || 'Inscription confirmée!'}
                   </SuccessMessage>
                 ) : (
                   <Form key="form" onSubmit={handleSubmit}>
+                    <HoneypotInput
+                      type="text"
+                      name="website"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      value={website}
+                      onChange={(e) => setWebsite(e.target.value)}
+                      aria-hidden="true"
+                    />
                     <EmailInput
                       type="email"
                       placeholder="Ton courriel"
@@ -272,6 +348,16 @@ const CalendarSignup = () => {
                 )}
               </AnimatePresence>
             </Container>
+
+            {status === 'error' && message ? (
+              <ErrorMessage
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <i className="fas fa-circle-exclamation"></i>
+                {message}
+              </ErrorMessage>
+            ) : null}
           </SignupBar>
         )}
       </AnimatePresence>
