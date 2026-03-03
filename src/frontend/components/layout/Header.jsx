@@ -148,7 +148,7 @@ const Header = ({ businessInfo: providedBusinessInfo }) => {
             pointerEvents: pathname === '/menu' ? 'none' : 'auto'
           }}
         >
-          NOTRE MENU
+          LE MENU
         </MenuLink>
       </HeaderContainer>
     </HeaderSection>
