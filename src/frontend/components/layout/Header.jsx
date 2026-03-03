@@ -47,6 +47,10 @@ const HeaderContainer = styled.div`
   @media (max-width: 960px) {
     width: 60vw;
   }
+
+  @media (max-width: 480px) {
+    width: 92vw;
+  }
 `;
 
 const Tagline = styled(motion.span)`
