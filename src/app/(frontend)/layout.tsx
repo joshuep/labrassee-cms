@@ -16,7 +16,7 @@ export default async function FrontendLayout(props: { children: React.ReactNode 
   const businessInfo = await getBusinessInfoData()
 
   return (
-    <html lang="fr">
+    <html lang="fr" className="app-loading">
       <head>
         <link href="/images/brand/full_logo_white.svg" rel="icon" type="image/svg+xml" />
         <link
@@ -28,7 +28,7 @@ export default async function FrontendLayout(props: { children: React.ReactNode 
           rel="stylesheet"
         />
       </head>
-      <body>
+      <body className="app-loading">
         <StyledComponentsRegistry>
           <FrontendShell businessInfo={businessInfo}>{children}</FrontendShell>
         </StyledComponentsRegistry>

@@ -1,17 +1,20 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const StickyWrapper = styled.div`
   position: fixed;
-  bottom: 0;
+  bottom: max(0px, env(safe-area-inset-bottom));
   left: 0;
   right: 0;
-  z-index: 1000;
+  z-index: 1200;
   padding: 0;
   pointer-events: none;
+  transform: translateZ(0);
+  will-change: transform;
 
   @media (min-width: 640px) {
     padding: 16px;
@@ -238,9 +241,11 @@ const CalendarSignup = () => {
   const [website, setWebsite] = useState('');
   const [status, setStatus] = useState('idle');
   const [message, setMessage] = useState('');
+  const [isMounted, setIsMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
     setIsVisible(!hasSignupCookie());
   }, []);
 
@@ -288,7 +293,7 @@ const CalendarSignup = () => {
     }
   };
 
-  return (
+  const signupContent = (
     <StickyWrapper>
       <AnimatePresence>
         {isVisible && (
@@ -363,6 +368,10 @@ const CalendarSignup = () => {
       </AnimatePresence>
     </StickyWrapper>
   );
+
+  if (!isMounted) return null;
+
+  return createPortal(signupContent, document.body);
 };
 
 export default CalendarSignup;

@@ -1,185 +1,93 @@
-# Payload CMS - Guide d'utilisation
+# Payload CMS - Notes Projet (La Brassée)
 
-## Architecture du projet
+## Stack
+- Next.js App Router (`next@15`)
+- Payload CMS (`payload@3.40.0`)
+- React 19
+- Styled-components + Framer Motion
+- Base de données PostgreSQL
 
-Ce projet utilise Payload CMS comme système de gestion de contenu avec une API REST automatiquement générée.
+## Commandes utiles
+- Dev: `pnpm run dev` (port `3001`)
+- Build: `pnpm run build`
+- Lint: `pnpm run lint`
+- Générer types Payload: `pnpm run generate:types`
+- Générer import map admin: `pnpm run generate:importmap`
 
-### Structure des collections :
-- **Users** : Gestion des utilisateurs administrateurs
-- **Media** : Stockage des fichiers (images, SVG, etc.)
-- **Events** : Événements avec catégorisation automatique
-- **EventGenres** : Genres d'événements avec mots-clés et icônes SVG
-- **MenuItems** : Éléments du menu du café
-- **BusinessInfo** : Informations globales de l'entreprise
+## Architecture
 
-## API REST Payload
+### API / CMS
+- Config centrale: `src/payload.config.ts`
+- Collections:
+  - `users`
+  - `media`
+  - `events`
+  - `event-genres`
+  - `menu-items`
+  - `calendar-subscribers`
+- Globals:
+  - `business-info`
+  - `facebook-config`
+  - `system-config`
 
-### URL de base
-- **Développement** : `http://localhost:3001/api`
-- **Production** : `${NEXT_PUBLIC_SERVER_URL}/api`
+### Frontend public
+- Routes: `src/app/(frontend)`
+- Composants: `src/frontend/components/*`
+- Chargement des données: `src/frontend/lib/payload-data.ts` (server-side avec `getPayload`)
 
-### Authentification
+Important:
+- Ne pas réintroduire un service client type `services/cms` / hooks `useCMS`.
+- Les données frontend doivent passer par `payload-data.ts` (SSR/SSG).
+- Pour tout élément `position: fixed` critique (barre sticky, modal, toast, overlay) sur mobile/Safari:
+  - utiliser un portal vers `document.body`
+  - ajouter la gestion safe area (`bottom: max(0px, env(safe-area-inset-bottom))` si ancré en bas)
+  - éviter de le laisser dans un contexte parent transformé/scrollable
 
-#### Se connecter
-```javascript
-const response = await fetch(`${API_URL}/api/users/login`, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    email: 'votre-email@example.com',
-    password: 'votre-mot-de-passe'
-  })
-})
+## Feature: barre d’inscription calendrier
 
-const { token } = await response.json()
-```
+### Backend
+- Endpoint: `POST /api/calendar-signup` (`src/app/api/calendar-signup/route.ts`)
+- Règles:
+  - Crée un abonné si email nouveau
+  - Retourne `Déjà inscrit!` si email existant
+  - Pose cookie `calendar_signup_subscribed=1`
 
-#### Utiliser le token
-```javascript
-const response = await fetch(`${API_URL}/api/collection-name`, {
-  headers: {
-    'Authorization': `JWT ${token}`,
-    'Content-Type': 'application/json',
-  }
-})
-```
+### Sécurité actuelle
+- Validation email
+- Gestion des doublons via contrainte unique + fallback
+- `origin` / `referer` check
+- Rate limit en mémoire (fenêtre glissante)
+- Honeypot anti-bot (`website`)
+- Cookie `secure` en production
 
-### Opérations CRUD
+### Frontend
+- Composant: `src/frontend/components/home/CalendarSignup.jsx`
+- Comportement:
+  - Si cookie présent: barre cachée
+  - Succès ou “déjà inscrit”: coche + message puis disparition barre
+  - Sur mobile, la barre est rendue via portal (`document.body`) pour rester fixée en bas
 
-#### Lire (GET)
-```javascript
-// Tous les documents
-const events = await fetch(`${API_URL}/api/events`)
+## Types Payload
+- Le fichier `src/payload-types.ts` est versionné dans git.
+- Après toute modification de collection/global:
+  1. `pnpm run generate:types`
+  2. commit de `src/payload-types.ts`
 
-// Un document par ID
-const event = await fetch(`${API_URL}/api/events/123`)
+## Variables d’environnement critiques
+- `NEXT_PUBLIC_SERVER_URL`
+- `DATABASE_URI`
+- `PAYLOAD_SECRET`
+- `BLOB_READ_WRITE_TOKEN`
 
-// Avec paramètres de requête
-const events = await fetch(`${API_URL}/api/events?limit=10&sort=-createdAt&populate=genre`)
-```
+## Problèmes fréquents
 
-#### Créer (POST)
-```javascript
-const newEvent = await fetch(`${API_URL}/api/events`, {
-  method: 'POST',
-  headers: {
-    'Authorization': `JWT ${token}`,
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    title: 'Nouveau concert',
-    date: '2024-12-25',
-    slug: 'nouveau-concert'
-  })
-})
-```
+### Mixed content média en prod
+Si la page HTTPS charge des URLs `http://localhost:3001/...`, vérifier:
+- `NEXT_PUBLIC_SERVER_URL` en prod
+- Normalisation des URLs dans `src/frontend/lib/payload-data.ts`
 
-#### Modifier (PATCH)
-```javascript
-const updatedEvent = await fetch(`${API_URL}/api/events/123`, {
-  method: 'PATCH',
-  headers: {
-    'Authorization': `JWT ${token}`,
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    title: 'Titre modifié'
-  })
-})
-```
+### Sharp module error
+Si erreur binaire `sharp`, réinstaller dépendances dans le bon runtime Node (`22.x`) et reconstruire.
 
-#### Supprimer (DELETE)
-```javascript
-await fetch(`${API_URL}/api/events/123`, {
-  method: 'DELETE',
-  headers: {
-    'Authorization': `JWT ${token}`,
-  }
-})
-```
-
-## Paramètres de requête utiles
-
-- **depth** : Populer les relations (`?depth=2`)
-- **limit** : Limiter le nombre de résultats (`?limit=10`)
-- **page** : Pagination (`?page=2`)
-- **sort** : Tri (`?sort=-createdAt` pour ordre décroissant)
-- **where** : Filtres avancés (`?where[status][equals]=published`)
-- **populate** : Spécifier les champs à populer (`?populate=genre,image`)
-
-## Erreurs fréquentes à éviter
-
-### ❌ Erreur : "You are not allowed to perform this action"
-**Cause** : Pas d'authentification ou permissions insuffisantes
-**Solution** : 
-```javascript
-// Toujours inclure le token JWT
-headers: {
-  'Authorization': `JWT ${token}`,
-}
-```
-
-### ❌ Erreur : Tentative d'import du config TypeScript depuis un script JS
-**Cause** : Les scripts Node.js ne peuvent pas importer directement des fichiers .ts
-**Solution** : Utiliser l'API REST au lieu de l'import direct
-
-### ❌ Erreur : Cannot find module lors de l'exécution de scripts
-**Cause** : Mauvais répertoire de travail
-**Solution** : 
-```bash
-# Toujours exécuter depuis la racine du projet
-cd /chemin/vers/labrassee.cafe
-node scripts/mon-script.js
-```
-
-### ❌ Erreur : Conversion de type enum vers integer
-**Cause** : Migration automatique de Payload qui ne peut pas convertir les enums
-**Solution** : 
-- Créer une migration manuelle avec `USING NULL`
-- Ou réinitialiser la base avec `PAYLOAD_DROP_DATABASE=true`
-
-### ❌ Erreur : RichText Slate vers Lexical
-**Cause** : Changement d'éditeur dans Payload
-**Solution** : 
-- Supprimer les champs `richText` problématiques
-- Ou migrer avec le script officiel Payload
-
-## Scripts utiles
-
-### Seed des genres d'événements
-```bash
-npm run seed:genres
-```
-
-### Reset complet de la base
-```bash
-PAYLOAD_DROP_DATABASE=true npm run dev
-```
-
-### Création de migration
-```bash
-cd apps/cms
-npx payload migrate:create nom-de-la-migration
-```
-
-## Bonnes pratiques
-
-1. **Toujours s'authentifier** avant d'utiliser l'API pour créer/modifier
-2. **Utiliser les relations** plutôt que des champs texte pour les références
-3. **Préfixer les slugs** de collections en kebab-case
-4. **Tester les scripts** sur une base de développement avant la production
-5. **Utiliser les hooks** pour automatiser les tâches (génération de slug, catégorisation)
-
-## Configuration spécifique au projet
-
-### Catégorisation automatique des événements
-Les événements sont automatiquement associés à un genre selon leur titre grâce au hook `beforeChange` qui :
-1. Compare le titre avec les mots-clés de chaque genre
-2. Assigne le premier genre qui correspond
-3. Laisse vide si aucune correspondance
-
-### Permissions
-- **Lecture** : Ouverte à tous (`read: () => true`)
-- **Écriture** : Réservée aux utilisateurs authentifiés (`create/update/delete: ({ req: { user } }) => !!user`)
+### Node version
+Le projet exige Node `22.x` (voir `package.json`).
