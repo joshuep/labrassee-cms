@@ -48,7 +48,7 @@ const Container = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: 24px;
+    gap: 16px;
   }
 `;
 
@@ -67,9 +67,9 @@ const TextContent = styled.div`
 `;
 
 const IconWrapper = styled.div`
+  display: none;
   width: 40px;
   height: 40px;
-  display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(247, 209, 53, 0.12);
@@ -79,6 +79,7 @@ const IconWrapper = styled.div`
   flex-shrink: 0;
 
   @media (min-width: 640px) {
+    display: flex;
     width: 44px;
     height: 44px;
     border-radius: 14px;
@@ -87,14 +88,18 @@ const IconWrapper = styled.div`
 `;
 
 const Title = styled.span`
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--color-white);
   letter-spacing: -0.01em;
   line-height: 1.3;
+  width: 100%;
+  text-align: center;
 
   @media (min-width: 640px) {
     font-size: 18px;
+    width: auto;
+    text-align: left;
   }
 `;
 
