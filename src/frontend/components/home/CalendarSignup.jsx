@@ -143,6 +143,7 @@ const SuccessMessage = styled(motion.div)`
 const CalendarSignup = () => {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState('idle');
+  const [isVisible, setIsVisible] = useState(true);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -153,59 +154,66 @@ const CalendarSignup = () => {
     setTimeout(() => {
       setStatus('success');
       setEmail('');
-      setTimeout(() => setStatus('idle'), 3000);
+      setTimeout(() => {
+        setIsVisible(false);
+      }, 1500);
     }, 800);
   };
 
   return (
     <StickyWrapper>
-      <SignupBar
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ type: 'spring', stiffness: 260, damping: 25, delay: 0.5 }}
-      >
-        <Container>
-          <TextContent>
-            <IconWrapper>
-              <i className="far fa-calendar-alt"></i>
-            </IconWrapper>
-            <Title>Reçois le calendrier des événements</Title>
-          </TextContent>
+      <AnimatePresence>
+        {isVisible && (
+          <SignupBar
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 120, opacity: 0, scale: 0.95 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 25, delay: 0.5 }}
+          >
+            <Container>
+              <TextContent>
+                <IconWrapper>
+                  <i className="far fa-calendar-alt"></i>
+                </IconWrapper>
+                <Title>Reçois le calendrier des événements</Title>
+              </TextContent>
 
-          <AnimatePresence mode="wait">
-            {status === 'success' ? (
-              <SuccessMessage
-                key="success"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-              >
-                <i className="fas fa-check-circle"></i>
-                Inscription confirmée!
-              </SuccessMessage>
-            ) : (
-              <Form key="form" onSubmit={handleSubmit}>
-                <EmailInput
-                  type="email"
-                  placeholder="Ton courriel"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  disabled={status === 'loading'}
-                />
-                <SubmitButton
-                  type="submit"
-                  disabled={status === 'loading'}
-                  whileTap={{ scale: 0.97 }}
-                  whileHover={{ scale: 1.02 }}
-                >
-                  {status === 'loading' ? 'Envoi...' : "S'inscrire"}
-                </SubmitButton>
-              </Form>
-            )}
-          </AnimatePresence>
-        </Container>
-      </SignupBar>
+              <AnimatePresence mode="wait">
+                {status === 'success' ? (
+                  <SuccessMessage
+                    key="success"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                  >
+                    <i className="fas fa-check-circle"></i>
+                    Inscription confirmée!
+                  </SuccessMessage>
+                ) : (
+                  <Form key="form" onSubmit={handleSubmit}>
+                    <EmailInput
+                      type="email"
+                      placeholder="Ton courriel"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      disabled={status === 'loading'}
+                    />
+                    <SubmitButton
+                      type="submit"
+                      disabled={status === 'loading'}
+                      whileTap={{ scale: 0.97 }}
+                      whileHover={{ scale: 1.02 }}
+                    >
+                      {status === 'loading' ? 'Envoi...' : "S'inscrire"}
+                    </SubmitButton>
+                  </Form>
+                )}
+              </AnimatePresence>
+            </Container>
+          </SignupBar>
+        )}
+      </AnimatePresence>
     </StickyWrapper>
   );
 };
