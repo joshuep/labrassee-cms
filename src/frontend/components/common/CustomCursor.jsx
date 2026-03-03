@@ -29,16 +29,38 @@ const CursorInner = styled(motion.div)`
 const CustomCursor = () => {
   const [cursorVariant, setCursorVariant] = useState('default');
   const [isVisible, setIsVisible] = useState(true);
+  const [isCursorEnabled, setIsCursorEnabled] = useState(false);
   
   const cursorX = useMotionValue(0);
   const cursorY = useMotionValue(0);
 
-  // Detecter si on est sur mobile
-  const isMobile = typeof window !== 'undefined' && 
-    (window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+  useEffect(() => {
+    const computeCursorEnabled = () => {
+      if (typeof window === 'undefined') return false;
+
+      const isSmallScreen = window.innerWidth <= 768;
+      const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+      const isTouchUserAgent = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      );
+
+      return !isSmallScreen && hasFinePointer && !isTouchUserAgent;
+    };
+
+    const handleViewportChange = () => {
+      setIsCursorEnabled(computeCursorEnabled());
+    };
+
+    handleViewportChange();
+    window.addEventListener('resize', handleViewportChange);
+
+    return () => {
+      window.removeEventListener('resize', handleViewportChange);
+    };
+  }, []);
 
   useEffect(() => {
-    if (isMobile) return;
+    if (!isCursorEnabled) return;
 
     const moveCursor = (e) => {
       cursorX.set(e.clientX - 10);
@@ -116,7 +138,7 @@ const CustomCursor = () => {
       document.removeEventListener('touchmove', moveOnDrag);
       observer.disconnect();
     };
-  }, [cursorX, cursorY, isMobile]);
+  }, [cursorX, cursorY, isCursorEnabled]);
 
   // Variants pour différents états
   const variants = {
@@ -142,8 +164,7 @@ const CustomCursor = () => {
     }
   };
 
-  // Ne pas rendre sur mobile
-  if (isMobile) return null;
+  if (!isCursorEnabled) return null;
 
   return (
     <CursorContainer
