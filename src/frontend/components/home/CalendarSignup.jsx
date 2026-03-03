@@ -154,6 +154,7 @@ const SubmitButton = styled(motion.button)`
   border-radius: 12px;
   cursor: pointer;
   transition: background 0.2s ease;
+  flex-shrink: 0;
 
   &:hover {
     background: rgba(247, 209, 53, 0.85);
@@ -165,28 +166,10 @@ const SubmitButton = styled(motion.button)`
   }
 
   @media (min-width: 768px) {
-    width: auto;
-    height: auto;
-    padding: 14px 24px;
-    font-size: 15px;
-    font-weight: 600;
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
     border-radius: 14px;
-  }
-`;
-
-const ButtonText = styled.span`
-  display: none;
-
-  @media (min-width: 768px) {
-    display: inline;
-  }
-`;
-
-const ButtonIcon = styled.span`
-  display: inline;
-
-  @media (min-width: 768px) {
-    display: none;
   }
 `;
 
@@ -269,12 +252,7 @@ const CalendarSignup = () => {
                       whileTap={{ scale: 0.97 }}
                       whileHover={{ scale: 1.02 }}
                     >
-                      <ButtonIcon>
-                        <i className={status === 'loading' ? 'fas fa-spinner fa-spin' : 'fas fa-paper-plane'}></i>
-                      </ButtonIcon>
-                      <ButtonText>
-                        {status === 'loading' ? 'Envoi...' : "S'inscrire"}
-                      </ButtonText>
+                      <i className={status === 'loading' ? 'fas fa-spinner fa-spin' : 'fas fa-paper-plane'}></i>
                     </SubmitButton>
                   </Form>
                 )}
