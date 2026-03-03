@@ -89,7 +89,7 @@ const IconWrapper = styled.div`
 
 const Title = styled.span`
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 300;
   color: var(--color-white);
   letter-spacing: -0.01em;
   line-height: 1.3;
