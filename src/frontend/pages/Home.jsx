@@ -13,9 +13,9 @@ const Home = ({ events = [] }) => {
   return (
     <div style={{ width: '100%', background: 'var(--color-dark)' }}>
       <Hero />
-      <CalendarSignup />
       <EventsCarousel events={events} />
       <Testimonials />
+      <CalendarSignup />
     </div>
   );
 };
