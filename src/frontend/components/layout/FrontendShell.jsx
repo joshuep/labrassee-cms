@@ -5,6 +5,7 @@ import React from 'react'
 import { useLenis } from '../../hooks/useLenis'
 import { useResetLenis } from '../../hooks/useResetLenis'
 import CustomCursor from '../common/CustomCursor'
+import LoadingScreen from '../common/LoadingScreen'
 import Footer from './Footer'
 import Header from './Header'
 
@@ -14,6 +15,7 @@ const FrontendShell = ({ businessInfo, children }) => {
 
   return (
     <>
+      <LoadingScreen minDuration={1000} />
       <CustomCursor />
       <Header businessInfo={businessInfo} />
       <main style={{ minHeight: '100vh', paddingTop: '0', position: 'relative' }}>{children}</main>

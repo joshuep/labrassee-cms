@@ -13,6 +13,7 @@ import { Media } from './collections/Media'
 import { Events } from './collections/Events'
 import { EventGenres } from './collections/EventGenres'
 import { MenuItems } from './collections/MenuItems'
+import { CalendarSubscribers } from './collections/CalendarSubscribers'
 import { BusinessInfo } from './collections/BusinessInfo'
 import { FacebookConfig } from './collections/FacebookConfig'
 import { SystemConfig } from './collections/SystemConfig'
@@ -48,7 +49,7 @@ export default buildConfig({
         ...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : []),
         ...(process.env.VERCEL_BRANCH_URL ? [`https://${process.env.VERCEL_BRANCH_URL}`] : [])
       ].filter(Boolean),
-  collections: [Users, Media, Events, EventGenres, MenuItems],
+  collections: [Users, Media, Events, EventGenres, MenuItems, CalendarSubscribers],
   globals: [BusinessInfo, FacebookConfig, SystemConfig],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

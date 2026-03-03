@@ -70,7 +70,8 @@ const HoursRow = styled(motion.div)`
   }
   
   @media (max-width: 480px) {
-    padding: 15px 0;
+    padding: 12px 0;
+    gap: 8px;
   }
 `;
 
@@ -88,8 +89,9 @@ const DayText = styled.span`
   }
   
   @media (max-width: 480px) {
-    font-size: 22px;
-    min-width: 180px;
+    font-size: 18px;
+    min-width: 120px;
+    flex: 1;
   }
 `;
 
@@ -98,10 +100,11 @@ const TimeBlock = styled.div`
   align-items: center;
   gap: 25px;
   flex: 1;
-  justify-content: center;
+  justify-content: flex-end;
   
   @media (max-width: 480px) {
-    gap: 15px;
+    gap: 8px;
+    flex: none;
   }
 `;
 
@@ -118,8 +121,8 @@ const TimeText = styled.span`
   }
   
   @media (max-width: 480px) {
-    font-size: 22px;
-    min-width: 60px;
+    font-size: 20px;
+    min-width: 45px;
   }
 `;
 
@@ -130,7 +133,7 @@ const TimeDivider = styled.div`
   opacity: 0.6;
   
   @media (max-width: 480px) {
-    width: 20px;
+    width: 12px;
   }
 `;
 
@@ -148,7 +151,7 @@ const BusinessHours = ({ businessInfo }) => {
         <HoursTitle>HORAIRE</HoursTitle>
         <Divider />
       </HoursHeader>
-      
+
       {hoursData.map((schedule, index) => (
         <HoursRow
           key={schedule.day}
@@ -164,7 +167,7 @@ const BusinessHours = ({ businessInfo }) => {
           </TimeBlock>
         </HoursRow>
       ))}
-      
+
     </HoursContainer>
   );
 };

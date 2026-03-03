@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Hero from '../components/home/Hero';
+import CalendarSignup from '../components/home/CalendarSignup';
 import EventsCarousel from '../components/home/EventsCarousel';
 import Testimonials from '../components/home/Testimonials';
 
@@ -14,6 +15,7 @@ const Home = ({ events = [] }) => {
       <Hero />
       <EventsCarousel events={events} />
       <Testimonials />
+      <CalendarSignup />
     </div>
   );
 };
