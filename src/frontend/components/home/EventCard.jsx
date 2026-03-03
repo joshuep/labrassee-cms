@@ -46,6 +46,31 @@ const TextOverlay = styled.div`
   gap: 5px;
 `;
 
+const DayBadge = styled.div`
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--color-brand);
+  color: var(--color-dark);
+  font-size: 12px;
+  font-weight: 300;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+
+  strong {
+    font-weight: 700;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 10px;
+    padding: 5px 10px;
+  }
+`;
+
 const EventTitle = styled.h3`
   font-size: 16px;
   font-weight: bold;
@@ -71,8 +96,8 @@ const EventDate = styled.p`
 
 const EventCard = ({ event, index }) => {
   const cardVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       y: 30,
       scale: 0.95
     },
@@ -116,6 +141,36 @@ const EventCard = ({ event, index }) => {
     return formattedDate;
   };
 
+  // Fonction pour obtenir le badge du jour si l'événement est cette semaine
+  const getDayBadge = (dateString) => {
+    const eventDate = new Date(dateString);
+    const today = new Date();
+
+    // Mettre les heures à 0 pour comparer seulement les dates
+    eventDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    // Calculer le début et la fin de la semaine en cours (lundi à dimanche)
+    const dayOfWeek = today.getDay();
+    const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() + mondayOffset);
+
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+    // Vérifier si l'événement est dans la semaine en cours
+    if (eventDate >= startOfWeek && eventDate <= endOfWeek) {
+      const days = ['DIMANCHE', 'LUNDI', 'MARDI', 'MERCREDI', 'JEUDI', 'VENDREDI', 'SAMEDI'];
+      const eventDayIndex = eventDate.getDay();
+      return { prefix: 'CE', day: days[eventDayIndex] };
+    }
+
+    return null;
+  };
+
+  const dayBadge = getDayBadge(event.date);
+
   return (
     <CardWrapper
       href={formatUrl(event.facebookLink)}
@@ -126,13 +181,16 @@ const EventCard = ({ event, index }) => {
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
-      <EventImage 
-        src={event.image} 
+      <EventImage
+        src={event.image}
         alt={event.title}
         loading="eager"
         decoding="async"
       />
-      
+
+      {/* Badge du jour pour les événements de la semaine en cours */}
+      {dayBadge && <DayBadge>{dayBadge.prefix} <strong>{dayBadge.day}</strong></DayBadge>}
+
       {/* Afficher le texte overlay sur toutes les affiches */}
       <TextOverlay>
         <EventTitle>{event.title}</EventTitle>
