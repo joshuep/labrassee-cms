@@ -77,14 +77,14 @@ export const businessInfo = {
   },
   contact: {
     general: 'envrac@labrassee.com',
-    artists: 'surlascene@labrassee.com',
-    exhibitions: 'surnosmurs@labrassee.com'
+    artists: 'Messenger FB La Brassée',
+    exhibitions: 'Messenger FB La Brassée'
   },
   hours: {
-    'lundi': { open: '9h00', close: '22h00' },
-    'mardi-mercredi': { open: '9h00', close: '19h00' },
-    'jeudi-vendredi-samedi': { open: '9h00', close: '22h00' },
-    'dimanche': { open: '9h00', close: '19h00' }
+    'lundi': { open: '9h00', close: '21h30' },
+    'mardi-mercredi': { open: '9h00', close: '21h30' },
+    'jeudi-vendredi-samedi': { open: '9h00', close: '21h30' },
+    'dimanche': { open: '9h00', close: '21h30' }
   },
   message: "CHERCHE PAS NOTRE NUMÉRO DE TÉLÉPHONE. ON PRÉFÈRE TE RÉPONDRE SUR LES RÉSEAUX SOCIAUX!"
 };

@@ -96,11 +96,13 @@ export interface Config {
     'business-info': BusinessInfo;
     'facebook-config': FacebookConfig;
     'system-config': SystemConfig;
+    'calendar-newsletter': CalendarNewsletter;
   };
   globalsSelect: {
     'business-info': BusinessInfoSelect<false> | BusinessInfoSelect<true>;
     'facebook-config': FacebookConfigSelect<false> | FacebookConfigSelect<true>;
     'system-config': SystemConfigSelect<false> | SystemConfigSelect<true>;
+    'calendar-newsletter': CalendarNewsletterSelect<false> | CalendarNewsletterSelect<true>;
   };
   locale: null;
   user: User & {
@@ -636,11 +638,11 @@ export interface BusinessInfo {
      */
     general: string;
     /**
-     * Email pour les artistes
+     * Contact pour les artistes
      */
     artists?: string | null;
     /**
-     * Email pour les expositions
+     * Contact pour les expositions
      */
     exhibitions?: string | null;
   };
@@ -750,6 +752,43 @@ export interface SystemConfig {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "calendar-newsletter".
+ */
+export interface CalendarNewsletter {
+  id: number;
+  /**
+   * Créer un client OAuth Web dans Google Cloud Console, puis autoriser cette URL de redirection: http://localhost:3001/api/calendar-newsletter/google/callback
+   */
+  googleClientId: string;
+  /**
+   * Enregistrer la globale, puis cliquer sur le bouton de connexion plus bas pour autoriser Google Calendar.
+   */
+  googleClientSecret: string;
+  /**
+   * Obligatoire si le calendrier n’est pas le principal. Exemple: abc123@group.calendar.google.com
+   */
+  googleCalendarId: string;
+  googleConnectedEmail?: string | null;
+  googleTokenUpdatedAt?: string | null;
+  googleRefreshTokenEncrypted?: string | null;
+  fromName: string;
+  /**
+   * Doit être une adresse expéditrice vérifiée chez Resend. La clé API Resend reste en variable d’environnement.
+   */
+  fromEmail: string;
+  replyToEmail?: string | null;
+  defaultSubject: string;
+  introMessage?: string | null;
+  lastTestSentAt?: string | null;
+  lastCampaignSentAt?: string | null;
+  lastCampaignRecipientCount?: number | null;
+  lastCampaignRangeStart?: string | null;
+  lastCampaignRangeEnd?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "business-info_select".
  */
 export interface BusinessInfoSelect<T extends boolean = true> {
@@ -843,6 +882,31 @@ export interface SystemConfigSelect<T extends boolean = true> {
         totalGenres?: T;
         totalMedia?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "calendar-newsletter_select".
+ */
+export interface CalendarNewsletterSelect<T extends boolean = true> {
+  googleClientId?: T;
+  googleClientSecret?: T;
+  googleCalendarId?: T;
+  googleConnectedEmail?: T;
+  googleTokenUpdatedAt?: T;
+  googleRefreshTokenEncrypted?: T;
+  fromName?: T;
+  fromEmail?: T;
+  replyToEmail?: T;
+  defaultSubject?: T;
+  introMessage?: T;
+  lastTestSentAt?: T;
+  lastCampaignSentAt?: T;
+  lastCampaignRecipientCount?: T;
+  lastCampaignRangeStart?: T;
+  lastCampaignRangeEnd?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

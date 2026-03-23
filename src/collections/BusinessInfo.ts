@@ -114,18 +114,18 @@ export const BusinessInfo: GlobalConfig = {
         },
         {
           name: 'artists',
-          type: 'email',
-          defaultValue: 'surlascene@labrassee.com',
+          type: 'text',
+          defaultValue: 'Messenger FB La Brassée',
           admin: {
-            description: 'Email pour les artistes',
+            description: 'Contact pour les artistes',
           },
         },
         {
           name: 'exhibitions',
-          type: 'email',
-          defaultValue: 'surnosmurs@labrassee.com',
+          type: 'text',
+          defaultValue: 'Messenger FB La Brassée',
           admin: {
-            description: 'Email pour les expositions',
+            description: 'Contact pour les expositions',
           },
         },
       ],
@@ -178,7 +178,7 @@ export const BusinessInfo: GlobalConfig = {
               name: 'close',
               type: 'text',
               required: true,
-              defaultValue: '22H',
+              defaultValue: '21H30',
               admin: {
                 description: 'Heure de fermeture',
               },
@@ -203,7 +203,7 @@ export const BusinessInfo: GlobalConfig = {
               name: 'close',
               type: 'text',
               required: true,
-              defaultValue: '20H',
+              defaultValue: '21H30',
               admin: {
                 description: 'Heure de fermeture',
               },

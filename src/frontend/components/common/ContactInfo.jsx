@@ -136,6 +136,7 @@ const ContactEmail = styled.a`
 
 const ContactInfo = ({ businessInfo }) => {
   const source = businessInfo || fallbackBusinessInfo;
+  const isEmail = (value) => typeof value === 'string' && value.includes('@');
 
   const contactData = [
     {
@@ -170,9 +171,15 @@ const ContactInfo = ({ businessInfo }) => {
           transition={{ delay: index * 0.02, duration: 0.2 }}
         >
           <ContactLabel>{contact.label}</ContactLabel>
-          <ContactEmail href={`mailto:${contact.email}`}>
-            {contact.email}
-          </ContactEmail>
+          {isEmail(contact.email) ? (
+            <ContactEmail href={`mailto:${contact.email}`}>
+              {contact.email}
+            </ContactEmail>
+          ) : (
+            <ContactEmail as="span">
+              {contact.email}
+            </ContactEmail>
+          )}
         </ContactRow>
       ))}
       

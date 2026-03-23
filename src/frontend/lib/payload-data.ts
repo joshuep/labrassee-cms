@@ -127,7 +127,7 @@ const formatMenuItem = (item: MenuItem): FrontendMenuItem => ({
 
 const businessHours: FrontendBusinessInfo['hours'] = {
   lundi: {
-    close: '22h00',
+    close: '21h30',
     open: '9h00',
   },
   'mardi-mercredi': {
@@ -135,7 +135,7 @@ const businessHours: FrontendBusinessInfo['hours'] = {
     open: '9h00',
   },
   'jeudi-vendredi-samedi': {
-    close: '22h00',
+    close: '21h30',
     open: '9h00',
   },
   dimanche: {

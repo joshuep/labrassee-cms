@@ -17,6 +17,7 @@ import { CalendarSubscribers } from './collections/CalendarSubscribers'
 import { BusinessInfo } from './collections/BusinessInfo'
 import { FacebookConfig } from './collections/FacebookConfig'
 import { SystemConfig } from './collections/SystemConfig'
+import { CalendarNewsletter } from './globals/CalendarNewsletter'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -50,7 +51,7 @@ export default buildConfig({
         ...(process.env.VERCEL_BRANCH_URL ? [`https://${process.env.VERCEL_BRANCH_URL}`] : [])
       ].filter(Boolean),
   collections: [Users, Media, Events, EventGenres, MenuItems, CalendarSubscribers],
-  globals: [BusinessInfo, FacebookConfig, SystemConfig],
+  globals: [BusinessInfo, FacebookConfig, SystemConfig, CalendarNewsletter],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
