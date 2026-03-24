@@ -24,20 +24,34 @@ const CarouselContainer = styled.div`
   margin: 0 auto;
 `;
 
-const NavigationButton = styled.div`
-  position: absolute;
-  top: 40%;
-  transform: translateY(-50%);
+const NavigationControls = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+
+  @media (max-width: 768px) {
+    margin-top: 16px;
+  }
+`;
+
+const NavigationButton = styled.button`
+  appearance: none;
+  border: none;
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  margin-top: 0;
   color: var(--color-brand);
   font-size: 16px;
-  z-index: 10;
   transition: all 0.3s ease;
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 999px;
   background: rgba(247, 209, 53, 0.1);
   border: 1px solid rgba(247, 209, 53, 0.3);
   backdrop-filter: blur(8px);
@@ -46,15 +60,7 @@ const NavigationButton = styled.div`
   &:hover {
     background: rgba(247, 209, 53, 0.2);
     border-color: rgba(247, 209, 53, 0.5);
-    transform: translateY(-50%) scale(1.05);
-  }
-  
-  &.swiper-button-prev {
-    left: 10px;
-  }
-  
-  &.swiper-button-next {
-    right: 10px;
+    transform: scale(1.05);
   }
   
   &.swiper-button-disabled {
@@ -67,8 +73,13 @@ const NavigationButton = styled.div`
     display: none;
   }
 
-  @media (max-width: 768px) {
-    display: none;
+  &.swiper-button-prev,
+  &.swiper-button-next {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    margin-top: 0;
   }
 `;
 
@@ -160,6 +171,24 @@ const EventsCarousel = ({ events = [] }) => {
                 </SwiperSlide>
               ))}
             </StyledSwiper>
+
+            <NavigationControls>
+              <NavigationButton
+                type="button"
+                className="swiper-button-prev cursor-hover"
+                aria-label="Événement précédent"
+              >
+                <i className="fas fa-chevron-left"></i>
+              </NavigationButton>
+
+              <NavigationButton
+                type="button"
+                className="swiper-button-next cursor-hover"
+                aria-label="Événement suivant"
+              >
+                <i className="fas fa-chevron-right"></i>
+              </NavigationButton>
+            </NavigationControls>
           </motion.div>
         ) : (
           <div style={{ textAlign: 'center', padding: '50px', color: 'var(--color-accent)' }}>
@@ -179,14 +208,6 @@ const EventsCarousel = ({ events = [] }) => {
             Clique sur une affiche pour accéder à l'événement Facebook!
           </InfoText>
         </InfoBlock>
-
-        <NavigationButton className="swiper-button-prev cursor-hover">
-          <i className="fas fa-chevron-left"></i>
-        </NavigationButton>
-        
-        <NavigationButton className="swiper-button-next cursor-hover">
-          <i className="fas fa-chevron-right"></i>
-        </NavigationButton>
       </CarouselContainer>
     </CarouselSection>
   );
