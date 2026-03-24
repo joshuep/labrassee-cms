@@ -31,7 +31,7 @@ const Eyebrow = styled.p`
 `;
 
 const Heading = styled.h1`
-  max-width: 10ch;
+  max-width: 12ch;
   margin-bottom: 1rem;
   color: var(--color-white);
   font-size: clamp(3rem, 12vw, 6.5rem);
@@ -281,8 +281,7 @@ const CalendarUnsubscribe = () => {
         <Eyebrow>Calendrier mensuel</Eyebrow>
         <Heading>Se désabonner</Heading>
         <Intro>
-          Entre le courriel utilisé pour recevoir le calendrier mensuel des événements. On le retirera
-          immédiatement de la liste d’envoi.
+          Entre le courriel que tu avais utilisé pour t'abonner.
         </Intro>
 
         <Card
@@ -294,12 +293,12 @@ const CalendarUnsubscribe = () => {
             <IconBadge>
               <i className="far fa-envelope-open"></i>
             </IconBadge>
-            <CardTitle>Désabonnement du calendrier</CardTitle>
+            <CardTitle>Je ne veux plus recevoir de courriels de la part de La Brassée.</CardTitle>
           </CardHeader>
 
           <CardText>
-            Si cette adresse est inscrite, elle sera supprimée de la collection Payload et ne recevra
-            plus le courriel mensuel.
+            Nous retirerons ton adresse courriel de la liste des abonné(e)s au calendrier mensuel des événements.
+            Tu ne recevras plus de courriels de notre part.
           </CardText>
 
           <Form onSubmit={handleSubmit}>
