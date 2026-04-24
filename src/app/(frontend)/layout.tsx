@@ -20,6 +20,7 @@ export default async function FrontendLayout(props: { children: React.ReactNode 
       <head>
         <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
         <link href="/images/brand/full_logo_white.svg" rel="icon" type="image/svg+xml" />
+        <link rel="stylesheet" href="https://use.typekit.net/ovt4lgv.css" />
         <link
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
           rel="stylesheet"
