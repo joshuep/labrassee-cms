@@ -4,6 +4,7 @@ import { cache } from 'react'
 
 import { getUpcomingEvents as getFallbackUpcomingEvents } from '@/frontend/data/events'
 import { businessInfo as fallbackBusinessInfo, menuCategories as fallbackMenuItems } from '@/frontend/data/menu'
+import { getUpcomingSurlasceneEvents } from '@/frontend/lib/surlascene-data'
 import type { BusinessInfo, Event, Media, MenuItem } from '@/payload-types'
 
 export type FrontendEvent = {
@@ -15,6 +16,29 @@ export type FrontendEvent = {
   image: string | null
   time?: string | null
   title: string
+  // --- Extensions Surlascène (présentes seulement pour les events lus depuis
+  // la BD Supabase Surlascène, ignorées par les cards Payload events) ---
+  surlasceneSource?: 'surlascene'
+  surlasceneShowId?: string
+  surlasceneType?: string
+  surlascenePosterPhoto?: string | null
+  surlasceneArtiste?: {
+    id: string
+    nom_artiste: string
+    genre: string | null
+    bio: string | null
+    permanence: boolean
+    recurrence_notes: string | null
+    heure_debut_speciale: string | null
+    site_web: string | null
+    instagram: string | null
+    spotify_url: string | null
+    bandcamp_url: string | null
+    soundcloud_url: string | null
+    youtube_url: string | null
+    photo_artiste_path: string | null
+    photos_hd_paths: string[] | null
+  } | null
 }
 
 export type FrontendMenuItem = {
@@ -210,6 +234,30 @@ export const getUpcomingEventsData = cache(async (limit = 50): Promise<FrontendE
     }))
   }
 })
+
+/**
+ * Récupère la liste complète d'événements à venir : Payload events + concerts Surlascène.
+ * Les deux sources sont fusionnées et triées par date croissante.
+ *
+ * - Les events Payload restent la source pour les soirées-événement avec affiche officielle
+ *   (concerts argentins, vernissages, conférences, etc.) saisies manuellement par Joshué.
+ * - Les concerts Surlascène viennent du calendrier Apple « La brassée » de Cédric
+ *   (sync auto toutes les 2h) — programmation hebdomadaire (Bluegrass mardi, Jazz Manouche
+ *   jeudi, Karaoké vendredi, etc.) + artistes invités.
+ *
+ * Zéro duplication côté Payload : pas de double saisie pour Cédric.
+ */
+export const getMergedUpcomingEvents = cache(
+  async (limit = 50): Promise<FrontendEvent[]> => {
+    const [payloadEvents, surlasceneEvents] = await Promise.all([
+      getUpcomingEventsData(limit),
+      getUpcomingSurlasceneEvents(limit),
+    ])
+    const all = [...payloadEvents, ...surlasceneEvents]
+    all.sort((a, b) => a.date.localeCompare(b.date))
+    return all.slice(0, limit)
+  },
+)
 
 export const getMenuItemsData = cache(async (): Promise<FrontendMenuItem[]> => {
   try {

@@ -65,18 +65,34 @@ const Tagline = styled(motion.span)`
   }
 `;
 
+const NavGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  @media (max-width: 480px) {
+    gap: 12px;
+  }
+`;
+
 const MenuLink = styled(Link)`
   color: var(--color-brand);
   font-size: 30px;
   text-decoration: none;
   transition: all 0.3s ease;
-  
+  white-space: nowrap;
+
   &:hover {
     transform: translateX(5px);
   }
-  
+
+  @media (max-width: 960px) {
+    font-size: 24px;
+  }
+
   @media (max-width: 480px) {
     margin-left: 0;
+    font-size: 18px;
   }
 `;
 
@@ -140,20 +156,36 @@ const Header = ({ businessInfo: providedBusinessInfo }) => {
           }
         }} />
 
-        <MenuLink
-          href="/menu"
-          className="cursor-menu"
-          onClick={(e) => {
-            if (pathname === '/menu') {
-              e.preventDefault();
-            }
-          }}
-          style={{
-            pointerEvents: pathname === '/menu' ? 'none' : 'auto'
-          }}
-        >
-          LE MENU
-        </MenuLink>
+        <NavGroup>
+          <MenuLink
+            href="/proposer"
+            className="cursor-menu"
+            onClick={(e) => {
+              if (pathname === '/proposer') {
+                e.preventDefault();
+              }
+            }}
+            style={{
+              pointerEvents: pathname === '/proposer' ? 'none' : 'auto',
+            }}
+          >
+            ARTISTES
+          </MenuLink>
+          <MenuLink
+            href="/menu"
+            className="cursor-menu"
+            onClick={(e) => {
+              if (pathname === '/menu') {
+                e.preventDefault();
+              }
+            }}
+            style={{
+              pointerEvents: pathname === '/menu' ? 'none' : 'auto'
+            }}
+          >
+            LE MENU
+          </MenuLink>
+        </NavGroup>
       </HeaderContainer>
     </HeaderSection>
   );

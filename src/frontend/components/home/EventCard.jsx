@@ -26,11 +26,121 @@ const EventImage = styled.img`
   display: block;
   background-color: var(--color-dark-alt);
   transition: opacity 0.2s ease-in-out;
-  
+
   &:not([src]),
   &[src=""] {
     opacity: 0.5;
   }
+`;
+
+/* Poster auto-généré pour les events Surlascène sans affiche officielle :
+   fond sombre avec gradient jaune Maïa + photo artiste (si dispo) en arrière-plan
+   atténué + texte overlay tagué "SUR LA SCÈNE" */
+const SurlascenePoster = styled.div`
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-color: #100f09;
+  background-image:
+    radial-gradient(ellipse at 30% 10%, rgba(247, 209, 53, 0.18), transparent 55%),
+    radial-gradient(ellipse at 70% 90%, rgba(247, 209, 53, 0.08), transparent 50%),
+    linear-gradient(180deg, #100f09 0%, #1f1c0f 100%);
+  overflow: hidden;
+
+  ${props => props.$bgPhoto && `
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url('${props.$bgPhoto}');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.45;
+      filter: saturate(110%) contrast(105%);
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(16,15,9,0.3) 0%, rgba(16,15,9,0.85) 70%, rgba(16,15,9,0.95) 100%);
+    }
+  `}
+`;
+
+const SurlasceneInner = styled.div`
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 18px 18px;
+  text-align: left;
+`;
+
+const SurlasceneBadge = styled.div`
+  align-self: flex-start;
+  background: rgba(247, 209, 53, 0.15);
+  border: 1px solid rgba(247, 209, 53, 0.4);
+  color: var(--color-brand);
+  font-family: var(--font-din);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 10px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+`;
+
+const SurlasceneTitre = styled.div`
+  font-family: var(--font-din);
+  color: #ffffff;
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 200;
+  line-height: 1;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+
+  @media (max-width: 768px) {
+    font-size: 24px;
+  }
+`;
+
+const SurlasceneGenre = styled.div`
+  font-family: var(--font-din);
+  color: rgba(205, 196, 157, 0.85);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 11px;
+  margin-bottom: 12px;
+`;
+
+const SurlasceneMeta = styled.div`
+  font-family: var(--font-din);
+  color: var(--color-brand);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 13px;
+  font-weight: 500;
+`;
+
+const SurlascenePerm = styled.div`
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  background: var(--color-brand);
+  color: var(--color-dark);
+  font-family: var(--font-din);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 5px 9px;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 `;
 
 const TextOverlay = styled.div`
@@ -170,32 +280,67 @@ const EventCard = ({ event, index }) => {
   };
 
   const dayBadge = getDayBadge(event.date);
+  const isSurlascene = event.surlasceneSource === 'surlascene';
+  const artiste = event.surlasceneArtiste || null;
+
+  // Détermine où va le clic et si on ouvre en nouvel onglet :
+  // 1. event.facebookLink présent → onglet FB (comportement actuel)
+  // 2. Surlascène sans FB → page publique détaillée (surlascene-publique.vercel.app)
+  // 3. Rien → ancre #agenda
+  const linkHref = event.facebookLink
+    ? formatUrl(event.facebookLink)
+    : isSurlascene
+      ? `https://labrassee-surlascene-publique.vercel.app/#agenda`
+      : '#';
+  const linkTarget = event.facebookLink || isSurlascene ? '_blank' : undefined;
 
   return (
     <CardWrapper
-      href={formatUrl(event.facebookLink)}
-      target="_blank"
-      rel="noopener noreferrer"
+      href={linkHref}
+      target={linkTarget}
+      rel={linkTarget ? 'noopener noreferrer' : undefined}
       className="cursor-event"
       variants={cardVariants}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
-      <EventImage
-        src={event.image}
-        alt={event.title}
-        loading="eager"
-        decoding="async"
-      />
+      {event.image ? (
+        <EventImage
+          src={event.image}
+          alt={event.title}
+          loading="eager"
+          decoding="async"
+        />
+      ) : isSurlascene ? (
+        <SurlascenePoster $bgPhoto={event.surlascenePosterPhoto || null}>
+          {artiste && artiste.permanence && (
+            <SurlascenePerm title={artiste.recurrence_notes || ''}>⭐ Permanence</SurlascenePerm>
+          )}
+          <SurlasceneInner>
+            <SurlasceneBadge>Sur la scène</SurlasceneBadge>
+            <div>
+              <SurlasceneTitre>{event.title}</SurlasceneTitre>
+              {artiste?.genre && <SurlasceneGenre>{artiste.genre}</SurlasceneGenre>}
+              <SurlasceneMeta>
+                {formatDateTime(event.date, event.time)}
+              </SurlasceneMeta>
+            </div>
+          </SurlasceneInner>
+        </SurlascenePoster>
+      ) : (
+        <EventImage src={event.image} alt={event.title} loading="eager" decoding="async" />
+      )}
 
       {/* Badge du jour pour les événements de la semaine en cours */}
       {dayBadge && <DayBadge>{dayBadge.prefix} <strong>{dayBadge.day}</strong></DayBadge>}
 
-      {/* Afficher le texte overlay sur toutes les affiches */}
-      <TextOverlay>
-        <EventTitle>{event.title}</EventTitle>
-        <EventDate>{formatDateTime(event.date, event.time)}</EventDate>
-      </TextOverlay>
+      {/* Overlay texte uniquement si on a une image (sinon le poster Surlascène gère son propre texte) */}
+      {event.image && (
+        <TextOverlay>
+          <EventTitle>{event.title}</EventTitle>
+          <EventDate>{formatDateTime(event.date, event.time)}</EventDate>
+        </TextOverlay>
+      )}
     </CardWrapper>
   );
 };
