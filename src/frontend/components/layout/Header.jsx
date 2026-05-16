@@ -158,6 +158,20 @@ const Header = ({ businessInfo: providedBusinessInfo }) => {
 
         <NavGroup>
           <MenuLink
+            href="/scene"
+            className="cursor-menu"
+            onClick={(e) => {
+              if (pathname === '/scene') {
+                e.preventDefault();
+              }
+            }}
+            style={{
+              pointerEvents: pathname === '/scene' ? 'none' : 'auto',
+            }}
+          >
+            LA SCÈNE
+          </MenuLink>
+          <MenuLink
             href="/proposer"
             className="cursor-menu"
             onClick={(e) => {

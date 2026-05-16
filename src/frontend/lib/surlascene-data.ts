@@ -129,3 +129,97 @@ export const getUpcomingSurlasceneEvents = cache(
     return rows.map(concertToEvent)
   },
 )
+
+/**
+ * Récupère les concerts à venir au format "détaillé" (pour la page riche /scene
+ * avec modal artiste, galeries de photos, etc.). Inclut tous les champs artistes
+ * + heure_soundcheck + photos_hd_paths complets.
+ */
+export type SurlasceneShowDetail = {
+  id: string
+  date_show: string
+  heure_debut: string | null
+  heure_fin: string | null
+  heure_soundcheck: string | null
+  type_show: string
+  titre_show: string | null
+  description_publique: string | null
+  statut: string
+  artiste: SurlasceneArtiste | null
+}
+
+type RawConcertDetailRow = {
+  id: string
+  date_show: string
+  heure_debut: string | null
+  heure_fin: string | null
+  heure_soundcheck: string | null
+  type_show: string
+  titre_show: string | null
+  description_publique: string | null
+  statut: string
+  concerts_artistes?: Array<{ ordre: number; artistes_scene: SurlasceneArtiste }>
+}
+
+export const getUpcomingShowDetails = cache(
+  async (limit = 40): Promise<SurlasceneShowDetail[]> => {
+    const today = new Date().toISOString().slice(0, 10)
+    const select = encodeURIComponent(
+      '*,concerts_artistes(ordre,artistes_scene(id,nom_artiste,genre,bio,permanence,recurrence_notes,heure_debut_speciale,site_web,instagram,facebook,spotify_url,bandcamp_url,soundcloud_url,youtube_url,vimeo_url,photo_artiste_path,photos_hd_paths,duree_set_minutes,nb_personnes_scene))',
+    )
+    const path =
+      `/rest/v1/concerts?select=${select}&date_show=gte.${today}` +
+      `&statut=in.(planifie,confirme)&order=date_show.asc&limit=${limit}`
+    const rows = await supaFetch<RawConcertDetailRow[]>(path)
+    if (!rows) return []
+    return rows.map((r) => {
+      const arts = (r.concerts_artistes || []).slice().sort((a, b) => a.ordre - b.ordre)
+      return {
+        id: r.id,
+        date_show: r.date_show,
+        heure_debut: r.heure_debut,
+        heure_fin: r.heure_fin,
+        heure_soundcheck: r.heure_soundcheck,
+        type_show: r.type_show,
+        titre_show: r.titre_show,
+        description_publique: r.description_publique,
+        statut: r.statut,
+        artiste: arts[0]?.artistes_scene || null,
+      }
+    })
+  },
+)
+
+/**
+ * Dossier technique (singleton, v1.x publié ou brouillon).
+ * Rendu dynamiquement par SceneDossierTechnique : itération sur les clés réelles
+ * du JSON pour absorber les évolutions de structure sans toucher au front.
+ */
+export type SurlasceneDossierTechnique = {
+  version: string
+  en_brouillon: boolean
+  contenu: Record<string, unknown>
+  notes_publiques: string | null
+  maj_le: string
+  pdf_path: string | null
+}
+
+export const getDossierTechnique = cache(
+  async (): Promise<SurlasceneDossierTechnique | null> => {
+    const path = '/rest/v1/dossier_technique?select=*&order=cree_le.desc&limit=1'
+    const rows = await supaFetch<SurlasceneDossierTechnique[]>(path)
+    return rows && rows[0] ? rows[0] : null
+  },
+)
+
+// Formatters réutilisables côté composants
+export const JOURS_FR = ['DIM', 'LUN', 'MAR', 'MER', 'JEU', 'VEN', 'SAM']
+export const MOIS_FR = [
+  'janv.', 'févr.', 'mars', 'avril', 'mai', 'juin',
+  'juill.', 'août', 'sept.', 'oct.', 'nov.', 'déc.',
+]
+export const JOURS_LONG = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi']
+export const MOIS_LONG = [
+  'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+  'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre',
+]
