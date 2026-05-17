@@ -211,10 +211,10 @@ export default function ProposerCards() {
               Proposer ma perfo
             </BtnPrimaire>
             <BtnSecondaire
-              href="#dossier-technique"
+              href="/proposer/equipement"
               className="cursor-event"
             >
-              Voir le dossier technique
+              Découvre notre équipement
             </BtnSecondaire>
           </Actions>
         </Carte>
