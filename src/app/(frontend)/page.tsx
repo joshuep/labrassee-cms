@@ -1,14 +1,17 @@
 import React from 'react'
 
-import { getUpcomingEventsData } from '@/frontend/lib/payload-data'
+import { getEventsCarousel } from '@/frontend/lib/payload-data'
 import Home from '@/frontend/pages/Home'
 
 export const revalidate = 300
 
 export default async function HomePage() {
-  const events = await getUpcomingEventsData(50)
+  // Stratégie home (2026-05-16) : carousel spotlight = 1 event passé (hier, tronqué
+  // à gauche) + 6 events futurs (aujourd'hui focus + 5 prochains). Reversible via
+  // chevrons + drag + clavier. Focus initial = premier event futur.
+  const { events, initialIndex } = await getEventsCarousel(1, 6)
 
   return (
-    <Home events={events} />
+    <Home events={events} initialIndex={initialIndex} />
   )
 }

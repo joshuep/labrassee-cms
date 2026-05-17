@@ -75,3 +75,6 @@ media/*
 # Database
 *.sqlite
 *.db
+
+# Local Claude Code config
+.claude/
