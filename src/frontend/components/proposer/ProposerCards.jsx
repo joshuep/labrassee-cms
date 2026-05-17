@@ -203,18 +203,18 @@ export default function ProposerCards() {
           </Liste>
           <Actions>
             <BtnPrimaire
-              href="mailto:contact@labrassee.cafe?subject=Proposition%20de%20performance%20-%20Sur%20la%20sc%C3%A8ne&amp;body=Salut%20%21%0A%0ANom%20artiste%20%2F%20groupe%20%3A%20%0AGenre%20%3A%20%0ANb%20de%20personnes%20sur%20sc%C3%A8ne%20%3A%20%0AP%C3%A9riode%20souhait%C3%A9e%20%3A%20%0ALien%20%C3%A9coute%20%28Spotify%2FBandcamp%2FYouTube%29%20%3A%20%0AUn%20mot%20sur%20toi%20%3A%20%0A%0AMerci%20%21"
+              href="https://labrassee-surlascene-depot.vercel.app/?candidature=scene"
+              target="_blank"
+              rel="noopener noreferrer"
               className="cursor-event"
             >
               Proposer ma perfo
             </BtnPrimaire>
             <BtnSecondaire
-              href="https://labrassee-surlascene-publique.vercel.app"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#dossier-technique"
               className="cursor-event"
             >
-              Conditions + dossier technique
+              Voir le dossier technique
             </BtnSecondaire>
           </Actions>
         </Carte>
@@ -265,15 +265,15 @@ export default function ProposerCards() {
           </Liste>
           <Actions>
             <BtnPrimaire
-              href="mailto:contact@labrassee.cafe?subject=Proposition%20d%27exposition%20-%20Sur%20nos%20murs&amp;body=Salut%20%21%0A%0ANom%20artiste%20%3A%20%0ATechnique%2Fm%C3%A9dium%20%3A%20%0ANb%20d%27%C5%93uvres%20pr%C3%A9vues%20%3A%20%0AP%C3%A9riode%20souhait%C3%A9e%20%3A%20%0ALien%20Instagram%2Fsite%20%3A%20%0AUn%20mot%20sur%20ton%20travail%20%3A%20%0A%0AMerci%20%21"
+              href="https://labrassee-murs-depot.vercel.app/?candidature=murs"
+              target="_blank"
+              rel="noopener noreferrer"
               className="cursor-event"
             >
               Proposer mon expo
             </BtnPrimaire>
             <BtnSecondaire
-              href="https://labrassee-surnosmurs-publique.vercel.app"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#cartes"
               className="cursor-event"
             >
               Conditions complètes

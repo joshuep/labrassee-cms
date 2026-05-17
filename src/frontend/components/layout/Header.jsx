@@ -169,7 +169,7 @@ const Header = ({ businessInfo: providedBusinessInfo }) => {
               pointerEvents: pathname === '/scene' ? 'none' : 'auto',
             }}
           >
-            LA SCÈNE
+            LES ÉVÉNEMENTS
           </MenuLink>
           <MenuLink
             href="/proposer"
@@ -183,7 +183,7 @@ const Header = ({ businessInfo: providedBusinessInfo }) => {
               pointerEvents: pathname === '/proposer' ? 'none' : 'auto',
             }}
           >
-            ARTISTES
+            VIENS TE FAIRE VOIR
           </MenuLink>
           <MenuLink
             href="/menu"

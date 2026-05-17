@@ -432,10 +432,14 @@ export default function SceneAgenda({ shows = [] }) {
   }
 
   const a = first.artiste
-  const photoFeat = a
-    ? photoUrl(a.photo_artiste_path) ||
-      (a.photos_hd_paths && a.photos_hd_paths[0] && photoUrl(a.photos_hd_paths[0]))
-    : null
+  // Priorité image : 1) affiche Facebook (event Payload matché par date)
+  // 2) photo artiste déposée (EPK) 3) première lettre du nom (fallback)
+  const photoFeat =
+    first.coverImage ||
+    (a
+      ? photoUrl(a.photo_artiste_path) ||
+        (a.photos_hd_paths && a.photos_hd_paths[0] && photoUrl(a.photos_hd_paths[0]))
+      : null)
   const dF = new Date(first.date_show + 'T' + (first.heure_debut || '19:30'))
   const dateTxt = `${JOURS_FR[dF.getDay()]} ${dF.getDate()} ${MOIS_FR[dF.getMonth()]} · ${
     first.heure_debut ? first.heure_debut.slice(0, 5) : '19:30'
@@ -535,10 +539,13 @@ export default function SceneAgenda({ shows = [] }) {
           const genre =
             (art && art.genre) || (s.type_show || 'Concert').toUpperCase()
           const dd = new Date(s.date_show + 'T' + (s.heure_debut || '19:30'))
-          const photo = art
-            ? photoUrl(art.photo_artiste_path) ||
-              (art.photos_hd_paths && art.photos_hd_paths[0] && photoUrl(art.photos_hd_paths[0]))
-            : null
+          // Priorité image : Facebook (event Payload) > photo artiste > initiale
+          const photo =
+            s.coverImage ||
+            (art
+              ? photoUrl(art.photo_artiste_path) ||
+                (art.photos_hd_paths && art.photos_hd_paths[0] && photoUrl(art.photos_hd_paths[0]))
+              : null)
           const desc =
             (art && art.bio
               ? art.bio.slice(0, 160) + (art.bio.length > 160 ? '…' : '')
@@ -546,7 +553,7 @@ export default function SceneAgenda({ shows = [] }) {
             s.description_publique ||
             (art ? 'Avec ' + nom : 'Programmation à confirmer')
           return (
-            <Carte key={s.id} onClick={() => setSelectedShow(s)}>
+            <Carte id={`concert-${s.id}`} key={s.id} onClick={() => setSelectedShow(s)}>
               <div className="date-bloc">
                 <div className="jour">{JOURS_FR[dd.getDay()]}</div>
                 <div className="jour-num">{dd.getDate()}</div>

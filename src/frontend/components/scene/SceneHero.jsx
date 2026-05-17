@@ -133,14 +133,14 @@ export default function SceneHero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1 }}
       >
-        La Brassée · Sur la scène
+        La Brassée · Programmation
       </Surtitre>
       <Titre
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.2 }}
       >
-        La <span className="accent">scène</span> est libre.
+        Les <span className="accent">événements</span>
       </Titre>
       <Pitch
         initial={{ opacity: 0 }}
@@ -156,8 +156,8 @@ export default function SceneHero() {
         <Btn href="#agenda" className="primaire">
           Voir le prochain show
         </Btn>
-        <Btn href="#dossier" className="secondaire">
-          Dossier technique
+        <Btn href="/proposer" className="secondaire">
+          Proposer ma candidature
         </Btn>
       </CTAs>
     </HeroSection>

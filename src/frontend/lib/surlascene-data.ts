@@ -81,12 +81,17 @@ type RawConcertRow = {
 
 /**
  * Convertit un concert Surlascène en FrontendEvent étendu (compatible avec EventCard).
- * - `image` = TOUJOURS null pour les events Surlascène → EventCard rend un poster CSS
- *   cohérent (badge "Sur la scène", style Maïa) même s'il y a une photo artiste.
- *   La photo artiste est passée séparément en `surlascenePosterPhoto` pour servir
- *   d'arrière-plan atténué du poster CSS.
- * - `facebookLink` = null par défaut (pas d'event FB encore lié)
- * - `surlasceneShowId` = id pour pointer vers la page détaillée
+ *
+ * Stratégie image (mise à jour 2026-05-16) :
+ * - Si l'artiste a une photo HD dans son EPK → on la met dans `event.image`, et
+ *   EventCard la rend exactement comme une affiche Payload (full bleed + overlay
+ *   texte bas standard). Cohérence visuelle totale avec le reste du carousel.
+ * - Si pas de photo → `image=null` et EventCard rend un poster CSS sobre
+ *   (gradient Maïa + nom/date dans l'overlay bas standard), pas un gros texte
+ *   intégré comme avant.
+ *
+ * `surlascenePosterPhoto` est conservé pour rétro-compat mais devient redondant
+ * quand `image` est rempli (même URL).
  */
 const concertToEvent = (row: RawConcertRow): FrontendEvent => {
   const arts = (row.concerts_artistes || []).slice().sort((a, b) => a.ordre - b.ordre)
@@ -97,13 +102,27 @@ const concertToEvent = (row: RawConcertRow): FrontendEvent => {
   // Heure formatée "19h30"
   const hr = row.heure_debut?.slice(0, 5).replace(':', 'h') || null
 
+  // Genre affiché sur la card : 1. genre artiste, 2. type_show humanisé
+  const typeShowLabel = (() => {
+    const t = (row.type_show || '').toLowerCase()
+    if (t === 'concert') return null
+    if (t === 'karaoke') return 'Karaoké'
+    if (t === 'jam') return 'Jam'
+    if (t === 'vernissage') return 'Vernissage'
+    if (t === 'poesie' || t === 'poésie') return 'Poésie'
+    if (t === 'impro') return 'Impro'
+    return row.type_show ? row.type_show.charAt(0).toUpperCase() + row.type_show.slice(1) : null
+  })()
+  const genre = (artiste?.genre && artiste.genre.trim()) || typeShowLabel || null
+
   return {
     id: 'surlascene-' + row.id,
     title: titre,
     date: row.date_show,
     time: hr,
-    image: null, // jamais d'image directe — le poster CSS Surlascène prend le relais
+    image: photoFull, // photo HD si dispo → rendu identique aux cards Payload
     facebookLink: null,
+    genre,
     hasOfficialPoster: false,
     description: undefined,
     // Extensions Surlascène (lues optionnellement par EventCard)
@@ -111,13 +130,27 @@ const concertToEvent = (row: RawConcertRow): FrontendEvent => {
     surlasceneSource: 'surlascene',
     surlasceneArtiste: artiste,
     surlasceneType: row.type_show,
-    surlascenePosterPhoto: photoFull,
+    surlascenePosterPhoto: photoFull, // rétro-compat (peut être null si pas de photo)
   } as FrontendEvent
+}
+
+/** Calcule l'ISO de "today" en heure Montréal (évite le bug UTC qui exclut
+ *  l'event du soir-même après minuit UTC mais avant minuit Montréal). */
+function todayMontrealISO(): string {
+  const f = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Toronto',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  })
+  const parts = f.formatToParts(new Date())
+  const get = (t: string) => parts.find((p) => p.type === t)?.value || ''
+  return `${get('year')}-${get('month')}-${get('day')}`
 }
 
 export const getUpcomingSurlasceneEvents = cache(
   async (limit = 30): Promise<FrontendEvent[]> => {
-    const today = new Date().toISOString().slice(0, 10)
+    const today = todayMontrealISO()
     const select = encodeURIComponent(
       '*,concerts_artistes(ordre,artistes_scene(id,nom_artiste,genre,bio,permanence,recurrence_notes,heure_debut_speciale,site_web,instagram,spotify_url,bandcamp_url,soundcloud_url,youtube_url,photo_artiste_path,photos_hd_paths))',
     )
@@ -127,6 +160,27 @@ export const getUpcomingSurlasceneEvents = cache(
     const rows = await supaFetch<RawConcertRow[]>(path)
     if (!rows) return []
     return rows.map(concertToEvent)
+  },
+)
+
+/**
+ * Récupère les events Surlascène RÉCENTS (date < today), ordre chronologique
+ * (plus ancien d'abord). Sert au carousel spotlight pour afficher l'event
+ * d'hier tronqué à gauche du focus.
+ */
+export const getRecentSurlasceneEvents = cache(
+  async (limit = 1): Promise<FrontendEvent[]> => {
+    const today = todayMontrealISO()
+    const select = encodeURIComponent(
+      '*,concerts_artistes(ordre,artistes_scene(id,nom_artiste,genre,bio,permanence,recurrence_notes,heure_debut_speciale,site_web,instagram,spotify_url,bandcamp_url,soundcloud_url,youtube_url,photo_artiste_path,photos_hd_paths))',
+    )
+    // Fetch desc puis on reverse pour avoir l'ordre chronologique côté retour
+    const path =
+      `/rest/v1/concerts?select=${select}&date_show=lt.${today}` +
+      `&statut=in.(planifie,confirme)&order=date_show.desc&limit=${limit}`
+    const rows = await supaFetch<RawConcertRow[]>(path)
+    if (!rows) return []
+    return rows.map(concertToEvent).reverse()
   },
 )
 
@@ -146,6 +200,12 @@ export type SurlasceneShowDetail = {
   description_publique: string | null
   statut: string
   artiste: SurlasceneArtiste | null
+  // Couverture Facebook de l'event Payload correspondant (matché par date).
+  // Renseigné par getSceneAgendaShows() côté payload-data. Permet à
+  // SceneAgenda d'afficher l'affiche FB officielle quand un event Payload
+  // existe, plutôt que la photo artiste (priorité visuelle).
+  coverImage?: string | null
+  facebookLink?: string | null
 }
 
 type RawConcertDetailRow = {
@@ -163,7 +223,7 @@ type RawConcertDetailRow = {
 
 export const getUpcomingShowDetails = cache(
   async (limit = 40): Promise<SurlasceneShowDetail[]> => {
-    const today = new Date().toISOString().slice(0, 10)
+    const today = todayMontrealISO()
     const select = encodeURIComponent(
       '*,concerts_artistes(ordre,artistes_scene(id,nom_artiste,genre,bio,permanence,recurrence_notes,heure_debut_speciale,site_web,instagram,facebook,spotify_url,bandcamp_url,soundcloud_url,youtube_url,vimeo_url,photo_artiste_path,photos_hd_paths,duree_set_minutes,nb_personnes_scene))',
     )
