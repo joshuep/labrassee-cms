@@ -137,31 +137,13 @@ const TimeDivider = styled.div`
   }
 `;
 
-/**
- * BusinessHours supporte deux formats pour `businessInfo.hours` :
- * 1. Tableau dynamique (nouveau) : Array<{ key, label, open, close, isToday }>
- * 2. Objet legacy : Record<jour, { open, close }> (fallback statique du menu.js)
- *
- * Le tableau dynamique est le format pivot depuis 2026-05-16 (7 jours glissants
- * à partir d'aujourd'hui, calculés selon les events programmés).
- */
 const BusinessHours = ({ businessInfo }) => {
   const source = businessInfo || fallbackBusinessInfo;
-  const hoursData = Array.isArray(source.hours)
-    ? source.hours.map((h) => ({
-        key: h.key,
-        day: h.label,
-        open: h.open,
-        close: h.close,
-        isToday: !!h.isToday,
-      }))
-    : Object.entries(source.hours).map(([day, hours]) => ({
-        key: day,
-        day: day.toUpperCase(),
-        open: hours.open,
-        close: hours.close,
-        isToday: false,
-      }));
+  const hoursData = Object.entries(source.hours).map(([day, hours]) => ({
+    day: day.toUpperCase(),
+    open: hours.open,
+    close: hours.close
+  }));
 
   return (
     <HoursContainer>
@@ -172,11 +154,10 @@ const BusinessHours = ({ businessInfo }) => {
 
       {hoursData.map((schedule, index) => (
         <HoursRow
-          key={schedule.key}
+          key={schedule.day}
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: index * 0.02, duration: 0.2 }}
-          style={schedule.isToday ? { background: 'rgba(247, 209, 53, 0.08)', borderRadius: 8, paddingLeft: 12, paddingRight: 12 } : undefined}
         >
           <DayText>{schedule.day}</DayText>
           <TimeBlock>

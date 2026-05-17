@@ -3,20 +3,17 @@
 import React from 'react';
 import Hero from '../components/home/Hero';
 import CalendarSignup from '../components/home/CalendarSignup';
-import EventsSpotlight from '../components/home/EventsSpotlight';
+import EventsCarousel from '../components/home/EventsCarousel';
 import Testimonials from '../components/home/Testimonials';
 
 /**
- * @param {{
- *   events?: import('../lib/payload-data').FrontendEvent[];
- *   initialIndex?: number;
- * }} props
+ * @param {{ events?: import('../lib/payload-data').FrontendEvent[] }} props
  */
-const Home = ({ events = [], initialIndex = 0 }) => {
+const Home = ({ events = [] }) => {
   return (
     <div style={{ width: '100%', background: 'var(--color-dark)' }}>
       <Hero />
-      <EventsSpotlight events={events} initialIndex={initialIndex} />
+      <EventsCarousel events={events} />
       <Testimonials />
       <CalendarSignup />
     </div>

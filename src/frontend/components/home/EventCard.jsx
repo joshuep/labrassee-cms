@@ -26,40 +26,10 @@ const EventImage = styled.img`
   display: block;
   background-color: var(--color-dark-alt);
   transition: opacity 0.2s ease-in-out;
-
+  
   &:not([src]),
   &[src=""] {
     opacity: 0.5;
-  }
-`;
-
-/* Poster de fallback pour les events SANS image (concert Surlascène dont
-   l'artiste n'a pas encore déposé de photo HD). Gradient sobre + Maïa filigrane
-   — le texte (nom + date) est géré par le TextOverlay standard en bas. */
-const FallbackPoster = styled.div`
-  width: 100%;
-  height: 100%;
-  position: relative;
-  background-color: #100f09;
-  background-image:
-    radial-gradient(ellipse at 30% 15%, rgba(247, 209, 53, 0.18), transparent 55%),
-    radial-gradient(ellipse at 75% 85%, rgba(247, 209, 53, 0.08), transparent 55%),
-    linear-gradient(180deg, #1a1810 0%, #100f09 100%);
-  overflow: hidden;
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 60%;
-    height: 60%;
-    transform: translate(-50%, -65%);
-    background-image: url('/picto_maia_white.svg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    opacity: 0.16;
   }
 `;
 
@@ -98,36 +68,6 @@ const DayBadge = styled.div`
   @media (max-width: 768px) {
     font-size: 10px;
     padding: 5px 10px;
-  }
-`;
-
-const GenreBadge = styled.div`
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: rgba(16, 15, 9, 0.7);
-  border: 1px solid rgba(247, 209, 53, 0.4);
-  color: var(--color-brand);
-  font-family: var(--font-din);
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  font-size: 10px;
-  font-weight: 500;
-  padding: 5px 10px;
-  border-radius: 999px;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  z-index: 2;
-  max-width: 60%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-
-  @media (max-width: 768px) {
-    font-size: 9px;
-    padding: 4px 8px;
-    letter-spacing: 1px;
   }
 `;
 
@@ -230,47 +170,28 @@ const EventCard = ({ event, index }) => {
   };
 
   const dayBadge = getDayBadge(event.date);
-  const isSurlascene = event.surlasceneSource === 'surlascene';
-
-  // Lien de la card :
-  // 1. event.facebookLink → onglet Facebook
-  // 2. Concert Surlascène sans FB → ancre interne /scene#agenda
-  // 3. Rien → ancre #agenda
-  const linkHref = event.facebookLink
-    ? formatUrl(event.facebookLink)
-    : isSurlascene
-      ? '/scene#agenda'
-      : '#';
-  const linkTarget = event.facebookLink ? '_blank' : undefined;
 
   return (
     <CardWrapper
-      href={linkHref}
-      target={linkTarget}
-      rel={linkTarget ? 'noopener noreferrer' : undefined}
+      href={formatUrl(event.facebookLink)}
+      target="_blank"
+      rel="noopener noreferrer"
       className="cursor-event"
       variants={cardVariants}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
-      {event.image ? (
-        <EventImage
-          src={event.image}
-          alt={event.title}
-          loading="eager"
-          decoding="async"
-        />
-      ) : (
-        <FallbackPoster />
-      )}
+      <EventImage
+        src={event.image}
+        alt={event.title}
+        loading="eager"
+        decoding="async"
+      />
 
       {/* Badge du jour pour les événements de la semaine en cours */}
       {dayBadge && <DayBadge>{dayBadge.prefix} <strong>{dayBadge.day}</strong></DayBadge>}
 
-      {/* Badge genre musical (Jazz, Jam, Karaoké, Vernissage…) */}
-      {event.genre && <GenreBadge>{event.genre}</GenreBadge>}
-
-      {/* Overlay texte standard en bas */}
+      {/* Afficher le texte overlay sur toutes les affiches */}
       <TextOverlay>
         <EventTitle>{event.title}</EventTitle>
         <EventDate>{formatDateTime(event.date, event.time)}</EventDate>
