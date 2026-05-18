@@ -273,7 +273,7 @@ export default function ProposerCards() {
               Proposer mon expo
             </BtnPrimaire>
             <BtnSecondaire
-              href="#cartes"
+              href="/proposer/expo"
               className="cursor-event"
             >
               Conditions complètes
