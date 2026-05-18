@@ -264,7 +264,7 @@ export const getCalendrierMois = cache(
         const dow = d.getDay()
         const concert = concertsParDate.get(iso)
         let statut: StatutJour
-        let eventTitre: string | null = null
+        const eventTitre: string | null = null
 
         // Jours ouverts selon le mois :
         // - Juillet (7) + août (8)       : VEN + SAM uniquement (été)

@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
+/** @typedef {import('../../lib/dates-libres').MoisCalendrier} MoisCalendrier */
+
 const Section = styled.section`
   padding: 60px 24px 100px;
   background: var(--color-dark);
@@ -549,6 +551,9 @@ function LigneDirectricePourMois({ moisHum }) {
   )
 }
 
+/**
+ * @param {{ mois?: MoisCalendrier[] }} props
+ */
 export default function ProposerCalendrier({ mois = [] }) {
   const [dateChoisie, setDateChoisie] = useState(null)
 

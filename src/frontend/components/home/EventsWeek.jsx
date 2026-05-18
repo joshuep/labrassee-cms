@@ -5,6 +5,8 @@ import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import EventCard from './EventCard'
 
+/** @typedef {import('../../lib/payload-data').FrontendEvent} FrontendEvent */
+
 const Section = styled.section`
   width: 100%;
   padding: 60px 24px 100px;
@@ -162,6 +164,9 @@ function grouperParJour(events) {
     }))
 }
 
+/**
+ * @param {{ events?: FrontendEvent[] }} props
+ */
 export default function EventsWeek({ events = [] }) {
   const groupes = grouperParJour(events)
   const todayISO = todayLocalISO()

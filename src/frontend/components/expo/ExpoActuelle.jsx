@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 
+/** @typedef {import('../../lib/surnosmurs-data').ArtisteMurs} ArtisteMurs */
+
 const Section = styled.section`
   width: 100%;
   background: var(--color-dark);
@@ -472,6 +474,13 @@ function normaliserInsta(input) {
 // Composant
 // ─────────────────────────────────────────────────────────────────────
 
+/**
+ * @param {{
+ *   artiste: ArtisteMurs | null
+ *   photosUrls?: string[]
+ *   portraitUrl?: string | null
+ * }} props
+ */
 export default function ExpoActuelle({ artiste, photosUrls = [], portraitUrl = null }) {
   const [lightbox, setLightbox] = useState(null) // index ou null
 

@@ -11,6 +11,8 @@ import 'swiper/css/navigation'
 
 import EventCard from './EventCard'
 
+/** @typedef {import('../../lib/payload-data').FrontendEvent} FrontendEvent */
+
 const Section = styled.section`
   width: 100vw;
   padding: 40px 0 70px;
@@ -239,6 +241,9 @@ const MoreWrap = styled.div`
   text-align: center;
 `
 
+/**
+ * @param {{ events?: FrontendEvent[], initialIndex?: number }} props
+ */
 export default function EventsSpotlight({ events = [], initialIndex = 0 }) {
   const swiperRef = useRef(null)
   const [activeIndex, setActiveIndex] = useState(initialIndex)

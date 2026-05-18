@@ -10,6 +10,8 @@ import {
 } from '@/frontend/lib/surlascene-data'
 import SceneArtisteModal from './SceneArtisteModal'
 
+/** @typedef {import('../../lib/surlascene-data').SurlasceneShowDetail} SurlasceneShowDetail */
+
 const Section = styled.section`
   padding: 80px 24px;
   background: var(--color-dark);
@@ -385,6 +387,9 @@ function buildLiens(a) {
   return l
 }
 
+/**
+ * @param {{ shows?: SurlasceneShowDetail[] }} props
+ */
 export default function SceneAgenda({ shows = [] }) {
   const [selectedShow, setSelectedShow] = useState(null)
   const [countdown, setCountdown] = useState({ j: 0, h: 0, m: 0 })

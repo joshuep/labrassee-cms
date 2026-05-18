@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import ImageViewer from '../common/ImageViewer';
 
+/** @typedef {import('../../lib/payload-data').FrontendMenuItem} FrontendMenuItem */
+
 const GallerySection = styled.section`
   width: 100%;
   padding: 40px 0;
@@ -73,6 +75,9 @@ const MenuTitle = styled.div`
   }
 `;
 
+/**
+ * @param {{ menuItems?: FrontendMenuItem[] }} props
+ */
 const MenuGallery = ({ menuItems = [] }) => {
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);

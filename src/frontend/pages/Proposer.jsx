@@ -5,6 +5,8 @@ import ProposerHero from '../components/proposer/ProposerHero'
 import ProposerCards from '../components/proposer/ProposerCards'
 import ProposerCalendrier from '../components/proposer/ProposerCalendrier'
 
+/** @typedef {import('../lib/dates-libres').MoisCalendrier} MoisCalendrier */
+
 // Note (2026-05-17) :
 //  - ProposerProgrammation séparée → retirée, intégrée dans ProposerCalendrier
 //    (mini-rappel LigneDirectrice au-dessus de chaque mois)
@@ -13,6 +15,9 @@ import ProposerCalendrier from '../components/proposer/ProposerCalendrier'
 //    matériel se fera au dépôt définitif (lien token personnel envoyé par
 //    Cédric après acceptation de la candidature).
 
+/**
+ * @param {{ moisCalendrier?: MoisCalendrier[] }} props
+ */
 const Proposer = ({ moisCalendrier = [] }) => {
   return (
     <div style={{ width: '100%', background: 'var(--color-dark)' }}>

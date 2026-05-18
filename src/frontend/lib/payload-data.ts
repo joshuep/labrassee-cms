@@ -2,7 +2,6 @@ import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { cache } from 'react'
 
-import { getUpcomingEvents as getFallbackUpcomingEvents } from '@/frontend/data/events'
 import { businessInfo as fallbackBusinessInfo, menuCategories as fallbackMenuItems } from '@/frontend/data/menu'
 import {
   getRecentSurlasceneEvents,
@@ -325,8 +324,9 @@ export const getBusinessInfoData = cache(async (): Promise<FrontendBusinessInfo>
 
     return formatBusinessInfo(info, horairesDynamiques)
   } catch {
+    const { hours: _legacyHours, ...fallbackInfo } = fallbackBusinessInfo
     return {
-      ...(fallbackBusinessInfo as FrontendBusinessInfo),
+      ...fallbackInfo,
       hours: horairesDynamiques,
     }
   }

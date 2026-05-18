@@ -4,6 +4,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { grouperParMois } from '../../lib/dates-libres'
 
+/** @typedef {import('../../lib/dates-libres').DateLibre} DateLibre */
+
 const Section = styled.section`
   padding: 60px 24px 100px;
   background: var(--color-dark);
@@ -168,6 +170,9 @@ function buildMailto(date) {
   return `mailto:contact@labrassee.cafe?subject=${sujet}&body=${corps}`
 }
 
+/**
+ * @param {{ dates?: DateLibre[] }} props
+ */
 export default function ProposerDatesLibres({ dates = [] }) {
   const groupes = grouperParMois(dates)
 
