@@ -68,31 +68,71 @@ const Tagline = styled(motion.span)`
 const NavGroup = styled.div`
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 6px;
 
+  @media (max-width: 960px) {
+    gap: 4px;
+  }
   @media (max-width: 480px) {
-    gap: 12px;
+    gap: 2px;
   }
 `;
 
+/**
+ * Menu de nav refait (2026-05-18) : passage de 30px texte brand à un format
+ * type "chip" plus lisible avec hover marqué (sous-ligné + fond brand) et
+ * état actif (chip plein). Avec 4 items au lieu de 3 (LES ÉVÉNEMENTS · L'EXPO
+ * ACTUELLE · VIENS TE FAIRE VOIR · LE MENU), on a besoin de compacité.
+ */
 const MenuLink = styled(Link)`
+  position: relative;
   color: var(--color-brand);
-  font-size: 30px;
+  background: transparent;
+  font-family: var(--font-din);
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
   text-decoration: none;
-  transition: all 0.3s ease;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition: all 0.25s ease;
   white-space: nowrap;
 
   &:hover {
-    transform: translateX(5px);
+    background: rgba(247, 209, 53, 0.12);
+    border-color: rgba(247, 209, 53, 0.35);
   }
 
-  @media (max-width: 960px) {
-    font-size: 24px;
+  &.active {
+    background: var(--color-brand);
+    color: var(--color-dark);
+    border-color: var(--color-brand);
+  }
+
+  @media (max-width: 1100px) {
+    font-size: 15px;
+    letter-spacing: 1.5px;
+    padding: 8px 12px;
+  }
+
+  @media (max-width: 880px) {
+    font-size: 13px;
+    letter-spacing: 1px;
+    padding: 7px 10px;
+  }
+
+  @media (max-width: 640px) {
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    padding: 6px 8px;
   }
 
   @media (max-width: 480px) {
-    margin-left: 0;
-    font-size: 18px;
+    font-size: 10px;
+    letter-spacing: 0.3px;
+    padding: 5px 7px;
   }
 `;
 
@@ -159,45 +199,35 @@ const Header = ({ businessInfo: providedBusinessInfo }) => {
         <NavGroup>
           <MenuLink
             href="/scene"
-            className="cursor-menu"
-            onClick={(e) => {
-              if (pathname === '/scene') {
-                e.preventDefault();
-              }
-            }}
-            style={{
-              pointerEvents: pathname === '/scene' ? 'none' : 'auto',
-            }}
+            className={`cursor-menu ${pathname === '/scene' ? 'active' : ''}`}
+            onClick={(e) => { if (pathname === '/scene') e.preventDefault(); }}
+            style={{ pointerEvents: pathname === '/scene' ? 'none' : 'auto' }}
           >
-            LES ÉVÉNEMENTS
+            Les événements
+          </MenuLink>
+          <MenuLink
+            href="/expo"
+            className={`cursor-menu ${pathname === '/expo' ? 'active' : ''}`}
+            onClick={(e) => { if (pathname === '/expo') e.preventDefault(); }}
+            style={{ pointerEvents: pathname === '/expo' ? 'none' : 'auto' }}
+          >
+            L'expo actuelle
           </MenuLink>
           <MenuLink
             href="/proposer"
-            className="cursor-menu"
-            onClick={(e) => {
-              if (pathname === '/proposer') {
-                e.preventDefault();
-              }
-            }}
-            style={{
-              pointerEvents: pathname === '/proposer' ? 'none' : 'auto',
-            }}
+            className={`cursor-menu ${pathname === '/proposer' || pathname?.startsWith('/proposer/') ? 'active' : ''}`}
+            onClick={(e) => { if (pathname === '/proposer') e.preventDefault(); }}
+            style={{ pointerEvents: pathname === '/proposer' ? 'none' : 'auto' }}
           >
-            VIENS TE FAIRE VOIR
+            Viens te faire voir
           </MenuLink>
           <MenuLink
             href="/menu"
-            className="cursor-menu"
-            onClick={(e) => {
-              if (pathname === '/menu') {
-                e.preventDefault();
-              }
-            }}
-            style={{
-              pointerEvents: pathname === '/menu' ? 'none' : 'auto'
-            }}
+            className={`cursor-menu ${pathname === '/menu' ? 'active' : ''}`}
+            onClick={(e) => { if (pathname === '/menu') e.preventDefault(); }}
+            style={{ pointerEvents: pathname === '/menu' ? 'none' : 'auto' }}
           >
-            LE MENU
+            Le menu
           </MenuLink>
         </NavGroup>
       </HeaderContainer>
