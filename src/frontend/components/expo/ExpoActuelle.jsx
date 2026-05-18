@@ -52,22 +52,35 @@ const HeroContent = styled.div`
 `
 
 const Eyebrow = styled.div`
-  color: rgba(180, 230, 240, 0.95);
+  color: rgba(200, 240, 250, 1);
   font-family: var(--font-din);
   text-transform: uppercase;
-  letter-spacing: 5px;
-  font-size: 12px;
+  letter-spacing: 4px;
+  font-size: 14px;
+  font-weight: 500;
   margin-bottom: 18px;
 
   .puce {
     display: inline-block;
     width: 10px;
     height: 10px;
-    background: rgba(99, 200, 220, 0.9);
+    background: rgba(99, 200, 220, 1);
     border-radius: 50%;
     margin-right: 10px;
     vertical-align: middle;
     box-shadow: 0 0 12px rgba(99, 200, 220, 0.6);
+  }
+
+  @media (max-width: 640px) {
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+
+  @media (max-width: 380px) {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    /* À cette taille, le séparateur · prend trop de place — wrap propre */
+    line-height: 1.4;
   }
 `
 
