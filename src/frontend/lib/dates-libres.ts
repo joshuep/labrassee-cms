@@ -43,6 +43,12 @@ const SOIRS_OUVERTS = new Set([1, 2, 4, 5, 6])
 const PREAVIS_JOURS = 7
 const HORIZON_DEFAUT_JOURS = 120
 
+// Soirée Impro permanente : tous les lundis du 25 mai au 24 août 2026 inclus.
+// Pendant cette plage, le lundi est forcé en vert (`bookee_perm`) MÊME en
+// juillet/août (qui sinon n'ouvriraient que ven/sam pour la scène).
+const IMPRO_DEBUT = '2026-05-25'
+const IMPRO_FIN = '2026-08-24'
+
 export const getDatesLibresScene = cache(
   async (joursHorizon = HORIZON_DEFAUT_JOURS): Promise<DateLibre[]> => {
     // 1. Fetch toutes les dates de concerts planifiés/confirmés dans l'horizon
@@ -403,6 +409,16 @@ export const getCalendrierMois = cache(
           // Les autres dim libres = visibles mais non interactifs (l'expo
           // qui s'accroche à l'ancre précédente les couvre déjà).
           statut = dimAncres.has(iso) ? 'libre_expo' : 'libre_expo_attente'
+        } else if (
+          dow === 1 &&
+          iso >= IMPRO_DEBUT &&
+          iso <= IMPRO_FIN &&
+          iso >= preavisISO
+        ) {
+          // Lundi pendant la saison Impro (25 mai → 24 août 2026 inclus).
+          // Forcé en vert même en juillet/août (qui sinon ne gardent
+          // que ven/sam pour la scène). Aucun tag : le jour = l'info.
+          statut = 'bookee_perm'
         } else if (!joursOuverts.has(dow)) {
           // Jour non ouvert ce mois-ci → fermé (mer, dim avec préavis pas
           // respecté ; + lun/mar/jeu en juillet/août ; + tout le mois en sept-déc)
@@ -410,11 +426,6 @@ export const getCalendrierMois = cache(
         } else if (iso < preavisISO) {
           // Préavis 7 jours minimum
           statut = 'ferme'
-        } else if (dow === 1) {
-          // Lundis = soirée Impro permanente confirmée (à partir du 2026-05-25).
-          // Marqués comme bookés en récurrence éditoriale → vert SANS tag
-          // (pas besoin d'écrire « impro » sur chaque case, c'est la norme).
-          statut = 'bookee_perm'
         } else {
           statut = 'libre'
         }
