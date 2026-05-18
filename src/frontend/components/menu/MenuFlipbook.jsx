@@ -332,10 +332,7 @@ export default function MenuFlipbook() {
       </SwiperWrap>
 
       <Pied>
-        Menu mis à jour <strong>printemps 2026</strong> · les prix incluent les taxes
-        · la version Koomi à jour est à la caisse.
-        <br />
-        Tu peux aussi <a href="/menu-complet.pdf" target="_blank" rel="noopener noreferrer">télécharger le PDF complet</a> à imprimer.
+        Menu mis à jour <strong>printemps 2026</strong> · les prix incluent les taxes.
       </Pied>
     </Section>
   )
