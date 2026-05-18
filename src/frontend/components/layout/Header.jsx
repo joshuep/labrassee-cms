@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -6,59 +6,36 @@ import { usePathname, useRouter } from 'next/navigation';
 
 /**
  * Header refondu 2026-05-18 :
- *   - Le petit logo + tagline ont été retirés (illisibles sur cell d'après
- *     Cédric).
- *   - Le GROS full_logo_white.svg est désormais en background du header,
- *     centré, semi-transparent, avec un effet "liquid glass" (backdrop-filter
- *     blur + saturate, gradient dark + bordure subtile) qui le fait apparaître
- *     comme givré.
- *   - Le Header entier est cliquable (retour home).
- *   - Onglets agrandis : 22px de base (vs 17 avant), avec 5 breakpoints
- *     responsive qui restent lisibles jusqu'à 380px.
+ *   - Petit logo + tagline retirés (illisibles cell). Logo BG retiré aussi
+ *     (2e itération Cédric : trop visuel, plus aéré sans).
+ *   - Bandeau bas (64px desktop · 56px mobile) avec effet liquid glass :
+ *     backdrop-filter blur + saturate + gradient dark + bordure top fine.
+ *   - 4 onglets centrés horizontalement (justify-content: center).
+ *   - Header toujours visible — pas d'auto-hide au scroll.
+ *   - Header cliquable (retour home) sauf clic direct onglet.
  */
 
-const HEADER_HEIGHT = 110; // px — plus haut qu'avant pour le logo en BG
+const HEADER_HEIGHT = 64; // px — bandeau slim
 
 const HeaderSection = styled(motion.section)`
-  height: ${props => props.$isHidden ? '0' : `${HEADER_HEIGHT}px`};
+  height: ${HEADER_HEIGHT}px;
   width: 100%;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
   overflow: hidden;
-  opacity: ${props => props.$isHidden ? '0' : '1'};
-  transform: translateY(${props => props.$isHidden ? '-20px' : '0'});
-  transition:
-    height 0.3s ease,
-    opacity 0.3s ease,
-    transform 0.3s ease;
   background:
     linear-gradient(
       to bottom,
       rgba(16, 15, 9, 0.62) 0%,
-      rgba(16, 15, 9, 0.55) 60%,
-      rgba(16, 15, 9, 0.25) 90%,
-      transparent 100%
+      rgba(16, 15, 9, 0.55) 70%,
+      rgba(16, 15, 9, 0.35) 100%
     );
   backdrop-filter: blur(18px) saturate(160%);
   -webkit-backdrop-filter: blur(18px) saturate(160%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   cursor: pointer;
-
-  /* GROS logo en filigrane derrière le glass — l'âme du header */
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url('/images/brand/full_logo_white.svg');
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: auto 70%;
-    opacity: 0.22;
-    pointer-events: none;
-    filter: drop-shadow(0 4px 24px rgba(247, 209, 53, 0.18));
-  }
 
   /* Très léger overlay clair en haut pour donner le côté frosted glass macOS */
   &::after {
@@ -70,8 +47,7 @@ const HeaderSection = styled(motion.section)`
   }
 
   @media (max-width: 640px) {
-    height: ${props => props.$isHidden ? '0' : '88px'};
-    &::before { background-size: auto 60%; opacity: 0.18; }
+    height: 56px;
   }
 `;
 
@@ -81,17 +57,13 @@ const HeaderContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   width: 100%;
   max-width: 1400px;
   height: 100%;
   margin: 0 auto;
-  padding: 0 28px;
+  padding: 0 16px;
   font-family: var(--font-din);
-
-  @media (max-width: 640px) {
-    padding: 0 14px;
-  }
 `;
 
 const NavGroup = styled.div`
@@ -179,44 +151,14 @@ const MenuLink = styled(Link)`
  * @param {{ businessInfo?: unknown }} props
  */
 const Header = ({ businessInfo: _providedBusinessInfo }) => {
-  const [isHidden, setIsHidden] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const router = useRouter();
   const pathname = usePathname();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      // Si on est tout en haut, toujours montrer le header
-      if (currentScrollY < 10) {
-        setIsHidden(false);
-      }
-      // Si on a scrollé assez pour cacher le header
-      else if (currentScrollY > 100) {
-        // Si on scroll vers le bas, cacher le header
-        if (currentScrollY > lastScrollY) {
-          setIsHidden(true);
-        }
-        // Si on scroll vers le haut, montrer le header
-        else if (currentScrollY < lastScrollY) {
-          setIsHidden(false);
-        }
-      }
-
-      setLastScrollY(currentScrollY);
-    };
-
-    // Écouter les événements de scroll (compatible avec Lenis)
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    // Cleanup
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  // 2026-05-18 : auto-hide au scroll retiré sur demande Cédric — le header
+  // reste toujours visible (les onglets doivent être accessibles à tout moment).
 
   return (
     <HeaderSection
-      $isHidden={isHidden}
       className="site-header"
       onClick={(e) => {
         // Le header entier est cliquable (retour home), sauf clic direct
