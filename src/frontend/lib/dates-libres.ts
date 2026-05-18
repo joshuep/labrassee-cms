@@ -194,11 +194,18 @@ export const getCalendrierMois = cache(
     const limitDate = new Date(today.getFullYear(), today.getMonth() + nMois + 1, 0)
     const limitISO = limitDate.toISOString().slice(0, 10)
 
+    // Les vernissages/accrochages/décrochages NE doivent PAS venir de cette
+    // table : ils sont dérivés de `artistes_murs` (source de vérité pour les
+    // périodes d'expo). On les exclut explicitement pour ne pas créer de
+    // collision avec des placeholders éventuels (qui apparaîtraient à tort en
+    // orange « réservé » au lieu de respecter la rotation 4 sem).
     const url =
       SUPABASE_URL +
       '/rest/v1/concerts?select=date_show,statut,titre_show,type_show' +
       `&date_show=gte.${todayISO}&date_show=lte.${limitISO}` +
-      '&statut=in.(planifie,confirme)&limit=500'
+      '&statut=in.(planifie,confirme)' +
+      '&type_show=not.in.(vernissage,accrochage,decrochage)' +
+      '&limit=500'
 
     const concertsParDate = new Map<
       string,
