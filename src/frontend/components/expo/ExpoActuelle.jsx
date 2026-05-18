@@ -16,6 +16,16 @@ const Section = styled.section`
 // HERO
 // ─────────────────────────────────────────────────────────────────────
 
+/**
+ * Stacking order du hero (de bas en haut) :
+ *   0. HeroBg : image floutée plein cadre (l'œuvre vedette)
+ *   1. ::after : gradient sombre overlay (pour la lisibilité du texte)
+ *   2. HeroContent : eyebrow + titre + nom + bandeau dates
+ *
+ * `isolation: isolate` crée un nouveau stacking context propre — sans ça,
+ * le z-index négatif de HeroBg pouvait le faire passer DERRIÈRE le body
+ * et disparaître complètement (bug remonté par Cédric 2026-05-18).
+ */
 const Hero = styled(motion.section)`
   position: relative;
   width: 100%;
@@ -23,13 +33,23 @@ const Hero = styled(motion.section)`
   display: flex;
   align-items: flex-end;
   padding: 80px 24px 60px;
-  background: linear-gradient(
-    180deg,
-    rgba(16, 15, 9, 0.4) 0%,
-    rgba(16, 15, 9, 0.7) 60%,
-    rgba(16, 15, 9, 0.95) 100%
-  );
   overflow: hidden;
+  isolation: isolate;
+  background: var(--color-dark);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(16, 15, 9, 0.35) 0%,
+      rgba(16, 15, 9, 0.55) 60%,
+      rgba(16, 15, 9, 0.92) 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+  }
 `
 
 const HeroBg = styled.div`
@@ -38,8 +58,9 @@ const HeroBg = styled.div`
   background-image: ${(p) => p.$src ? `url('${p.$src}')` : 'none'};
   background-size: cover;
   background-position: center;
-  z-index: -1;
-  filter: blur(2px) brightness(0.6);
+  background-repeat: no-repeat;
+  z-index: 0;
+  filter: blur(2px) brightness(0.7);
   transform: scale(1.05);
 `
 
