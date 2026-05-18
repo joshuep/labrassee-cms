@@ -21,22 +21,32 @@ const HeroSection = styled.section`
 `
 
 const Surtitre = styled(motion.div)`
-  color: rgba(205, 196, 157, 0.6);
+  color: var(--color-brand);
   font-family: var(--font-din);
   text-transform: uppercase;
-  letter-spacing: 6px;
-  font-size: 12px;
+  letter-spacing: 4px;
+  font-size: 15px;
+  font-weight: 500;
   margin-bottom: 20px;
+  opacity: 0.95;
+
+  @media (max-width: 640px) {
+    font-size: 12px;
+    letter-spacing: 3px;
+    margin-bottom: 14px;
+  }
 `
 
 const Titre = styled(motion.h1)`
   color: #ffffff;
   font-family: var(--font-din);
   font-size: clamp(54px, 9vw, 140px);
-  line-height: 0.95;
+  line-height: 0.92;
   font-weight: 200;
   letter-spacing: -2px;
-  margin: 0 0 24px 0;
+  margin: 0 0 28px 0;
+  /* Évite les orphelins (un mot ou un signe seul sur la dernière ligne) */
+  text-wrap: balance;
 
   .accent {
     color: var(--color-brand);
@@ -44,8 +54,8 @@ const Titre = styled(motion.h1)`
 `
 
 const Pitch = styled(motion.p)`
-  font-size: clamp(15px, 1.4vw, 18px);
-  color: rgba(255, 255, 255, 0.85);
+  font-size: clamp(15px, 1.5vw, 19px);
+  color: rgba(255, 255, 255, 0.88);
   max-width: 720px;
   margin: 0 auto;
   line-height: 1.7;
@@ -59,14 +69,14 @@ export default function ProposerHero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1 }}
       >
-        Tu veux exposer ou jouer chez nous ?
+        Pour les artistes
       </Surtitre>
       <Titre
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.2 }}
       >
-        Propose ta <span className="accent">candidature</span>
+        Viens te faire <span className="accent">voir</span>.
       </Titre>
       <Pitch
         initial={{ opacity: 0 }}

@@ -284,28 +284,36 @@ const Case = styled.div`
     color: rgba(210, 185, 240, 0.95);
   }
 
-  /* Statut VERNISSAGE → cyan/turquoise + forme RONDE (différenciation visuelle
-     forte des concerts/karaokés qui sont carrés). Couvre Sur nos murs (vernissage
-     + accrochage J-7) ET futures sorties littéraires dominicales. */
-  &.vernissage {
-    background: rgba(99, 200, 220, 0.18);
-    border: 1px solid rgba(99, 200, 220, 0.55);
-    color: rgba(180, 230, 240, 0.95);
-    border-radius: 50%;
-  }
-
-  /* Statut RÉSERVÉE → orange (en attente confirmation) */
+  /* Statut RÉSERVÉE (concert scène en attente) → orange CARRÉ */
   &.reservee {
     background: rgba(255, 159, 64, 0.18);
     border: 1px solid rgba(255, 159, 64, 0.55);
     color: rgba(255, 200, 145, 0.95);
   }
 
-  /* Statut BOOKÉE → vert (artiste confirmé) */
+  /* Statut BOOKÉE (concert scène confirmé) → vert CARRÉ */
   &.bookee {
     background: rgba(86, 180, 110, 0.18);
     border: 1px solid rgba(86, 180, 110, 0.55);
     color: rgba(180, 230, 195, 0.95);
+  }
+
+  /* Statut RÉSERVÉE_EXPO (vernissage/accrochage en attente) → orange ROND
+     même couleur que les concerts en attente mais forme ronde = expo. */
+  &.reservee_expo {
+    background: rgba(255, 159, 64, 0.18);
+    border: 1px solid rgba(255, 159, 64, 0.55);
+    color: rgba(255, 200, 145, 0.95);
+    border-radius: 50%;
+  }
+
+  /* Statut BOOKÉE_EXPO (vernissage/accrochage confirmé) → vert ROND
+     même couleur que les concerts bookés mais forme ronde = expo. */
+  &.bookee_expo {
+    background: rgba(86, 180, 110, 0.18);
+    border: 1px solid rgba(86, 180, 110, 0.55);
+    color: rgba(180, 230, 195, 0.95);
+    border-radius: 50%;
   }
 
   /* Statut FERMÉ → gris (mercredi, dimanche, préavis insuffisant) */
@@ -504,10 +512,12 @@ function tagPour(statut, vernissageRole) {
     case 'libre': return null
     case 'libre_expo': return 'expo ?'
     case 'impro': return 'impro'
-    case 'vernissage':
-      return vernissageRole === 'accrochage' ? 'acc.' : 'vern.'
     case 'reservee': return 'résa'
     case 'bookee': return 'booké'
+    case 'reservee_expo':
+      return vernissageRole === 'accrochage' ? 'acc.' : 'vern.'
+    case 'bookee_expo':
+      return vernissageRole === 'accrochage' ? 'acc.' : 'vern.'
     case 'ferme': return null
     case 'passee': return null
     default: return null
@@ -610,16 +620,20 @@ export default function ProposerCalendrier({ mois = [] }) {
             Impro (lundis)
           </span>
           <span className="puce">
-            <span className="swatch" style={{ background: 'rgba(99, 200, 220, 0.4)', border: '1px solid rgba(99, 200, 220, 0.8)', borderRadius: '50%' }} />
-            Sur nos murs (vernissage · accrochage)
-          </span>
-          <span className="puce">
             <span className="swatch" style={{ background: 'rgba(255, 159, 64, 0.4)', border: '1px solid rgba(255, 159, 64, 0.8)' }} />
-            Réservée (en attente)
+            Concert en attente
           </span>
           <span className="puce">
             <span className="swatch" style={{ background: 'rgba(86, 180, 110, 0.4)', border: '1px solid rgba(86, 180, 110, 0.8)' }} />
-            Bookée
+            Concert bookée
+          </span>
+          <span className="puce">
+            <span className="swatch" style={{ background: 'rgba(255, 159, 64, 0.4)', border: '1px solid rgba(255, 159, 64, 0.8)', borderRadius: '50%' }} />
+            Expo en attente
+          </span>
+          <span className="puce">
+            <span className="swatch" style={{ background: 'rgba(86, 180, 110, 0.4)', border: '1px solid rgba(86, 180, 110, 0.8)', borderRadius: '50%' }} />
+            Expo bookée
           </span>
           <span className="puce">
             <span className="swatch" style={{ background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.18)' }} />
@@ -662,23 +676,27 @@ export default function ProposerCalendrier({ mois = [] }) {
                   // Tooltips génériques uniquement — on ne révèle pas le nom des shows
                   const titleHover =
                     j.statut === 'bookee'
-                      ? 'Date bookée'
+                      ? 'Date bookée (concert)'
                       : j.statut === 'reservee'
-                        ? 'Date réservée (en attente)'
-                        : j.statut === 'impro'
-                          ? 'Lundi : soirée Impro (récurrence éditoriale)'
-                          : j.statut === 'vernissage'
+                        ? 'Date réservée — concert en attente de confirmation'
+                        : j.statut === 'bookee_expo'
+                          ? (j.vernissageRole === 'accrochage'
+                              ? 'Dim AM : décrochage / accrochage Sur nos murs (confirmé)'
+                              : 'Dim : vernissage Sur nos murs · 5 à 7 (confirmé)')
+                          : j.statut === 'reservee_expo'
                             ? (j.vernissageRole === 'accrochage'
-                                ? 'Dimanche AM : décrochage / accrochage Sur nos murs'
-                                : 'Dimanche : vernissage Sur nos murs · 5 à 7')
-                            : j.statut === 'libre_expo'
-                              ? 'Dimanche libre — clique pour proposer une expo Sur nos murs'
-                              : j.statut === 'ferme'
-                                ? (j.dow === 3 ? 'Mercredi : repos' :
-                                   j.dow === 0 ? 'Dimanche : réservé aux vernissages' :
-                                   (j.iso && j.iso.slice(5, 7) >= '07' && j.iso.slice(5, 7) <= '08' ? 'Juillet–août : on garde la scène pour ven + sam' :
-                                    'Trop proche — préavis minimum 7 jours'))
-                                : ''
+                                ? 'Dim AM : décrochage / accrochage Sur nos murs (en attente)'
+                                : 'Dim : vernissage Sur nos murs · 5 à 7 (en attente)')
+                            : j.statut === 'impro'
+                              ? 'Lundi : soirée Impro (récurrence éditoriale)'
+                              : j.statut === 'libre_expo'
+                                ? 'Dimanche libre — clique pour proposer une expo Sur nos murs'
+                                : j.statut === 'ferme'
+                                  ? (j.dow === 3 ? 'Mercredi : repos' :
+                                     j.dow === 0 ? 'Dimanche : réservé aux vernissages' :
+                                     (j.iso && j.iso.slice(5, 7) >= '07' && j.iso.slice(5, 7) <= '08' ? 'Juillet–août : on garde la scène pour ven + sam' :
+                                      'Trop proche — préavis minimum 7 jours'))
+                                  : ''
                   const handleClick = isClickableScene
                     ? () => setDateChoisie(j.iso)
                     : isClickableExpo

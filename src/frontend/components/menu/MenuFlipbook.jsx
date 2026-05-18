@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -162,6 +162,122 @@ const NavBtn = styled.button`
   }
 `
 
+// ─────────────────────────────────────────────────────────────────────
+// LIGHTBOX (zoom plein écran sur la page courante)
+// ─────────────────────────────────────────────────────────────────────
+
+const LightboxBackdrop = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.96);
+  z-index: 1500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeIn 0.2s ease;
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+`
+
+const LightboxImg = styled.img`
+  max-width: 100%;
+  max-height: 96vh;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+  /* Permet le zoom pinch tactile sur iOS Safari */
+  touch-action: pinch-zoom;
+  cursor: zoom-out;
+`
+
+const LightboxFermeBtn = styled.button`
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.9);
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 2;
+
+  &:hover {
+    background: rgba(247, 209, 53, 0.2);
+    color: var(--color-brand);
+    border-color: var(--color-brand);
+  }
+`
+
+const LightboxNav = styled.button`
+  position: absolute;
+  top: 50%;
+  ${(p) => p.$side === 'left' ? 'left: 16px;' : 'right: 16px;'}
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.9);
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 2;
+
+  &:hover {
+    background: rgba(247, 209, 53, 0.18);
+    color: var(--color-brand);
+    border-color: var(--color-brand);
+  }
+
+  &:disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 480px) {
+    width: 42px;
+    height: 42px;
+    ${(p) => p.$side === 'left' ? 'left: 8px;' : 'right: 8px;'}
+  }
+`
+
+const LightboxLegende = styled.div`
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.78);
+  font-family: var(--font-din);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-size: 12px;
+  background: rgba(0, 0, 0, 0.55);
+  padding: 8px 16px;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+
+  .label {
+    color: var(--color-brand);
+    margin-left: 8px;
+    font-weight: 500;
+  }
+`
+
 const Compteur = styled.div`
   color: var(--color-brand);
   font-family: var(--font-din);
@@ -237,11 +353,24 @@ const Pied = styled.div`
 
 export default function MenuFlipbook() {
   const [active, setActive] = useState(0)
+  const [zoom, setZoom] = useState(null) // index page zoomée ou null
   const swiperRef = useRef(null)
 
   const goTo = (idx) => {
     if (swiperRef.current) swiperRef.current.slideTo(idx)
   }
+
+  // Lightbox : clavier Esc + flèches ← →
+  useEffect(() => {
+    if (zoom === null) return
+    const onKey = (e) => {
+      if (e.key === 'Escape') setZoom(null)
+      else if (e.key === 'ArrowRight') setZoom((i) => (i !== null && i < PAGES.length - 1 ? i + 1 : i))
+      else if (e.key === 'ArrowLeft') setZoom((i) => (i !== null && i > 0 ? i - 1 : i))
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [zoom])
 
   const pageCourante = PAGES[active]
 
@@ -252,7 +381,7 @@ export default function MenuFlipbook() {
         <Titre>
           Feuillette <span className="accent">tout ça</span>
         </Titre>
-        <Aide>Drag · flèches · clavier ← → · ou clique une page en bas</Aide>
+        <Aide>Drag · flèches clavier ← → · clique sur la page pour zoomer</Aide>
       </Hero>
 
       <SwiperWrap>
@@ -278,9 +407,19 @@ export default function MenuFlipbook() {
               1440: { slidesPerView: 2.8, spaceBetween: 36 },
             }}
           >
-            {PAGES.map((p) => (
+            {PAGES.map((p, i) => (
               <SwiperSlide key={p.id}>
-                <PageCard $bg={p.bg}>
+                <PageCard
+                  $bg={p.bg}
+                  onClick={() => {
+                    // Si on clique sur la page active → zoom plein écran.
+                    // Sinon Swiper s'occupe de naviguer.
+                    if (i === active) setZoom(i)
+                  }}
+                  style={{ cursor: i === active ? 'zoom-in' : 'grab' }}
+                  role={i === active ? 'button' : undefined}
+                  aria-label={i === active ? `Zoomer la page ${p.titre}` : undefined}
+                >
                   <img
                     src={`/images/menu-v2/${p.id}.png`}
                     alt={`Menu La Brassée — ${p.titre}`}
@@ -334,6 +473,49 @@ export default function MenuFlipbook() {
       <Pied>
         Menu mis à jour <strong>printemps 2026</strong> · les prix incluent les taxes.
       </Pied>
+
+      {zoom !== null && PAGES[zoom] && (
+        <LightboxBackdrop onClick={() => setZoom(null)}>
+          <LightboxFermeBtn
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setZoom(null) }}
+            aria-label="Fermer le zoom"
+          >
+            ✕
+          </LightboxFermeBtn>
+          <LightboxNav
+            type="button"
+            $side="left"
+            onClick={(e) => { e.stopPropagation(); setZoom((i) => (i > 0 ? i - 1 : i)) }}
+            disabled={zoom === 0}
+            aria-label="Page précédente"
+          >
+            <i className="fas fa-chevron-left" />
+          </LightboxNav>
+          <LightboxImg
+            src={`/images/menu-v2/${PAGES[zoom].id}.png`}
+            alt={`Menu La Brassée — ${PAGES[zoom].titre}`}
+            onClick={(e) => {
+              // Tap au centre de l'image = fermer (au-delà du backdrop)
+              // mais NE pas se fermer si on tente un pinch-zoom
+              if (e.detail >= 1) setZoom(null)
+            }}
+          />
+          <LightboxNav
+            type="button"
+            $side="right"
+            onClick={(e) => { e.stopPropagation(); setZoom((i) => (i < PAGES.length - 1 ? i + 1 : i)) }}
+            disabled={zoom === PAGES.length - 1}
+            aria-label="Page suivante"
+          >
+            <i className="fas fa-chevron-right" />
+          </LightboxNav>
+          <LightboxLegende>
+            {zoom + 1} / {PAGES.length}
+            <span className="label">{PAGES[zoom].label}</span>
+          </LightboxLegende>
+        </LightboxBackdrop>
+      )}
     </Section>
   )
 }

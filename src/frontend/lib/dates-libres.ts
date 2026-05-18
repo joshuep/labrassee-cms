@@ -131,15 +131,16 @@ export function grouperParMois(dates: DateLibre[]): Array<{ cleMois: string; lib
 // ─────────────────────────────────────────────────────────────────────────
 
 export type StatutJour =
-  | 'libre'       // soir ouvert + aucun concert → cliquable pour proposer un show
-  | 'libre_expo'  // dimanche sans vernissage/accrochage → cliquable pour proposer une expo
-  | 'impro'       // lundi réservé d'office pour la soirée Impro (non cliquable)
-  | 'vernissage'  // dimanche vernissage 5à7 ou dim X-7 (accrochage/décrochage)
-  | 'reservee'    // concert avec statut='planifie' (option, en attente confirmation)
-  | 'bookee'      // concert avec statut='confirme'
-  | 'ferme'       // soir non scène (mer + dim) ou hors préavis (< 7 jours)
-  | 'passee'      // date dans le passé
-  | 'horsmois'    // padding début/fin du mois pour avoir grille 7 colonnes
+  | 'libre'         // soir ouvert + aucun concert → cliquable pour proposer un show
+  | 'libre_expo'    // dim sans vernissage/accrochage → cliquable pour proposer une expo
+  | 'impro'         // lundi réservé d'office pour la soirée Impro (non cliquable)
+  | 'reservee'      // concert (scène) statut='planifie' (option, attente confirmation)
+  | 'bookee'        // concert (scène) statut='confirme'
+  | 'reservee_expo' // dim expo statut='planifie' (rond orange, distinct des concerts carrés)
+  | 'bookee_expo'   // dim expo statut='confirme' (rond vert)
+  | 'ferme'         // soir non scène (mer + dim) ou hors préavis (< 7 jours)
+  | 'passee'        // date dans le passé
+  | 'horsmois'      // padding début/fin du mois pour avoir grille 7 colonnes
 
 export type JourCalendrier = {
   iso: string
@@ -282,9 +283,10 @@ export const getCalendrierMois = cache(
 
         let vernissageRole: 'vernissage' | 'accrochage' | undefined
         if (concert) {
-          // Vernissage / accrochage : couleur dédiée (Sur nos murs)
+          // Vernissage / accrochage : statut expo (rond vert/orange selon
+          // confirme/planifie — cohérent avec les concerts mais en rond).
           if (concert.type === 'vernissage' || concert.type === 'accrochage' || concert.type === 'decrochage') {
-            statut = 'vernissage'
+            statut = concert.statut === 'confirme' ? 'bookee_expo' : 'reservee_expo'
             vernissageRole = concert.type === 'vernissage' ? 'vernissage' : 'accrochage'
           } else {
             statut = concert.statut === 'confirme' ? 'bookee' : 'reservee'
