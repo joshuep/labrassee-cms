@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 /** @typedef {import('../../lib/dates-libres').MoisCalendrier} MoisCalendrier */
@@ -337,170 +337,14 @@ const Case = styled.div`
   }
 `
 
-// ─────────────────────────────────────────────────────────────────────
-// Modal de choix (scène vs murs) au clic sur une case libre
-// ─────────────────────────────────────────────────────────────────────
-
-const ModalBackdrop = styled.div`
-  position: fixed;
-  inset: 0;
-  background: rgba(8, 8, 4, 0.78);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  z-index: 1100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  animation: fadeIn 0.2s ease;
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-`
-
-const ModalCard = styled.div`
-  position: relative;
-  width: 100%;
-  max-width: 540px;
-  background: linear-gradient(180deg, #1a1810 0%, #100f09 100%);
-  border: 1px solid rgba(247, 209, 53, 0.3);
-  border-radius: 22px;
-  padding: 38px 30px 30px;
-  text-align: center;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
-
-  .ferme {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: rgba(255, 255, 255, 0.7);
-    width: 32px;
-    height: 32px;
-    border-radius: 999px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.2s ease;
-
-    &:hover {
-      background: rgba(247, 209, 53, 0.15);
-      color: var(--color-brand);
-      border-color: var(--color-brand);
-    }
-  }
-
-  .eyebrow {
-    color: var(--color-brand);
-    font-family: var(--font-din);
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    font-size: 11px;
-    margin-bottom: 12px;
-  }
-
-  h3 {
-    font-family: var(--font-din);
-    color: #ffffff;
-    font-size: clamp(22px, 3vw, 30px);
-    font-weight: 200;
-    letter-spacing: -0.5px;
-    margin: 0 0 8px;
-    line-height: 1.1;
-
-    .accent { color: var(--color-brand); }
-  }
-
-  .date {
-    color: rgba(255, 255, 255, 0.65);
-    font-size: 14px;
-    margin-bottom: 30px;
-    font-style: italic;
-  }
-`
-
-const ChoixGrille = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-  }
-`
-
-const Choix = styled.a`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 22px 16px;
-  background: rgba(247, 209, 53, 0.05);
-  border: 1px solid rgba(247, 209, 53, 0.3);
-  border-radius: 14px;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.25s ease;
-
-  &:hover {
-    background: rgba(247, 209, 53, 0.18);
-    border-color: var(--color-brand);
-    transform: translateY(-2px);
-  }
-
-  .emo {
-    font-size: 32px;
-    line-height: 1;
-  }
-
-  .label {
-    font-family: var(--font-din);
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    font-size: 12px;
-    color: var(--color-brand);
-    font-weight: 500;
-  }
-
-  .ss {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 12px;
-    line-height: 1.4;
-    margin-top: 2px;
-  }
-`
-
-const NoteModal = styled.div`
-  margin-top: 22px;
-  padding-top: 16px;
-  border-top: 1px dashed rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 12px;
-  line-height: 1.6;
-  font-style: italic;
-`
-
 const JOURS_HEAD = ['LUN', 'MAR', 'MER', 'JEU', 'VEN', 'SAM', 'DIM']
-const MOIS_FR = [
-  'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
-  'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre',
-]
-const JOURS_FR_LONG = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi']
+
+// 2026-05-18 : la modal de choix scène vs murs a été retirée. Le clic sur un
+// carré jaune (libre) ouvre direct le dépôt Surlascène, le clic sur un rond
+// jaune (libre_expo) ouvre direct le dépôt Surnosmurs. La forme dit déjà tout.
 
 const DEPOT_SCENE_URL = 'https://labrassee-surlascene-depot.vercel.app/?candidature=scene'
 const DEPOT_MURS_URL = 'https://labrassee-murs-depot.vercel.app/?candidature=murs'
-
-function labelDate(iso) {
-  if (!iso) return ''
-  const [y, m, d] = iso.split('-').map(Number)
-  const dateObj = new Date(y, m - 1, d)
-  return `${JOURS_FR_LONG[dateObj.getDay()]} ${d} ${MOIS_FR[m - 1]} ${y}`
-}
 
 function urlDepot(type, iso) {
   const base = type === 'murs' ? DEPOT_MURS_URL : DEPOT_SCENE_URL
@@ -584,15 +428,9 @@ function LigneDirectricePourMois({ moisHum }) {
  * @param {{ mois?: MoisCalendrier[] }} props
  */
 export default function ProposerCalendrier({ mois = [] }) {
-  const [dateChoisie, setDateChoisie] = useState(null)
-
-  // Ferme la modal sur Esc
-  useEffect(() => {
-    if (!dateChoisie) return
-    const onKey = (e) => { if (e.key === 'Escape') setDateChoisie(null) }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [dateChoisie])
+  // Plus de modal scène/murs : le clic sur un carré jaune (libre, soir scène)
+  // ouvre direct le dépôt Surlascène avec date pré-remplie. Le clic sur un
+  // rond jaune (libre_expo, dim) ouvre direct Surnosmurs. Symétrie complète.
 
   return (
     <Section id="calendrier">
@@ -698,7 +536,7 @@ export default function ProposerCalendrier({ mois = [] }) {
                                       'Trop proche — préavis minimum 7 jours'))
                                   : ''
                   const handleClick = isClickableScene
-                    ? () => setDateChoisie(j.iso)
+                    ? () => { window.open(urlDepot('scene', j.iso), '_blank', 'noopener,noreferrer') }
                     : isClickableExpo
                       ? () => { window.open(urlDepot('murs', j.iso), '_blank', 'noopener,noreferrer') }
                       : undefined
@@ -722,50 +560,6 @@ export default function ProposerCalendrier({ mois = [] }) {
         )}
       </Container>
 
-      {dateChoisie && (
-        <ModalBackdrop onClick={() => setDateChoisie(null)}>
-          <ModalCard onClick={(e) => e.stopPropagation()}>
-            <button
-              type="button"
-              className="ferme"
-              onClick={() => setDateChoisie(null)}
-              aria-label="Fermer"
-            >
-              ✕
-            </button>
-            <div className="eyebrow">Date visée · {labelDate(dateChoisie)}</div>
-            <h3>
-              Tu veux te faire <span className="accent">voir</span> sur quoi ?
-            </h3>
-            <div className="date">On t'ouvre le bon dépôt selon ta réponse.</div>
-            <ChoixGrille>
-              <Choix
-                href={urlDepot('scene', dateChoisie)}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span className="emo">🎤</span>
-                <span className="label">Sur la scène</span>
-                <span className="ss">Concert · jam · poésie · karaoké</span>
-              </Choix>
-              <Choix
-                href={urlDepot('murs', dateChoisie)}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span className="emo">🖼️</span>
-                <span className="label">Sur les murs</span>
-                <span className="ss">Expo · peinture · photo · illustration</span>
-              </Choix>
-            </ChoixGrille>
-            <NoteModal>
-              La date est juste indicative — on regarde ton dossier puis on te
-              propose un créneau qui colle (scène : la date choisie · murs :
-              prochaine rotation 4 sem libre).
-            </NoteModal>
-          </ModalCard>
-        </ModalBackdrop>
-      )}
     </Section>
   )
 }
