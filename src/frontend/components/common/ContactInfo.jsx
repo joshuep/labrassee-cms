@@ -138,18 +138,14 @@ const ContactInfo = ({ businessInfo }) => {
   const source = businessInfo || fallbackBusinessInfo;
   const isEmail = (value) => typeof value === 'string' && value.includes('@');
 
+  // 2026-05-18 : retrait des lignes ARTISTES + EXPOSITIONS.
+  // Les artistes passent désormais par les dépôts EPK (boutons « Proposer ma
+  // perfo » / « Proposer mon expo » dans l'onglet « Viens te faire voir »).
+  // Le footer ne garde que le contact général.
   const contactData = [
     {
       label: 'POUR TOUTES QUESTIONS',
       email: source.contact.general
-    },
-    {
-      label: 'ARTISTES',
-      email: source.contact.artists
-    },
-    {
-      label: 'EXPOSITIONS',
-      email: source.contact.exhibitions
     }
   ];
 
