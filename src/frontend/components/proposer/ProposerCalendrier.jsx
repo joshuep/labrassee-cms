@@ -259,9 +259,7 @@ const Case = styled.div`
     }
   }
 
-  /* Statut LIBRE_EXPO → même couleur que LIBRE mais ROND (cohérence avec
-     les vernissages cyan ronds — distingue visuellement « dim libre pour
-     proposer une expo » des autres dim grisés). */
+  /* Statut LIBRE_EXPO → rond jaune cliquable (dim d'accrochage rotation 4 sem) */
   &.libre_expo {
     background: rgba(247, 209, 53, 0.12);
     border: 1px solid rgba(247, 209, 53, 0.45);
@@ -275,6 +273,18 @@ const Case = styled.div`
       border-color: var(--color-brand);
       box-shadow: 0 6px 18px rgba(247, 209, 53, 0.2);
     }
+  }
+
+  /* Statut LIBRE_EXPO_ATTENTE → même jaune mais opacity réduite + non
+     cliquable. Indique « dim libre mais déjà couvert par la rotation
+     en cours » : visible pour cohérence mais l'artiste ne peut pas
+     candidater dessus. */
+  &.libre_expo_attente {
+    background: rgba(247, 209, 53, 0.05);
+    border: 1px dashed rgba(247, 209, 53, 0.28);
+    color: rgba(247, 209, 53, 0.45);
+    border-radius: 50%;
+    cursor: default;
   }
 
   /* Statut IMPRO → mauve/violet (réservé en récurrence éditoriale) */
@@ -355,6 +365,7 @@ function tagPour(statut, vernissageRole) {
   switch (statut) {
     case 'libre': return null
     case 'libre_expo': return 'expo ?'
+    case 'libre_expo_attente': return null
     case 'impro': return 'impro'
     case 'reservee': return 'résa'
     case 'bookee': return 'booké'
@@ -454,6 +465,10 @@ export default function ProposerCalendrier({ mois = [] }) {
             Dim libre — propose une expo
           </span>
           <span className="puce">
+            <span className="swatch" style={{ background: 'rgba(247, 209, 53, 0.08)', border: '1px dashed rgba(247, 209, 53, 0.4)', borderRadius: '50%' }} />
+            Dim couvert (rotation 4 sem)
+          </span>
+          <span className="puce">
             <span className="swatch" style={{ background: 'rgba(155, 110, 220, 0.4)', border: '1px solid rgba(155, 110, 220, 0.8)' }} />
             Impro (lundis)
           </span>
@@ -529,7 +544,9 @@ export default function ProposerCalendrier({ mois = [] }) {
                               ? 'Lundi : soirée Impro (récurrence éditoriale)'
                               : j.statut === 'libre_expo'
                                 ? 'Dimanche libre — clique pour proposer une expo Sur nos murs'
-                                : j.statut === 'ferme'
+                                : j.statut === 'libre_expo_attente'
+                                  ? 'Dim couvert par la rotation en cours (4 sem) — prochain accrochage indiqué en jaune cliquable'
+                                  : j.statut === 'ferme'
                                   ? (j.dow === 3 ? 'Mercredi : repos' :
                                      j.dow === 0 ? 'Dimanche : réservé aux vernissages' :
                                      (j.iso && j.iso.slice(5, 7) >= '07' && j.iso.slice(5, 7) <= '08' ? 'Juillet–août : on garde la scène pour ven + sam' :

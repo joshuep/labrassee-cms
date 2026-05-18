@@ -131,16 +131,17 @@ export function grouperParMois(dates: DateLibre[]): Array<{ cleMois: string; lib
 // ─────────────────────────────────────────────────────────────────────────
 
 export type StatutJour =
-  | 'libre'         // soir ouvert + aucun concert → cliquable pour proposer un show
-  | 'libre_expo'    // dim sans vernissage/accrochage → cliquable pour proposer une expo
-  | 'impro'         // lundi réservé d'office pour la soirée Impro (non cliquable)
-  | 'reservee'      // concert (scène) statut='planifie' (option, attente confirmation)
-  | 'bookee'        // concert (scène) statut='confirme'
-  | 'reservee_expo' // dim expo statut='planifie' (rond orange, distinct des concerts carrés)
-  | 'bookee_expo'   // dim expo statut='confirme' (rond vert)
-  | 'ferme'         // soir non scène (mer + dim) ou hors préavis (< 7 jours)
-  | 'passee'        // date dans le passé
-  | 'horsmois'      // padding début/fin du mois pour avoir grille 7 colonnes
+  | 'libre'             // soir ouvert + aucun concert → cliquable pour proposer un show
+  | 'libre_expo'        // dim d'accrochage (rotation 4 sem) → cliquable pour proposer une expo
+  | 'libre_expo_attente' // dim libre hors cadence rotation → jaune visible, non cliquable
+  | 'impro'             // lundi réservé d'office pour la soirée Impro (non cliquable)
+  | 'reservee'          // concert (scène) statut='planifie' (option, attente confirmation)
+  | 'bookee'            // concert (scène) statut='confirme'
+  | 'reservee_expo'     // dim expo statut='planifie' (rond orange, distinct des concerts carrés)
+  | 'bookee_expo'       // dim expo statut='confirme' (rond vert)
+  | 'ferme'             // soir non scène (mer + dim) ou hors préavis (< 7 jours)
+  | 'passee'            // date dans le passé
+  | 'horsmois'          // padding début/fin du mois pour avoir grille 7 colonnes
 
 export type JourCalendrier = {
   iso: string
@@ -266,11 +267,49 @@ export const getCalendrierMois = cache(
       console.error('[calendrier-mois] fetch expos fail', e)
     }
 
+    // Une expo couvre du jour d'accrochage (inclus) au jour de décrochage
+    // EXCLU : le matin du décrochage, on dépose les œuvres de l'expo suivante,
+    // donc ce dim doit redevenir libre/cliquable (pas bloqué par l'expo qui sort).
     function expoCouvrant(iso: string): ExpoRange | null {
       for (const e of exposEnCours) {
-        if (iso >= e.start && iso <= e.end) return e
+        if (iso >= e.start && iso < e.end) return e
       }
       return null
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // Rotation expo : 4 semaines fixes
+    //
+    // Les dim libres ne sont PAS tous cliquables. Seuls les dim "ancres"
+    // (= dim d'accrochage à +0/+4/+8/... sem du dernier décrochage connu)
+    // déclenchent une nouvelle expo. Les autres dim libres restent visibles
+    // (jaune) mais non cliquables : ils sont déjà couverts par l'expo
+    // accrochée à l'ancre précédente.
+    //
+    // Ancrage :
+    //   - S'il existe au moins une expo (passée ou en cours), l'ancre 0
+    //     = dim de décrochage le plus tardif connu (= prochain accrochage).
+    //   - Sinon, ancre 0 = premier dim ≥ today + 7 jours (préavis).
+    // ─────────────────────────────────────────────────────────────────
+    const dimAncres = new Set<string>()
+    let pivot: Date | null = null
+    if (exposEnCours.length > 0) {
+      for (const e of exposEnCours) {
+        const dec = new Date(e.end + 'T00:00:00')
+        if (!pivot || dec > pivot) pivot = dec
+      }
+    } else {
+      pivot = new Date(today)
+      pivot.setDate(pivot.getDate() + PREAVIS_JOURS)
+      while (pivot.getDay() !== 0) pivot.setDate(pivot.getDate() + 1)
+    }
+    // On génère 18 mois d'ancres (horizon large vs le calendrier 3 mois)
+    const horizonAncres = new Date(today)
+    horizonAncres.setDate(horizonAncres.getDate() + 18 * 31)
+    const curAncre = new Date(pivot!)
+    while (curAncre <= horizonAncres) {
+      dimAncres.add(curAncre.toISOString().slice(0, 10))
+      curAncre.setDate(curAncre.getDate() + 28) // exactement 4 semaines
     }
 
     const result: MoisCalendrier[] = []
@@ -345,15 +384,17 @@ export const getCalendrierMois = cache(
         } else if (iso < todayISO) {
           statut = 'passee'
         } else if (expoCe) {
-          // Dimanche pendant une expo en cours → bloqué (rond vert si signé,
-          // rond orange si pas encore signé) — pas cliquable pour une nouvelle
-          // candidature, l'artiste actuel·le occupe les murs.
-          statut = expoCe.signature ? 'bookee_expo' : 'reservee_expo'
+          // Dimanche pendant une expo en cours → bloqué (rond vert).
+          // Les murs sont occupés, peu importe l'état de signature du contrat
+          // (la signature concerne le contrat artistique, pas l'occupation
+          // physique : si l'expo est accrochée, le mur est pris).
+          statut = 'bookee_expo'
         } else if (dow === 0 && !isPermanentsMonth && iso >= preavisISO) {
-          // Dimanche libre (pas de vernissage/accrochage prévu, hors mois
-          // permanents prioritaires, préavis respecté) → cliquable pour
-          // proposer une expo Surnosmurs (rond jaune, distinct des concerts).
-          statut = 'libre_expo'
+          // Dimanche libre : on garde l'apparence jaune dans tous les cas
+          // mais seul·e·s les dim "ancres" (rotation 4 sem) sont cliquables.
+          // Les autres dim libres = visibles mais non interactifs (l'expo
+          // qui s'accroche à l'ancre précédente les couvre déjà).
+          statut = dimAncres.has(iso) ? 'libre_expo' : 'libre_expo_attente'
         } else if (!joursOuverts.has(dow)) {
           // Jour non ouvert ce mois-ci → fermé (mer, dim avec préavis pas
           // respecté ; + lun/mar/jeu en juillet/août ; + tout le mois en sept-déc)

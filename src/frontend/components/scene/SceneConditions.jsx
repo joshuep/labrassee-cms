@@ -195,18 +195,8 @@ const cards = [
   },
 ]
 
-const mailtoBody = encodeURIComponent(
-  `Salut !
-
-Nom artiste / groupe :
-Genre :
-Nb de personnes sur scène :
-Période souhaitée :
-Lien écoute (Spotify/Bandcamp/YouTube) :
-Un mot sur toi :
-
-Merci !`,
-)
+const DEPOT_SCENE_URL =
+  'https://labrassee-surlascene-depot.vercel.app/?candidature=scene'
 
 export default function SceneConditions() {
   return (
@@ -232,10 +222,12 @@ export default function SceneConditions() {
 
         <Actions>
           <Btn
-            href={`mailto:contact@labrassee.cafe?subject=Proposition%20de%20performance%20-%20Sur%20la%20sc%C3%A8ne&body=${mailtoBody}`}
+            href={DEPOT_SCENE_URL}
             className="primaire"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            Écrire à Cédric
+            Proposer ma perfo
           </Btn>
           <Btn href="#agenda" className="secondaire">
             Revoir l'agenda
