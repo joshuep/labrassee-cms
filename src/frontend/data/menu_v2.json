@@ -1,0 +1,1434 @@
+{
+  "_meta": {
+    "version": "v3-printemps-2026",
+    "updated": "2026-04-26",
+    "structure": "7 pages (nouveau, boissons chaudes, boissons froides, salé, sucré, bières et vin, cocktails)",
+    "note": "CABANE = 15,00 $ TTC validé par Cédric 2026-04-26. Fever-Tree retiré. Boréale 0 % conservées. GURU ajouté. Verres de lait retirés du menu papier (restent dans Koomi)."
+  },
+  "brand": {
+    "name": "La Brassée",
+    "tagline": "Café de Quartier — au cœur de Rosepatrie"
+  },
+  "pages": [
+    {
+      "id": "nouveau",
+      "slug": "menu_nouveau",
+      "title": "NOUVEAU",
+      "subtitle": "Printemps 2026 — la pêche à l'honneur",
+      "bg_color": "#e8895e",
+      "accent": "#2a1810",
+      "sections": [
+        {
+          "title": "",
+          "full_width": true,
+          "type": "hero_cards",
+          "cols": 3,
+          "items": [
+            {
+              "tag": "Smoothie vedette · NOUVEAU",
+              "name": "TEMPS DES PÊCHES",
+              "desc": "pêches · banane · tofu · avoine · coco · sirop de pêche",
+              "prix": 9.5
+            },
+            {
+              "tag": "Cocktail · jeu → dim",
+              "name": "PUNCH DE L'ÎLE",
+              "desc": "rhum épicé · pêches · bière de gingembre · lime · menthe",
+              "prix": 12.0
+            },
+            {
+              "tag": "Petit-déjeuner DIY",
+              "name": "POT'IDEJ",
+              "desc": "16 oz · yogourt · granola maison · fruits · confiture · 100% local",
+              "prix": 10.0
+            }
+          ]
+        },
+        {
+          "title": "",
+          "type": "bubbles_pair",
+          "full_width": true,
+          "bubbles": [
+            {
+              "label": "LE RETOUR DE L'ÉTÉ",
+              "body": "<em>Limonade · thé glacé · smoothies · cold brew · lattés glacés</em> · kombucha Gutsy · Heritage 77 · Mate Libre · GURU.",
+              "price": "Page suivante →",
+              "tilt": -1.5
+            }
+          ]
+        },
+        {
+          "title": "",
+          "type": "bubbles_pair",
+          "full_width": true,
+          "bubbles": [
+            {
+              "label": "LE CABANE <span class=\"badge-new\">NOUVEAU</span> <span class=\"badge-ca\">100% LOCAL</span>",
+              "body": "Cabane à sucre · version sandwich. Ciabatta · philadelphia · BBQ érable · porc effiloché · oignons caramélisés · cheddar Île aux Grues.<br><em>+ demi-salade verte 2,50 $ · jour 4,50 $</em>",
+              "price": "15,00 $ · 100% LOCAL",
+              "tilt": -1.5
+            },
+            {
+              "label": "LES FOCACCIAS · SAM-DIM",
+              "body": "Pâte maison · servie chaude.<br><em>Poulet-bacon</em> 13$ · <em>VG</em> 11$.",
+              "price": "11,00 / 13,00 $",
+              "tilt": 1.5
+            }
+          ],
+          "ratio": "2-1"
+        },
+        {
+          "title": "",
+          "type": "bubbles_pair",
+          "full_width": true,
+          "bubbles": [
+            {
+              "label": "LUFA · ÉPICERIE",
+              "body": "Fais livrer ton panier <em>Lufa</em> ici · au frais jusqu'à ton arrivée.",
+              "price": "7 / 7 · sans rendez-vous",
+              "tilt": -3
+            },
+            {
+              "label": "GRENOUILLE ROUGE · CHAMPIGNONS",
+              "body": "Tes champignons livrés dans le frigo dédié · libre-service.",
+              "price": "Frigo réservé",
+              "tilt": 2
+            }
+          ]
+        }
+      ],
+      "footer": "<span class=\"uc\">Commande &amp; service aux tables · WIFI : LABRASSEE2019 · MOT DE PASSE : EntreVoisins2019</span>",
+      "body_class": "page-fill",
+      "extras": [
+        "<div class=\"page-foot-bubbles page-foot-bubbles-3\"><div class=\"foot-bubble\"><div class=\"fb-label\">SOIRS D'ÉVÉNEMENT</div><div class=\"fb-text\">Pas d'entrée · participe au chapeau. <em>+10% sur la facture · 100% aux artistes</em>.</div></div><div class=\"foot-bubble\"><div class=\"fb-label\">WIFI</div><div class=\"fb-text\" style=\"font-size:1.25em;line-height:1.4\"><em>Réseau&nbsp;:</em> LABRASSEE2019<br><em>Mot de passe&nbsp;:</em> EntreVoisins2019</div></div><div class=\"foot-bubble tilt-r\"><div class=\"fb-label\">NOS HORAIRES</div><div class=\"fb-text\">On ouvre à 9h · on ferme selon l'événement.<br><em>www.labrassee.cafe</em></div></div></div>"
+      ]
+    },
+    {
+      "id": "boissons_chaudes",
+      "slug": "menu_boissons_chaudes",
+      "title": "NOS BOISSONS CHAUDES",
+      "subtitle": "Cafés · thés · lattes — laits végétaux = même prix",
+      "bg_color": "#c49860",
+      "accent": "#2a1810",
+      "sections": [
+        {
+          "title": "CAFÉS",
+          "headers": [
+            "COURT",
+            "ALLONGÉ",
+            "PETIT",
+            "MOYEN",
+            "GRAND"
+          ],
+          "items": [
+            {
+              "name": "ESPRESSO (DOUBLE)",
+              "prix": [
+                3.6,
+                3.6,
+                null,
+                null,
+                null
+              ]
+            },
+            {
+              "name": "AMÉRICANO",
+              "prix": [
+                null,
+                null,
+                3.9,
+                3.9,
+                3.9
+              ]
+            },
+            {
+              "name": "MACCHIATO",
+              "prix": [
+                4.25,
+                4.25,
+                null,
+                null,
+                null
+              ]
+            },
+            {
+              "name": "CORTADO",
+              "prix": [
+                4.75,
+                4.75,
+                null,
+                null,
+                null
+              ]
+            },
+            {
+              "name": "CAPPUCCINO",
+              "prix": [
+                null,
+                null,
+                5.0,
+                null,
+                null
+              ]
+            },
+            {
+              "name": "LATTE",
+              "prix": [
+                null,
+                null,
+                null,
+                6.5,
+                7.5
+              ]
+            },
+            {
+              "name": "FLAT WHITE",
+              "prix": [
+                null,
+                null,
+                null,
+                6.5,
+                null
+              ]
+            },
+            {
+              "name": "LAIT D'OR",
+              "prix": [
+                null,
+                null,
+                null,
+                6.25,
+                7.25
+              ]
+            },
+            {
+              "name": "CHOCOLAT CHAUD",
+              "prix": [
+                null,
+                null,
+                null,
+                6.25,
+                7.0
+              ]
+            },
+            {
+              "name": "MOKACCINO",
+              "prix": [
+                null,
+                null,
+                null,
+                7.0,
+                7.5
+              ]
+            }
+          ],
+          "aside": "<div class=\"bubble\" style=\"margin-top: -10px; transform: rotate(2deg)\">Décaf <em>même prix</em></div><div class=\"bubble\" style=\"margin-top: 22px; transform: rotate(-2deg)\">Lait <em>Henrietta</em> · avoine · amande · coco · soya <span class=\"b-price\">aucun supplément</span></div><div class=\"bubble\" style=\"margin-top: 22px\">Caramel salé <em>Breton</em> <span class=\"b-price\">+1 $</span></div>"
+        },
+        {
+          "title": "LATTES & INFUSIONS THÉ",
+          "items": [
+            {
+              "name": "MATCHA LATTE <span class=\"variants\">régulier · chaï · earl grey · mangue</span>",
+              "format": "16oz",
+              "prix": 7.5
+            },
+            {
+              "name": "LONDON FOG",
+              "format": "16oz",
+              "prix": 7.5
+            },
+            {
+              "name": "CHAÏ LATTE",
+              "format": "16oz",
+              "prix": 7.5
+            },
+            {
+              "name": "DIRTY CHAÏ LATTE",
+              "format": "16oz",
+              "prix": 8.5
+            }
+          ],
+          "aside": "<div class=\"bubble bubble-arrow-high\" style=\"margin-top: 6px\">Sirop chocolat blanc sur le Matcha&nbsp;? <span class=\"b-price\">+1,00 $</span></div>"
+        },
+        {
+          "title": "<span class=\"h2-main\">FORMATS DE THÉ <span class=\"h2-sub\">pour 1 personne</span></span>",
+          "extra_top": true,
+          "items": [
+            {
+              "name": "PETITE THÉIÈRE",
+              "format": "12oz",
+              "prix": 4.0
+            },
+            {
+              "name": "GRANDE THÉIÈRE",
+              "format": "20oz",
+              "prix": 6.0
+            },
+            {
+              "name": "THÉ À EMPORTER",
+              "format": "16oz",
+              "prix": 4.5
+            }
+          ],
+          "type": "inline_formats",
+          "full_width": true,
+          "subtitle_style": "small_black"
+        },
+        {
+          "title": "NOS THÉS",
+          "type": "tea_categories",
+          "categories": {
+            "THÉS NOIRS": [
+              "Darjeeling",
+              "Casablanca",
+              "Thé des Tsars",
+              "Masala Chaï",
+              "Lapsang Souchong",
+              "English Breakfast",
+              "Pu-Erh Jeune",
+              "Grand Earl Grey",
+              "Earl Grey Cream"
+            ],
+            "THÉS VERTS": [
+              "Bleuets",
+              "Gunpowder",
+              "Sencha Coing",
+              "Jasmin du Paradis",
+              "Zeste de Citron"
+            ],
+            "THÉS BLANCS": [
+              "Supérieur",
+              "Pomme-Grenade"
+            ],
+            "MATCHAS": [
+              "Régulier",
+              "Mangue",
+              "Earl Grey",
+              "Chaï"
+            ],
+            "SANS THÉINE": [
+              "Rooibos Orange/Gingembre",
+              "Rooibos Vanille",
+              "Infusion Bien-Être",
+              "Infusion Digestion",
+              "Fleurs d'Hibiscus",
+              "Shanti Framboise",
+              "Tilleul",
+              "Camomille Menthe",
+              "Verveine"
+            ],
+            "INCLASSABLES": [
+              "Se Zhong",
+              "Wulong Fleur d'Oranger"
+            ]
+          }
+        },
+        {
+          "title": "",
+          "subtitle": "",
+          "type": "bubbles_pair",
+          "bubbles": [
+            {
+              "label": "EXTRA GOURMAND · +1 $",
+              "body": "<em>Sirops 1883</em> + caramel salé maison",
+              "price": "",
+              "tilt": -3
+            },
+            {
+              "label": "EXTRA TRÈS GOURMAND · +18 ans",
+              "body": "Coureur des Bois Crème (1oz) · Whisky (1oz)",
+              "price": "+2,50 $ · +3,00 $",
+              "tilt": 2
+            }
+          ],
+          "full_width": true
+        }
+      ],
+      "footer": "<span class=\"uc\">WIFI : LABRASSEE2019  ·  MOT DE PASSE :</span> EntreVoisins2019",
+      "body_class": "page-tight"
+    },
+    {
+      "id": "boissons_froides",
+      "slug": "menu_boissons_froides",
+      "title": "NOS BOISSONS FROIDES",
+      "subtitle": "Saisonniers · cafés glacés · canettes de producteurs d'ici",
+      "bg_color": "#4a9cc4",
+      "accent": "#0a1e2a",
+      "sections": [
+        {
+          "title": "NOS SAISONNIERS",
+          "subtitle": "préparés minute chez nous — le cœur de notre carte froide",
+          "full_width": true,
+          "type": "hero_cards",
+          "cols": 4,
+          "items": [
+            {
+              "tag": "Smoothie",
+              "name": "TUTTI FRUTTI",
+              "desc": "banane · fruits rouges · menthe · coco",
+              "prix": 9.5
+            },
+            {
+              "tag": "Smoothie",
+              "name": "POPEYE",
+              "desc": "ananas · mangue · épinards · banane · coco",
+              "prix": 9.5
+            },
+            {
+              "tag": "Smoothie",
+              "name": "BOUYA BOUYA",
+              "desc": "banane · espresso · amande · avoine · cannelle · choco",
+              "prix": 9.5
+            },
+            {
+              "tag": "Smoothie saisonnier",
+              "name": "TEMPS DES PÊCHES",
+              "desc": "pêches · banane · tofu · avoine · coco · pêche",
+              "prix": 9.5
+            }
+          ]
+        },
+        {
+          "title": "",
+          "full_width": true,
+          "type": "hero_cards",
+          "cols": 2,
+          "items": [
+            {
+              "tag": "Printemps-été",
+              "name": "LIMONADE MAISON",
+              "desc": "orgeat · citron · orange",
+              "prix": 5.5
+            },
+            {
+              "tag": "Infusion maison",
+              "name": "THÉ GLACÉ MAISON",
+              "desc": "litchi · sans sucre ajouté",
+              "prix": 5.5
+            }
+          ]
+        },
+        {
+          "title": "CAFÉS & LATTÉS GLACÉS",
+          "subtitle": "tous en 20oz — laits végétaux au choix (même prix)",
+          "full_width": false,
+          "type": "grouped_columns",
+          "cols": 2,
+          "extra_top": true,
+          "aside": "<div class=\"bubble\" style=\"margin-top: -10px; transform: rotate(2deg)\">Lait <em>Henrietta 3,8%</em> ou <em>avoine, amande, coco, soya</em> <span class=\"b-price\">aucun supplément&nbsp;!</span></div><div class=\"bubble\" style=\"margin-top: 36px\">Option caramel salé <em>Breton</em> <span class=\"b-price\">+1,00 $</span></div>",
+          "groups": [
+            {
+              "title": "CAFÉS GLACÉS",
+              "items": [
+                {
+                  "name": "AMÉRICANO ESPRESSO GLACÉ",
+                  "prix": 5.5
+                },
+                {
+                  "name": "AMÉRICANO COLD BREW",
+                  "prix": 5.5
+                },
+                {
+                  "name": "LATTÉ GLACÉ",
+                  "format": "espresso",
+                  "prix": 7.25
+                },
+                {
+                  "name": "LATTÉ GLACÉ COLD BREW",
+                  "prix": 7.25
+                },
+                {
+                  "name": "MOKA GLACÉ",
+                  "prix": 7.5
+                }
+              ]
+            },
+            {
+              "title": "LATTÉS GLACÉS & AUTRES",
+              "items": [
+                {
+                  "name": "CHAÏ LATTÉ GLACÉ",
+                  "prix": 7.5
+                },
+                {
+                  "name": "MATCHA GLACÉ",
+                  "prix": 7.5
+                },
+                {
+                  "name": "LONDON FOG GLACÉ",
+                  "prix": 7.5
+                },
+                {
+                  "name": "LAIT D'OR GLACÉ",
+                  "prix": 7.25
+                },
+                {
+                  "name": "CHOCOLAT FRAPPÉ",
+                  "prix": 7.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "CANETTES & BOUTEILLES",
+          "subtitle": "sélection de producteurs d'ici — servies telles quelles",
+          "full_width": true,
+          "type": "grouped_columns",
+          "cols": 2,
+          "extra_top": true,
+          "groups": [
+            {
+              "title": "SANS ALCOOL",
+              "items": [
+                {
+                  "name": "GUTSY KOMBUCHA (MTL)",
+                  "desc": "6 saveurs en rotation",
+                  "prix": 6.0
+                },
+                {
+                  "name": "MATE LIBRE (QC)",
+                  "desc": "4 saveurs",
+                  "prix": 5.75
+                },
+                {
+                  "name": "GURU (QC)",
+                  "desc": "énergie végétale biologique",
+                  "prix": 6.75
+                },
+                {
+                  "name": "HERITAGE 77 (QC)",
+                  "desc": "jus fermiers · pomme · pomme-fraise",
+                  "prix": 5.75
+                },
+                {
+                  "name": "OASIS (QC)",
+                  "desc": "jus d'orange",
+                  "prix": 4.25
+                },
+                {
+                  "name": "MONTELLIER (QC)",
+                  "desc": "nature · citron · pamplemousse",
+                  "prix": 2.75
+                }
+              ]
+            },
+            {
+              "title": "BIÈRES 0 % — BORÉALE HORS SENTIER (MTL)",
+              "items": [
+                {
+                  "name": "BLONDE",
+                  "format": "473 ml",
+                  "prix": 8.5
+                },
+                {
+                  "name": "ROUSSE",
+                  "format": "473 ml",
+                  "prix": 8.5
+                },
+                {
+                  "name": "IPA",
+                  "format": "473 ml",
+                  "prix": 8.5
+                },
+                {
+                  "name": "FRAMBOISE SURE",
+                  "format": "473 ml",
+                  "prix": 8.5
+                },
+                {
+                  "name": "BLANCHE",
+                  "format": "341 ml",
+                  "prix": 7.5
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "footer": "<span class=\"uc\">WIFI : LABRASSEE2019  ·  MOT DE PASSE :</span> EntreVoisins2019",
+      "extras": [
+        "<div class=\"page-foot-bubbles\"><div class=\"foot-bubble\"><div class=\"fb-label\">SERVICE AUX TABLES</div><div class=\"fb-text\">Ici, on te sert dans <em>de la vraie vaisselle</em> tant que tu restes avec nous. <em>Promis</em>, tu repartiras avec ton verre en carton au moment de partir. <em>Pas de gâchis&nbsp;!</em></div></div><div class=\"foot-bubble tilt-r\"><div class=\"fb-label\">COLD BREW</div><div class=\"fb-text\">Infusé <em>18h à froid</em>, aromatique et peu acide — <em>la signature de l'été</em>.</div></div></div>"
+      ],
+      "body_class": "page-tight"
+    },
+    {
+      "id": "sale",
+      "slug": "menu_sale",
+      "title": "CÔTÉ SALÉ",
+      "subtitle": "<span class=\"sub-sm\">Plats du jour, grilled cheese, quiches & petits creux — viandes des Fermes Valens</span>",
+      "bg_color": "#4d7a2c",
+      "accent": "#10200a",
+      "sections": [
+        {
+          "title": "PLATS DU JOUR <span class=\"tip-bubble\">+ salade verte <em>2,50&nbsp;$</em> · demi-salade du jour <em>4,50&nbsp;$</em></span>",
+          "subtitle": "",
+          "type": "plats_condensed",
+          "full_width": true,
+          "days": [
+            {
+              "day": "LUN",
+              "vg": "—",
+              "viande": "Pâté poulet 12,50 · Pâté viande 14,50"
+            },
+            {
+              "day": "MAR",
+              "vg": "—",
+              "viande": "Bœuf bourguignon (SG) 14,50"
+            },
+            {
+              "day": "MER",
+              "vg": "Lasagne mexicaine (SG) 12,50",
+              "viande": "Lasagne mexicaine bœuf (SG) 14,00"
+            },
+            {
+              "day": "JEU",
+              "vg": "Tofu au beurre (SG) 12,50",
+              "viande": "Poulet au beurre (SG) 14,00"
+            },
+            {
+              "day": "VEN",
+              "vg": "Lasagne légumes (SG) 12,50",
+              "viande": "Lasagne bœuf-ricotta 14,50"
+            },
+            {
+              "day": "SAM-DIM",
+              "vg": "Focaccia <em>à l'inspiration</em> 11,00",
+              "viande": "Focaccia poulet-bacon 13,00"
+            },
+            {
+              "day": "TOUS LES JOURS",
+              "text": "Croissant déjeuner — œufs brouillés, épinards, cheddar, érable · 9,50<br><span class=\"plat-tail\"><em>stocks limités · ou presque</em></span>"
+            }
+          ]
+        },
+        {
+          "title": "GRILLED CHEESE <span class=\"tip-bubble\">+ salade verte <em>2,50&nbsp;$</em> · demi-salade du jour <em>4,50&nbsp;$</em></span>",
+          "subtitle": "",
+          "full_width": true,
+          "type": "hero_cards",
+          "cols": 3,
+          "items": [
+            {
+              "name": "CABANE <span class=\"badge-new\">NOUVEAU</span> <span class=\"badge-ca\">100% CANADIEN</span>",
+              "desc": "philly · BBQ érable · porc · oignons · cheddar · pain ciabatta",
+              "prix": 15.0
+            },
+            {
+              "tag": "Sandwich grillé · végé",
+              "name": "STM <span class=\"badge-soft\">PRESQUE NOUVEAU</span>",
+              "desc": "shiitakés · créminis · estragon · cheddar fort · miso · pain 9 grains",
+              "prix": 12.5
+            },
+            {
+              "tag": "Brunch",
+              "name": "TI BRUNCH",
+              "desc": "provolone · omelette · poivrons · paprika · mozzarella · érable",
+              "prix": 11.0
+            },
+            {
+              "tag": "Saumon",
+              "name": "HAMEÇON",
+              "desc": "saumon fumé · brie · abricots · aneth · mozza · sur pain à l'avoine",
+              "prix": 11.5
+            },
+            {
+              "tag": "Classique",
+              "name": "CROC <span class=\"badge-ca\">100% CANADIEN</span>",
+              "desc": "jambon · tête dure · béchamel · cornichons · sur pain blanc",
+              "prix": 11.5
+            },
+            {
+              "tag": "Sandwich grillé",
+              "name": "BEC <span class=\"badge-ca\">100% CANADIEN</span>",
+              "desc": "bacon · beurre d'érable · cheddar · pain quinoa",
+              "prix": 11.25
+            }
+          ]
+        },
+        {
+          "title": "QUICHES — 11,00 $ <span class=\"tip-bubble\">+ salade verte <em>2,50&nbsp;$</em> · demi-salade du jour <em>4,50&nbsp;$</em></span>",
+          "full_width": true,
+          "type": "hero_cards",
+          "cols": 4,
+          "items": [
+            {
+              "name": "LORRAINE",
+              "tag": "Bacon"
+            },
+            {
+              "name": "CHAMPIGNON-PARMESAN",
+              "tag": "Végé"
+            },
+            {
+              "name": "POIREAUX-BRIE",
+              "tag": "Végé"
+            },
+            {
+              "name": "CHÈVRE-ÉPINARDS",
+              "tag": "Végé"
+            }
+          ],
+          "extra_top": true
+        },
+        {
+          "title": "SALADES",
+          "full_width": true,
+          "type": "grouped_columns",
+          "cols": 2,
+          "groups": [
+            {
+              "title": "SALADES REPAS",
+              "items": [
+                {
+                  "name": "SALADE DU JOUR",
+                  "prix": 12.5
+                },
+                {
+                  "name": "SALADE VÉGANE <span class=\"variants\">pois chiches</span>",
+                  "prix": 11.0
+                },
+                {
+                  "name": "SALADE DE THON",
+                  "prix": 11.0
+                }
+              ]
+            },
+            {
+              "title": "DEMI-SALADES",
+              "items": [
+                {
+                  "name": "DEMI-SALADE DU JOUR <span class=\"variants\">seule</span>",
+                  "prix": 7.0
+                },
+                {
+                  "name": "DEMI-SALADE VERTE <span class=\"variants\">seule</span>",
+                  "prix": 4.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "NACHOS — À PARTAGER",
+          "subtitle": "tortillas de maïs, généreusement garnies — mozza · oignons · olives · poivrons · salsa mangue · crème sûre",
+          "full_width": true,
+          "type": "hero_cards",
+          "cols": 2,
+          "items": [
+            {
+              "tag": "Pour 1",
+              "name": "LA BRASSÉE",
+              "prix": 11.0
+            },
+            {
+              "tag": "Pour 2",
+              "name": "DOUBLE BRASSÉE",
+              "prix": 19.0
+            }
+          ]
+        }
+      ],
+      "footer": "<span class=\"uc\">WIFI : LABRASSEE2019  ·  MOT DE PASSE :</span> EntreVoisins2019",
+      "extras": [],
+      "body_class": "page-tight"
+    },
+    {
+      "id": "sucre",
+      "slug": "menu_sucre",
+      "title": "CÔTÉ SUCRÉ",
+      "subtitle": "Faits maison ou presque, toujours avec amour",
+      "bg_color": "#d46890",
+      "accent": "#2a0a1a",
+      "sections": [
+        {
+          "title": "",
+          "type": "bubbles_pair",
+          "full_width": true,
+          "ratio": "2-1",
+          "bubbles": [
+            {
+              "label": "POT'IDEJ — 10,00 $",
+              "body": "<em>Le petit-déj qui te ressemble.</em> Format <strong>16 oz · la totale</strong> : yogourt plain, végane ou vanille, granola maison, fruits frais, noix au choix · garni de <em>confiture fraise</em>, <em>marmelade orange</em> ou <em>confiture de pêche</em>.",
+              "price": "Confitures locales · 100% local · sur place ou à emporter",
+              "tilt": -2
+            },
+            {
+              "label": "CROISSANT — 3,75 $",
+              "body": "Boulangerie <em>Madeleine</em>",
+              "price": "Sauf lundi-mardi",
+              "tilt": 2
+            }
+          ],
+          "items": []
+        },
+        {
+          "title": "MUFFINS MAISON",
+          "price_label": "4,00",
+          "full_width": true,
+          "type": "hero_cards",
+          "cols": 4,
+          "square": true,
+          "items": [
+            {
+              "name": "CAROTTES · AMANDES",
+              "tag": "Végane · sans gluten"
+            },
+            {
+              "name": "FRAMBOISES",
+              "tag": "Végane"
+            },
+            {
+              "name": "BLEUETS",
+              "tag": "Végane"
+            },
+            {
+              "name": "DOUBLE CHOCOLAT"
+            }
+          ]
+        },
+        {
+          "title": "SCONES SUCRÉS MAISON",
+          "price_label": "4,50",
+          "subtitle": "un nouveau parfum chaque saison",
+          "full_width": true,
+          "type": "hero_cards",
+          "cols": 4,
+          "items": [
+            {
+              "name": "FRAMBOISES · CHOCOLAT 70% · CITRON"
+            },
+            {
+              "name": "ABRICOT · CHOCOLAT BLANC"
+            },
+            {
+              "name": "CANNEBERGES · COINTREAU · CHOCOLAT BLANC"
+            },
+            {
+              "name": "BLEUETS · GINGEMBRE CONFIT"
+            }
+          ],
+          "extra_top": true,
+          "square": true
+        },
+        {
+          "title": "SCONES SALÉS MAISON",
+          "price_label": "5,00",
+          "full_width": true,
+          "type": "hero_cards",
+          "cols": 3,
+          "compact": true,
+          "items": [
+            {
+              "name": "BACON · CHEDDAR · CIBOULETTE",
+              "tag": "SG"
+            },
+            {
+              "name": "OLIVES · TOMATES SÉCHÉES · CHEDDAR"
+            },
+            {
+              "name": "JALAPEÑOS · CHEDDAR"
+            }
+          ],
+          "extra_top": true,
+          "square": true
+        },
+        {
+          "title": "AUTRES DESSERTS MAISON",
+          "full_width": true,
+          "type": "grouped_columns",
+          "cols": 2,
+          "groups": [
+            {
+              "title": "À LA CUILLÈRE",
+              "items": [
+                {
+                  "name": "DÉCADENT CHAUD CARAMEL SALÉ (SG)",
+                  "desc": "servi chaud",
+                  "prix": 4.5
+                },
+                {
+                  "name": "PUDDING CHÔMEUR POIRE",
+                  "desc": "servi chaud",
+                  "prix": 5.5
+                },
+                {
+                  "name": "CROUSTADE AUX POMMES",
+                  "desc": "servie chaude",
+                  "prix": 6.0
+                },
+                {
+                  "name": "MOUSSE CAFÉ (SG)",
+                  "desc": "servie froide",
+                  "prix": 5.0
+                }
+              ]
+            },
+            {
+              "title": "BISCUITS & GÂTEAUX",
+              "items": [
+                {
+                  "name": "BROWNIE (VG/SG)",
+                  "prix": 5.0
+                },
+                {
+                  "name": "GARGANTUA (TRÈS TRÈS GROS BISCUIT)",
+                  "prix": 5.0
+                },
+                {
+                  "name": "CLAFOUTIS (CERISE)",
+                  "prix": 5.0
+                },
+                {
+                  "name": "GÂTEAU AUX CAROTTES",
+                  "desc": "raisins · rhum · ananas",
+                  "prix": 6.0
+                },
+                {
+                  "name": "GÂTEAU AU FROMAGE",
+                  "desc": "caramel salé · Madeleine",
+                  "prix": 8.0
+                }
+              ]
+            }
+          ],
+          "items": [],
+          "extra_top": true
+        }
+      ],
+      "footer": "<span class=\"uc\">WIFI : LABRASSEE2019  ·  MOT DE PASSE :</span> EntreVoisins2019",
+      "extras": [
+        "<div class=\"page-foot-bubbles\"><div class=\"foot-bubble\"><div class=\"fb-label\">TOUT EST FAIT ICI</div><div class=\"fb-text\">Nos pâtisseries sortent du four <em>chaque matin</em> — sans gluten, végane ou classique : <em>on a pour chacun</em>.</div></div><div class=\"foot-bubble tilt-r\"><div class=\"fb-label\">QUELQUES CRÉATIONS</div><div class=\"fb-text\">On s'autorise quelques <em>créations</em> de temps à autre — donc <em>possibles nouveautés</em>&nbsp;: -)</div></div></div>"
+      ],
+      "body_class": "page-sucre page-fill"
+    },
+    {
+      "id": "biere_vin",
+      "slug": "menu_biere_vin",
+      "title": "BIÈRES ET VIN",
+      "subtitle": "5-à-7 tous les jours · rotation régulière · partenaires locaux",
+      "bg_color": "#8a5fb0",
+      "accent": "#1a0a2a",
+      "sections": [
+        {
+          "title": "",
+          "type": "bubbles_pair",
+          "full_width": true,
+          "bubbles": [
+            {
+              "label": "5 À 7 — TOUS LES JOURS",
+              "body": "<strong>−15%</strong> sur toutes les <em>pintes</em> · <em>17h → 19h</em> · même le dimanche",
+              "price": "Aucune réservation · juste t'asseoir",
+              "tilt": -1.5
+            }
+          ],
+          "items": []
+        },
+        {
+          "title": "NOS FÛTS",
+          "subtitle": "rotation régulière — 8 fûts du moment",
+          "full_width": true,
+          "headers": [
+            "VERRE",
+            "PINTE"
+          ],
+          "items": [
+            {
+              "name": "BORÉALE IPA DU NORD-EST",
+              "prix": [
+                9.0,
+                12.5
+              ]
+            },
+            {
+              "name": "BORÉALE SAISONNIÈRE",
+              "prix": [
+                8.5,
+                12.0
+              ]
+            },
+            {
+              "name": "BORÉALE BLANCHE DES CIMES",
+              "prix": [
+                8.5,
+                12.0
+              ]
+            },
+            {
+              "name": "BORÉALE STOUT",
+              "prix": [
+                8.0,
+                10.0
+              ]
+            },
+            {
+              "name": "BORÉALE BLONDE",
+              "prix": [
+                8.0,
+                10.0
+              ]
+            },
+            {
+              "name": "BORÉALE ROUSSE",
+              "prix": [
+                8.0,
+                10.0
+              ]
+            },
+            {
+              "name": "BEAUREGARD COUP DE CŒUR",
+              "prix": [
+                8.5,
+                12.0
+              ]
+            },
+            {
+              "name": "MCKEOWN CIDRE DE POMMES",
+              "prix": [
+                8.0,
+                10.0
+              ]
+            }
+          ]
+        },
+        {
+          "title": "CANETTES BEAUREGARD",
+          "price_label": "9,00",
+          "subtitle": "format 473 ml · brasseries de quartier",
+          "full_width": true,
+          "type": "hero_cards",
+          "cols": 3,
+          "compact": true,
+          "items": [
+            {
+              "name": "BLONDE DU MOMENT"
+            },
+            {
+              "name": "ROUSSE ÉQUINOXE",
+              "tag": "Vienna lager"
+            },
+            {
+              "name": "INDIA PALE LAGER FUSION"
+            },
+            {
+              "name": "BIÈRE SÛRE MIMOSA",
+              "tag": "Gose orange · Nelson Sauvin"
+            },
+            {
+              "name": "STOUT DU MOMENT"
+            },
+            {
+              "name": "BIÈRE DU MOMENT"
+            }
+          ]
+        },
+        {
+          "title": "VINS",
+          "subtitle": "verre · bouteille",
+          "full_width": true,
+          "type": "grouped_columns",
+          "cols": 3,
+          "groups": [
+            {
+              "title": "ROUGES",
+              "items": [
+                {
+                  "name": "P. DE ROTHSCHILD",
+                  "desc": "Merlot · FR",
+                  "prix": "10,50 · 45,00"
+                },
+                {
+                  "name": "BAGATELLE",
+                  "desc": "Assemblage · FR",
+                  "prix": "11,25 · 50,00"
+                },
+                {
+                  "name": "SAVOIE",
+                  "desc": "Pinot Noir · USA",
+                  "prix": "12,00 · 50,00"
+                },
+                {
+                  "name": "VIGNES D'À CÔTÉ",
+                  "desc": "Syrah",
+                  "prix": "12,75 · 55,00"
+                },
+                {
+                  "name": "SHI FU MI",
+                  "desc": "Grenache · FR",
+                  "prix": "10,50 · 45,00"
+                }
+              ]
+            },
+            {
+              "title": "BLANCS",
+              "items": [
+                {
+                  "name": "VENETO",
+                  "desc": "Chardonnay · IT",
+                  "prix": "10,25 · 41,00"
+                },
+                {
+                  "name": "LES JAMELLES",
+                  "desc": "Sauvignon · FR",
+                  "prix": "11,00 · 43,00"
+                },
+                {
+                  "name": "RIFF",
+                  "desc": "Pinot Gris · IT",
+                  "prix": "11,50 · 45,00"
+                },
+                {
+                  "name": "SAVATIANO",
+                  "desc": "Vieilles vignes · GR",
+                  "prix": "12,25 · 50,00"
+                }
+              ]
+            },
+            {
+              "title": "ROSÉ & MOUSSEUX",
+              "items": [
+                {
+                  "name": "GABRIELLE",
+                  "desc": "Assemblage · QC",
+                  "prix": "10,50 · 35,00"
+                },
+                {
+                  "name": "SEGURA VIUDAS",
+                  "desc": "Cava · ES",
+                  "prix": "11,75 · 45,00"
+                }
+              ]
+            }
+          ],
+          "items": []
+        }
+      ],
+      "footer": "<span class=\"uc\">WIFI : LABRASSEE2019 · MOT DE PASSE : EntreVoisins2019</span>",
+      "extras": [],
+      "body_class": "page-tight page-biere-vin"
+    },
+    {
+      "id": "cocktails",
+      "slug": "menu_cocktails",
+      "title": "NOS COCKTAILS",
+      "subtitle": "2 oz spiritueux",
+      "bg_color": "#d4a024",
+      "accent": "#2a1a0a",
+      "sections": [
+        {
+          "title": "PAS PEU FIERS — NOS PRÉFÉRÉS",
+          "full_width": true,
+          "type": "hero_cards",
+          "cols": 2,
+          "items": [
+            {
+              "tag": "★ Nouveau · jeu → dim",
+              "name": "PUNCH DE L'ÎLE",
+              "desc": "rhum épicé · pêches · bière de gingembre · lime · menthe",
+              "prix": 12.0
+            },
+            {
+              "tag": "La signature",
+              "name": "LE SIGNATURE",
+              "desc": "gin bergamote · figue · blanc d'œuf",
+              "prix": 15.0
+            },
+            {
+              "tag": "Frais · herbacé",
+              "name": "PIÑA MÂTINA",
+              "desc": "gin London Dry · ananas · orgeat · menthe",
+              "prix": 15.0
+            },
+            {
+              "tag": "Café-cocktail",
+              "name": "ESPRESSO MARTINI",
+              "desc": "vodka · Aléa · espresso · sucre de canne",
+              "prix": 13.0
+            }
+          ],
+          "subtitle": "les cocktails qui nous tiennent à cœur"
+        },
+        {
+          "title": "CLASSIQUES",
+          "subtitle": "les indémodables · 2 oz",
+          "full_width": true,
+          "type": "grouped_columns",
+          "cols": 2,
+          "groups": [
+            {
+              "title": "",
+              "items": [
+                {
+                  "name": "CAÏPIRINHA",
+                  "desc": "cachaça · lime · sucre · jus de lime",
+                  "prix": 14.0
+                },
+                {
+                  "name": "DAIQUIRI",
+                  "desc": "rhum épicé · érable · fraises",
+                  "prix": 13.0
+                },
+                {
+                  "name": "MARGARITA",
+                  "desc": "tequila Rosemont · lime · sirop d'agave",
+                  "prix": 13.0
+                },
+                {
+                  "name": "MOSCOW MULE",
+                  "desc": "vodka · gingembre · lime",
+                  "prix": 13.0
+                }
+              ]
+            },
+            {
+              "title": "",
+              "items": [
+                {
+                  "name": "OLD FASHIONED",
+                  "desc": "whisky · érable · bitter · orange",
+                  "prix": 12.0
+                },
+                {
+                  "name": "MOJITO",
+                  "desc": "rhum épicé · lime · menthe",
+                  "prix": 15.0
+                },
+                {
+                  "name": "SPRITZ MAISON",
+                  "format": "1,5oz",
+                  "desc": "Volaré · prosecco · pamplemousse",
+                  "prix": 13.0
+                },
+                {
+                  "name": "GIN TONIC",
+                  "format": "1oz · 2oz",
+                  "desc": "gin au choix · tonic · lime",
+                  "prix": "10,00 · 14,00"
+                }
+              ]
+            }
+          ],
+          "extra_top": true
+        },
+        {
+          "title": "SHOOTERS",
+          "subtitle": "format 1 oz · 2 oz",
+          "full_width": true,
+          "type": "grouped_columns",
+          "cols": 4,
+          "groups": [
+            {
+              "title": "6,00 / 10,00 $ — GINS",
+              "items": [
+                {
+                  "name": "WENDIGO"
+                },
+                {
+                  "name": "MADISON PARK LONDON DRY"
+                },
+                {
+                  "name": "MADISON PARK BERGAMOTE"
+                }
+              ]
+            },
+            {
+              "title": "6,00 / 10,00 $ — ROSEMONT",
+              "items": [
+                {
+                  "name": "RHUM ÉPICÉ ROSEMONT"
+                },
+                {
+                  "name": "« TEQUILA » ROSEMONT"
+                },
+                {
+                  "name": "WHISKY ROSEMONT"
+                }
+              ]
+            },
+            {
+              "title": "6,00 / 10,00 $ — VODKA · RHUM BLANC",
+              "items": [
+                {
+                  "name": "VODKA MVODKA"
+                },
+                {
+                  "name": "RHUM BLANC MORBLEU"
+                }
+              ]
+            },
+            {
+              "title": "5,50 / 9,00 $ — DIVERS",
+              "items": [
+                {
+                  "name": "RICARD"
+                },
+                {
+                  "name": "JÄGERMEISTER"
+                },
+                {
+                  "name": "WHISKY COUREUR DES BOIS"
+                },
+                {
+                  "name": "CRÈME COUREUR DES BOIS"
+                }
+              ]
+            }
+          ],
+          "extra_top": true
+        },
+        {
+          "title": "DOUCEURS & APRÈS-MIDI",
+          "subtitle": "café-cocktail ou fin de journée",
+          "full_width": true,
+          "type": "items",
+          "items": [
+            {
+              "name": "CHICO-CHICA",
+              "format": "2oz + 2oz · Aléa · chocolat · avoine",
+              "prix": 12.0
+            },
+            {
+              "name": "GROG",
+              "format": "1oz · rhum épicé · lime · érable · eau chaude",
+              "prix": 7.0
+            }
+          ],
+          "extra_top": true
+        }
+      ],
+      "footer": "<span class=\"uc\">WIFI : LABRASSEE2019  ·  MOT DE PASSE :</span> EntreVoisins2019",
+      "extras": [
+        "<div class=\"page-foot-bubbles\"><div class=\"foot-bubble\"><div class=\"fb-label\">ALCOOLS QUÉBÉCOIS</div><div class=\"fb-text\">À part le Ricard, <em>tous nos alcools forts sont québécois</em>. Et pour info, le proprio est <em>fan de gins</em> ;-)</div></div><div class=\"foot-bubble tilt-r\"><div class=\"fb-label\">10% AUX ARTISTES</div><div class=\"fb-text\">Soirs d'événement&nbsp;: <em>majoration de 10% reversée à 100% aux artistes</em>.</div></div></div>"
+      ],
+      "body_class": "page-cocktails page-tight"
+    },
+    {
+      "id": "qui_on_est",
+      "slug": "menu_qui_on_est",
+      "title": "QUI ON EST",
+      "subtitle": "La Brassée — café de quartier · au cœur de Rosepatrie",
+      "bg_color": "#3a8f8f",
+      "accent": "#0a1f1f",
+      "sections": [
+        {
+          "title": "",
+          "type": "bubbles_pair",
+          "full_width": true,
+          "bubbles": [
+            {
+              "label": "ON N'EST PAS TROISIÈME VAGUE",
+              "body": "<em>Café de quartier · prendre le temps.</em> Travailler · lire · jaser · manger · venir voir un concert. <em>Tu fais ce que tu veux.</em>",
+              "price": "Depuis 2019 · Beaubien Est",
+              "tilt": -1.5
+            }
+          ]
+        },
+        {
+          "title": "CE QU'ON DÉFEND",
+          "full_width": true,
+          "type": "hero_cards",
+          "cols": 4,
+          "square": true,
+          "items": [
+            {
+              "tag": "Local · 100%",
+              "name": "PRODUITS D'ICI",
+              "desc": "Valens · Île aux Grues · Madison Park · Rosemont · Boréale · Beauregard"
+            },
+            {
+              "tag": "Service aux tables",
+              "name": "PAS DE GÂCHIS",
+              "desc": "Vaisselle ici · carton pour partir."
+            },
+            {
+              "tag": "Équité aux artistes",
+              "name": "10% RÉVERSÉS",
+              "desc": "Soirs d'événement · <em>+10% · 100% aux artistes</em>."
+            },
+            {
+              "tag": "Fiers alliés",
+              "name": "🏳️‍🌈 ALLIÉS",
+              "desc": "<em>Rainbow flag</em> bien haut · espace safe pour tous."
+            }
+          ]
+        },
+        {
+          "title": "L'ESPRIT MAISON",
+          "full_width": true,
+          "type": "bubbles_pair",
+          "ratio": "1-1",
+          "bubbles": [
+            {
+              "label": "FAIT ICI · CHAQUE JOUR",
+              "body": "Limonade · thé glacé · scones · muffins · pâtisseries · grilled cheese — <em>tout fait ici</em>.",
+              "price": "Sans gluten, végan ou classique · pour chacun",
+              "tilt": -3
+            },
+            {
+              "label": "ON S'ADAPTE",
+              "body": "Allergies, intolérances, régimes&nbsp;? <em>Demande à ton barista</em> — on fait au mieux. <em>Options VG partout quand on peut</em>.",
+              "price": "Pas de jugement · de l'écoute",
+              "tilt": 2
+            }
+          ]
+        },
+        {
+          "title": "OÙ NOUS TROUVER",
+          "full_width": true,
+          "type": "grouped_columns",
+          "cols": 3,
+          "groups": [
+            {
+              "title": "ADRESSE",
+              "items": [
+                {
+                  "name": "2522 BEAUBIEN EST",
+                  "desc": "Rosemont — Montréal"
+                },
+                {
+                  "name": "MÉTRO BEAUBIEN",
+                  "desc": "ligne orange · 10 min à pied"
+                },
+                {
+                  "name": "MÉTRO D'IBERVILLE",
+                  "desc": "ligne bleue · 10 min à pied"
+                }
+              ]
+            },
+            {
+              "title": "HORAIRES",
+              "items": [
+                {
+                  "name": "OUVERT 7/7",
+                  "desc": "Service café dès 9h"
+                },
+                {
+                  "name": "FERMETURE",
+                  "desc": "selon les événements — info sur place"
+                }
+              ]
+            },
+            {
+              "title": "NOUS SUIVRE",
+              "items": [
+                {
+                  "name": "labrassee.cafe",
+                  "desc": "agenda, événements, info-lettre"
+                },
+                {
+                  "name": "@labrassee",
+                  "desc": "Instagram · Facebook"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "footer": "<span class=\"uc\">MERCI D'ÊTRE PASSÉ — REVIENS QUAND TU VEUX · 2522 BEAUBIEN EST · LABRASSEE.CAFE</span>",
+      "extras": [
+        "<div class=\"page-foot-bubbles page-foot-bubbles-3\"><div class=\"foot-bubble\"><div class=\"fb-label\">L'ÉQUIPE</div><div class=\"fb-text\">Une équipe <em>petite mais fidèle</em>. On se connaît, on travaille ensemble, on apprend ensemble. <em>Et si le ton monte, c'est seulement par amour.</em></div></div><div class=\"foot-bubble\"><div class=\"fb-label\">ÉVÉNEMENTS</div><div class=\"fb-text\"><em>Karaoké 100% francophone</em>, <em>soirées drag</em>, bluegrass, jazz manouche, jazz, blues, folk, chanson française & québécoise, klezmer, irlandais, swing, soul, country, world, cabaret, poésie, contes — <em>pas d'entrée, pas de réservation</em>. <em>Participe au chapeau</em>.</div></div><div class=\"foot-bubble tilt-r\"><div class=\"fb-label\">ARTISTES&nbsp;? 🎨🎤</div><div class=\"fb-text\">Tu veux <em>squatter nos murs un mois</em> ou <em>notre scène un soir</em>&nbsp;? Un seul canal&nbsp;: <em>Messenger</em> sur <em>Facebook</em> ou <em>Instagram @labrassee</em>.</div></div></div>"
+      ],
+      "body_class": "page-qui-on-est page-fill"
+    }
+  ]
+}
