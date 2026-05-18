@@ -91,12 +91,12 @@ const MenuLink = styled(Link)`
   color: var(--color-brand);
   background: rgba(16, 15, 9, 0.35);
   font-family: var(--font-din);
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 500;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   text-decoration: none;
-  padding: 11px 20px;
+  padding: 12px 22px;
   border-radius: 999px;
   border: 1px solid rgba(247, 209, 53, 0.25);
   backdrop-filter: blur(6px);
@@ -117,33 +117,39 @@ const MenuLink = styled(Link)`
     box-shadow: 0 6px 18px rgba(247, 209, 53, 0.25);
   }
 
-  @media (max-width: 1240px) {
-    font-size: 19px;
-    padding: 10px 17px;
+  @media (max-width: 1320px) {
+    font-size: 22px;
+    padding: 11px 18px;
   }
 
-  @media (max-width: 1000px) {
-    font-size: 16px;
+  @media (max-width: 1100px) {
+    font-size: 18px;
     letter-spacing: 1px;
-    padding: 9px 14px;
+    padding: 10px 15px;
   }
 
-  @media (max-width: 800px) {
-    font-size: 13px;
+  @media (max-width: 880px) {
+    font-size: 15px;
     letter-spacing: 0.8px;
-    padding: 8px 11px;
+    padding: 9px 12px;
   }
 
-  @media (max-width: 640px) {
-    font-size: 11px;
+  @media (max-width: 720px) {
+    font-size: 13px;
     letter-spacing: 0.5px;
-    padding: 7px 9px;
+    padding: 8px 10px;
+  }
+
+  @media (max-width: 560px) {
+    font-size: 11px;
+    letter-spacing: 0.4px;
+    padding: 7px 8px;
   }
 
   @media (max-width: 420px) {
     font-size: 10px;
     letter-spacing: 0.3px;
-    padding: 6px 7px;
+    padding: 6px 6px;
   }
 `;
 
@@ -172,6 +178,14 @@ const Header = ({ businessInfo: _providedBusinessInfo }) => {
     >
       <HeaderContainer>
         <NavGroup>
+          <MenuLink
+            href="/"
+            className={`cursor-menu ${pathname === '/' ? 'active' : ''}`}
+            onClick={(e) => { if (pathname === '/') e.preventDefault(); }}
+            style={{ pointerEvents: pathname === '/' ? 'none' : 'auto' }}
+          >
+            Accueil
+          </MenuLink>
           <MenuLink
             href="/scene"
             className={`cursor-menu ${pathname === '/scene' ? 'active' : ''}`}
