@@ -287,11 +287,11 @@ const Case = styled.div`
     cursor: default;
   }
 
-  /* Statut IMPRO → mauve/violet (réservé en récurrence éditoriale) */
+  /* Statut IMPRO → DEPRECATED, conservé pour compat (plus émis par dates-libres) */
   &.impro {
-    background: rgba(155, 110, 220, 0.18);
-    border: 1px solid rgba(155, 110, 220, 0.5);
-    color: rgba(210, 185, 240, 0.95);
+    background: rgba(86, 180, 110, 0.18);
+    border: 1px solid rgba(86, 180, 110, 0.55);
+    color: rgba(180, 230, 195, 0.95);
   }
 
   /* Statut RÉSERVÉE (concert scène en attente) → orange CARRÉ */
@@ -303,6 +303,15 @@ const Case = styled.div`
 
   /* Statut BOOKÉE (concert scène confirmé) → vert CARRÉ */
   &.bookee {
+    background: rgba(86, 180, 110, 0.18);
+    border: 1px solid rgba(86, 180, 110, 0.55);
+    color: rgba(180, 230, 195, 0.95);
+  }
+
+  /* Statut BOOKEE_PERM (récurrence éditoriale : impro lundi, etc.) → même
+     vert que les concerts bookés, mais SANS tag. Le jour de semaine dit
+     déjà tout (lundi = impro pour les habitués). */
+  &.bookee_perm {
     background: rgba(86, 180, 110, 0.18);
     border: 1px solid rgba(86, 180, 110, 0.55);
     color: rgba(180, 230, 195, 0.95);
@@ -366,9 +375,10 @@ function tagPour(statut, vernissageRole) {
     case 'libre': return null
     case 'libre_expo': return 'expo ?'
     case 'libre_expo_attente': return null
-    case 'impro': return 'impro'
+    case 'impro': return null // deprecated, plus émis
     case 'reservee': return 'résa'
     case 'bookee': return 'booké'
+    case 'bookee_perm': return null // récurrence éditoriale : pas de tag
     case 'reservee_expo':
       return vernissageRole === 'accrochage' ? 'acc.' : 'vern.'
     case 'bookee_expo':
@@ -469,10 +479,6 @@ export default function ProposerCalendrier({ mois = [] }) {
             Dim couvert (rotation 4 sem)
           </span>
           <span className="puce">
-            <span className="swatch" style={{ background: 'rgba(155, 110, 220, 0.4)', border: '1px solid rgba(155, 110, 220, 0.8)' }} />
-            Impro (lundis)
-          </span>
-          <span className="puce">
             <span className="swatch" style={{ background: 'rgba(255, 159, 64, 0.4)', border: '1px solid rgba(255, 159, 64, 0.8)' }} />
             Concert en attente
           </span>
@@ -530,9 +536,11 @@ export default function ProposerCalendrier({ mois = [] }) {
                   const titleHover =
                     j.statut === 'bookee'
                       ? 'Date bookée (concert)'
-                      : j.statut === 'reservee'
-                        ? 'Date réservée — concert en attente de confirmation'
-                        : j.statut === 'bookee_expo'
+                      : j.statut === 'bookee_perm'
+                        ? (j.dow === 1 ? 'Lundi : soirée Impro (récurrence éditoriale)' : 'Date bookée (récurrence éditoriale)')
+                        : j.statut === 'reservee'
+                          ? 'Date réservée — concert en attente de confirmation'
+                          : j.statut === 'bookee_expo'
                           ? (j.vernissageRole === 'accrochage'
                               ? 'Dim AM : décrochage / accrochage Sur nos murs (confirmé)'
                               : 'Dim : vernissage Sur nos murs · 5 à 7 (confirmé)')

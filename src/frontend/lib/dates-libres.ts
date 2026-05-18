@@ -134,9 +134,10 @@ export type StatutJour =
   | 'libre'             // soir ouvert + aucun concert → cliquable pour proposer un show
   | 'libre_expo'        // dim d'accrochage (rotation 4 sem) → cliquable pour proposer une expo
   | 'libre_expo_attente' // dim libre hors cadence rotation → jaune visible, non cliquable
-  | 'impro'             // lundi réservé d'office pour la soirée Impro (non cliquable)
+  | 'impro'             // (DEPRECATED) lundi réservé Impro — désormais 'bookee_perm'
   | 'reservee'          // concert (scène) statut='planifie' (option, attente confirmation)
   | 'bookee'            // concert (scène) statut='confirme'
+  | 'bookee_perm'       // récurrence éditoriale confirmée (impro lundi, etc.) — vert SANS tag
   | 'reservee_expo'     // dim expo statut='planifie' (rond orange, distinct des concerts carrés)
   | 'bookee_expo'       // dim expo statut='confirme' (rond vert)
   | 'ferme'             // soir non scène (mer + dim) ou hors préavis (< 7 jours)
@@ -403,8 +404,10 @@ export const getCalendrierMois = cache(
           // Préavis 7 jours minimum
           statut = 'ferme'
         } else if (dow === 1) {
-          // Lundis bloqués pour la soirée Impro (récurrence éditoriale)
-          statut = 'impro'
+          // Lundis = soirée Impro permanente confirmée (à partir du 2026-05-25).
+          // Marqués comme bookés en récurrence éditoriale → vert SANS tag
+          // (pas besoin d'écrire « impro » sur chaque case, c'est la norme).
+          statut = 'bookee_perm'
         } else {
           statut = 'libre'
         }
