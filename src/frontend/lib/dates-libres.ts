@@ -131,14 +131,15 @@ export function grouperParMois(dates: DateLibre[]): Array<{ cleMois: string; lib
 // ─────────────────────────────────────────────────────────────────────────
 
 export type StatutJour =
-  | 'libre'      // soir ouvert + aucun concert → cliquable pour proposer
-  | 'impro'      // lundi réservé d'office pour la soirée Impro (non cliquable)
-  | 'vernissage' // dimanche vernissage 5à7 ou dim X-7 (accrochage/décrochage)
-  | 'reservee'   // concert avec statut='planifie' (option, en attente confirmation)
-  | 'bookee'     // concert avec statut='confirme'
-  | 'ferme'      // soir non scène (mer + dim) ou hors préavis (< 7 jours)
-  | 'passee'     // date dans le passé
-  | 'horsmois'   // padding début/fin du mois pour avoir grille 7 colonnes
+  | 'libre'       // soir ouvert + aucun concert → cliquable pour proposer un show
+  | 'libre_expo'  // dimanche sans vernissage/accrochage → cliquable pour proposer une expo
+  | 'impro'       // lundi réservé d'office pour la soirée Impro (non cliquable)
+  | 'vernissage'  // dimanche vernissage 5à7 ou dim X-7 (accrochage/décrochage)
+  | 'reservee'    // concert avec statut='planifie' (option, en attente confirmation)
+  | 'bookee'      // concert avec statut='confirme'
+  | 'ferme'       // soir non scène (mer + dim) ou hors préavis (< 7 jours)
+  | 'passee'      // date dans le passé
+  | 'horsmois'    // padding début/fin du mois pour avoir grille 7 colonnes
 
 export type JourCalendrier = {
   iso: string
@@ -290,9 +291,14 @@ export const getCalendrierMois = cache(
           }
         } else if (iso < todayISO) {
           statut = 'passee'
+        } else if (dow === 0 && !isPermanentsMonth && iso >= preavisISO) {
+          // Dimanche libre (pas de vernissage/accrochage prévu, hors mois
+          // permanents prioritaires, préavis respecté) → cliquable pour
+          // proposer une expo Surnosmurs (rond jaune, distinct des concerts).
+          statut = 'libre_expo'
         } else if (!joursOuverts.has(dow)) {
-          // Jour non ouvert ce mois-ci → fermé (mer, dim toute l'année ;
-          // + lun/mar/jeu en juillet/août ; + tout le mois en sept/oct/nov)
+          // Jour non ouvert ce mois-ci → fermé (mer, dim avec préavis pas
+          // respecté ; + lun/mar/jeu en juillet/août ; + tout le mois en sept-déc)
           statut = 'ferme'
         } else if (iso < preavisISO) {
           // Préavis 7 jours minimum

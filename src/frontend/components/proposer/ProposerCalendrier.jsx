@@ -245,7 +245,7 @@ const Case = styled.div`
     opacity: 0.85;
   }
 
-  /* Statut LIBRE → cliquable, brand */
+  /* Statut LIBRE → cliquable, brand (concert / scène) */
   &.libre {
     background: rgba(247, 209, 53, 0.12);
     border: 1px solid rgba(247, 209, 53, 0.45);
@@ -256,6 +256,24 @@ const Case = styled.div`
       background: rgba(247, 209, 53, 0.25);
       transform: translateY(-2px);
       border-color: var(--color-brand);
+    }
+  }
+
+  /* Statut LIBRE_EXPO → même couleur que LIBRE mais ROND (cohérence avec
+     les vernissages cyan ronds — distingue visuellement « dim libre pour
+     proposer une expo » des autres dim grisés). */
+  &.libre_expo {
+    background: rgba(247, 209, 53, 0.12);
+    border: 1px solid rgba(247, 209, 53, 0.45);
+    color: var(--color-brand);
+    border-radius: 50%;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(247, 209, 53, 0.28);
+      transform: translateY(-2px);
+      border-color: var(--color-brand);
+      box-shadow: 0 6px 18px rgba(247, 209, 53, 0.2);
     }
   }
 
@@ -484,6 +502,7 @@ function urlDepot(type, iso) {
 function tagPour(statut, vernissageRole) {
   switch (statut) {
     case 'libre': return null
+    case 'libre_expo': return 'expo ?'
     case 'impro': return 'impro'
     case 'vernissage':
       return vernissageRole === 'accrochage' ? 'acc.' : 'vern.'
@@ -580,14 +599,18 @@ export default function ProposerCalendrier({ mois = [] }) {
         <Legende>
           <span className="puce">
             <span className="swatch" style={{ background: 'rgba(247, 209, 53, 0.5)', border: '1px solid var(--color-brand)' }} />
-            Libre · clique pour proposer
+            Soir libre — propose un show
+          </span>
+          <span className="puce">
+            <span className="swatch" style={{ background: 'rgba(247, 209, 53, 0.5)', border: '1px solid var(--color-brand)', borderRadius: '50%' }} />
+            Dim libre — propose une expo
           </span>
           <span className="puce">
             <span className="swatch" style={{ background: 'rgba(155, 110, 220, 0.4)', border: '1px solid rgba(155, 110, 220, 0.8)' }} />
             Impro (lundis)
           </span>
           <span className="puce">
-            <span className="swatch" style={{ background: 'rgba(99, 200, 220, 0.4)', border: '1px solid rgba(99, 200, 220, 0.8)' }} />
+            <span className="swatch" style={{ background: 'rgba(99, 200, 220, 0.4)', border: '1px solid rgba(99, 200, 220, 0.8)', borderRadius: '50%' }} />
             Sur nos murs (vernissage · accrochage)
           </span>
           <span className="puce">
@@ -634,7 +657,8 @@ export default function ProposerCalendrier({ mois = [] }) {
                     return <Case key={`hm-${m.cleMois}-${idx}`} className="horsmois" />
                   }
                   const tag = tagPour(j.statut, j.vernissageRole)
-                  const isClickable = j.statut === 'libre'
+                  const isClickableScene = j.statut === 'libre'
+                  const isClickableExpo = j.statut === 'libre_expo'
                   // Tooltips génériques uniquement — on ne révèle pas le nom des shows
                   const titleHover =
                     j.statut === 'bookee'
@@ -647,18 +671,25 @@ export default function ProposerCalendrier({ mois = [] }) {
                             ? (j.vernissageRole === 'accrochage'
                                 ? 'Dimanche AM : décrochage / accrochage Sur nos murs'
                                 : 'Dimanche : vernissage Sur nos murs · 5 à 7')
-                            : j.statut === 'ferme'
-                              ? (j.dow === 3 ? 'Mercredi : repos' :
-                                 j.dow === 0 ? 'Dimanche : réservé aux vernissages' :
-                                 (j.iso && j.iso.slice(5, 7) >= '07' && j.iso.slice(5, 7) <= '08' ? 'Juillet–août : on garde la scène pour ven + sam' :
-                                  'Trop proche — préavis minimum 7 jours'))
-                              : ''
+                            : j.statut === 'libre_expo'
+                              ? 'Dimanche libre — clique pour proposer une expo Sur nos murs'
+                              : j.statut === 'ferme'
+                                ? (j.dow === 3 ? 'Mercredi : repos' :
+                                   j.dow === 0 ? 'Dimanche : réservé aux vernissages' :
+                                   (j.iso && j.iso.slice(5, 7) >= '07' && j.iso.slice(5, 7) <= '08' ? 'Juillet–août : on garde la scène pour ven + sam' :
+                                    'Trop proche — préavis minimum 7 jours'))
+                                : ''
+                  const handleClick = isClickableScene
+                    ? () => setDateChoisie(j.iso)
+                    : isClickableExpo
+                      ? () => { window.open(urlDepot('murs', j.iso), '_blank', 'noopener,noreferrer') }
+                      : undefined
                   return (
                     <Case
                       key={j.iso}
                       className={j.statut}
                       title={titleHover || undefined}
-                      onClick={isClickable ? () => setDateChoisie(j.iso) : undefined}
+                      onClick={handleClick}
                     >
                       <span className="num">{j.jourMois}</span>
                       {tag && <span className="tag">{tag}</span>}
