@@ -221,8 +221,8 @@ const HoneypotInput = styled.input`
   pointer-events: none;
 `;
 
-const COOKIE_NAME = 'calendar_signup_subscribed';
-const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365; // 1 year
+const COOKIE_NAME = 'calendar_signup_subscribed_v2';
+const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 60; // 60 jours (rappel bimensuel)
 
 const hasSignupCookie = () => {
   if (typeof document === 'undefined') return false;
