@@ -229,6 +229,50 @@ export const getCalendrierMois = cache(
       console.error('[calendrier-mois] fetch fail', e)
     }
 
+    // Fetch les périodes d'expo Surnosmurs qui chevauchent la fenêtre.
+    // Une expo = date_install → date_decrochage. Tous les dimanches dans cette
+    // plage doivent être marqués comme « expo en cours » (rond vert/orange)
+    // même s'ils n'ont pas de concert spécifique en BD.
+    type ExpoRange = { start: string; end: string; signature: boolean }
+    const exposEnCours: ExpoRange[] = []
+    try {
+      const urlExpos =
+        SUPABASE_URL +
+        '/rest/v1/artistes_murs?select=date_install,date_decrochage,signature_acceptee' +
+        `&date_install=lte.${limitISO}&date_decrochage=gte.${todayISO}` +
+        '&date_install=not.is.null&date_decrochage=not.is.null'
+      const resExpos = await fetch(urlExpos, {
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: 'Bearer ' + SUPABASE_ANON_KEY,
+        },
+        next: { revalidate: 300, tags: ['surnosmurs', 'calendrier-mois'] },
+      })
+      if (resExpos.ok) {
+        const rows: {
+          date_install: string
+          date_decrochage: string
+          signature_acceptee: boolean
+        }[] = await resExpos.json()
+        for (const r of rows) {
+          exposEnCours.push({
+            start: r.date_install,
+            end: r.date_decrochage,
+            signature: !!r.signature_acceptee,
+          })
+        }
+      }
+    } catch (e) {
+      console.error('[calendrier-mois] fetch expos fail', e)
+    }
+
+    function expoCouvrant(iso: string): ExpoRange | null {
+      for (const e of exposEnCours) {
+        if (iso >= e.start && iso <= e.end) return e
+      }
+      return null
+    }
+
     const result: MoisCalendrier[] = []
     for (let i = 0; i < nMois; i++) {
       const annee = today.getFullYear() + Math.floor((today.getMonth() + i) / 12)
@@ -282,6 +326,13 @@ export const getCalendrierMois = cache(
             : new Set([1, 2, 4, 5, 6])
 
         let vernissageRole: 'vernissage' | 'accrochage' | undefined
+        // Cas particulier : si on est un DIMANCHE pendant une expo en cours
+        // (date_install ≤ iso ≤ date_decrochage), on marque le dim comme
+        // bookée/réservée expo MÊME s'il n'y a pas de concert spécifique en BD
+        // ce jour-là (sinon les dim intermédiaires apparaissent à tort comme
+        // « libre_expo »).
+        const expoCe = dow === 0 ? expoCouvrant(iso) : null
+
         if (concert) {
           // Vernissage / accrochage : statut expo (rond vert/orange selon
           // confirme/planifie — cohérent avec les concerts mais en rond).
@@ -293,6 +344,11 @@ export const getCalendrierMois = cache(
           }
         } else if (iso < todayISO) {
           statut = 'passee'
+        } else if (expoCe) {
+          // Dimanche pendant une expo en cours → bloqué (rond vert si signé,
+          // rond orange si pas encore signé) — pas cliquable pour une nouvelle
+          // candidature, l'artiste actuel·le occupe les murs.
+          statut = expoCe.signature ? 'bookee_expo' : 'reservee_expo'
         } else if (dow === 0 && !isPermanentsMonth && iso >= preavisISO) {
           // Dimanche libre (pas de vernissage/accrochage prévu, hors mois
           // permanents prioritaires, préavis respecté) → cliquable pour
