@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 
@@ -372,6 +372,53 @@ const Vignette = styled.button`
   }
 `
 
+const OeuvreCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`
+
+const OeuvreInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px 2px 8px;
+
+  .titre {
+    color: var(--color-white);
+    font-family: var(--font-din);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.25;
+    letter-spacing: -0.2px;
+  }
+
+  .meta {
+    color: rgba(205, 196, 157, 0.7);
+    font-family: var(--font-din);
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+
+  .prix {
+    color: var(--color-brand);
+    font-family: var(--font-din);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+
+  .vendue {
+    color: rgba(255, 100, 100, 0.85);
+    font-family: var(--font-din);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+`
+
 const LightboxBackdrop = styled.div`
   position: fixed;
   inset: 0;
@@ -547,6 +594,16 @@ function formaterDateCourte(iso) {
   return `${jourCourt} ${d} ${MOIS[m - 1].replace('.', '')}`
 }
 
+/** Format prix « 950 $ ». Tolère number ou string (PostgREST numeric → string). */
+function formaterPrix(p) {
+  if (p === null || p === undefined || p === '') return ''
+  const n = typeof p === 'number' ? p : parseFloat(String(p))
+  if (Number.isNaN(n)) return ''
+  // arrondi entier si pas de décimales utiles
+  const entier = Math.round(n) === n ? String(Math.round(n)) : n.toFixed(2)
+  return `${entier} $`
+}
+
 /** True si la date ISO est aujourd'hui ou dans le futur (Montréal local). */
 function estDansFutur(iso) {
   if (!iso) return false
@@ -570,14 +627,45 @@ function normaliserInsta(input) {
 // ─────────────────────────────────────────────────────────────────────
 
 /**
+ * @typedef {Object} Oeuvre
+ * @property {string} id
+ * @property {string|null} titre
+ * @property {string|null} technique
+ * @property {string|null} dimensions
+ * @property {number|string|null} prix_vitrine
+ * @property {string|null} photo_path
+ * @property {number} ordre
+ * @property {boolean} vendue
+ */
+/**
  * @param {{
  *   artiste: ArtisteMurs | null
  *   photosUrls?: string[]
  *   portraitUrl?: string | null
+ *   oeuvres?: Oeuvre[]
  * }} props
  */
-export default function ExpoActuelle({ artiste, photosUrls = [], portraitUrl = null }) {
+export default function ExpoActuelle({ artiste, photosUrls = [], portraitUrl = null, oeuvres = [] }) {
   const [lightbox, setLightbox] = useState(null) // index ou null
+
+  // Map photoPath → Oeuvre (pour matcher chaque vignette à ses métadonnées).
+  // Fallback par index si pas de match (rare).
+  const oeuvresByPath = useMemo(() => {
+    const map = new Map()
+    for (const o of oeuvres) {
+      if (o && o.photo_path) map.set(o.photo_path, o)
+    }
+    return map
+  }, [oeuvres])
+
+  function trouverOeuvre(i) {
+    const path = artiste?.photos_oeuvres_paths?.[i]
+    if (path) {
+      const o = oeuvresByPath.get(path)
+      if (o) return o
+    }
+    return oeuvres[i] || null
+  }
 
   useEffect(() => {
     if (lightbox === null) return
@@ -711,16 +799,36 @@ export default function ExpoActuelle({ artiste, photosUrls = [], portraitUrl = n
               <div className="count">Clique pour zoomer · flèches ← → pour naviguer</div>
             </GalerieTitre>
             <Galerie>
-              {photosUrls.map((url, i) => (
-                <Vignette
-                  key={url}
-                  type="button"
-                  onClick={() => setLightbox(i)}
-                  aria-label={`Œuvre ${i + 1} de ${photosUrls.length}`}
-                >
-                  <img src={url} alt={`Œuvre ${i + 1} de ${nom}`} loading="lazy" decoding="async" />
-                </Vignette>
-              ))}
+              {photosUrls.map((url, i) => {
+                const oeuvre = trouverOeuvre(i)
+                const label = oeuvre?.titre || `Œuvre ${i + 1} de ${photosUrls.length}`
+                return (
+                  <OeuvreCard key={url}>
+                    <Vignette
+                      type="button"
+                      onClick={() => setLightbox(i)}
+                      aria-label={label}
+                    >
+                      <img src={url} alt={oeuvre?.titre || `Œuvre ${i + 1} de ${nom}`} loading="lazy" decoding="async" />
+                    </Vignette>
+                    {oeuvre && (
+                      <OeuvreInfo>
+                        {oeuvre.titre && <span className="titre">{oeuvre.titre}</span>}
+                        {(oeuvre.dimensions || oeuvre.technique) && (
+                          <span className="meta">
+                            {[oeuvre.technique, oeuvre.dimensions && `${oeuvre.dimensions} po`].filter(Boolean).join(' · ')}
+                          </span>
+                        )}
+                        {oeuvre.vendue ? (
+                          <span className="vendue">Vendue</span>
+                        ) : oeuvre.prix_vitrine ? (
+                          <span className="prix">{formaterPrix(oeuvre.prix_vitrine)}</span>
+                        ) : null}
+                      </OeuvreInfo>
+                    )}
+                  </OeuvreCard>
+                )
+              })}
             </Galerie>
           </>
         )}

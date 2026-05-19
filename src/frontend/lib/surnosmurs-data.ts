@@ -107,6 +107,33 @@ export const getExpoActuelle = cache(async (): Promise<ArtisteMurs | null> => {
   return rows && rows[0] ? rows[0] : null
 })
 
+export type Oeuvre = {
+  id: string
+  artiste_id: string
+  titre: string | null
+  technique: string | null
+  dimensions: string | null
+  prix_vitrine: number | string | null // numeric vient en string via PostgREST
+  photo_path: string | null
+  ordre: number
+  vendue: boolean
+}
+
+/**
+ * Retourne les œuvres d'un artiste (table `oeuvres`), triées par ordre.
+ * Chaque œuvre contient titre, technique, dimensions, prix.
+ */
+export const getOeuvresArtiste = cache(async (artisteId: string): Promise<Oeuvre[]> => {
+  if (!artisteId) return []
+  const select = encodeURIComponent('id,artiste_id,titre,technique,dimensions,prix_vitrine,photo_path,ordre,vendue')
+  const path =
+    `/rest/v1/oeuvres?select=${select}` +
+    `&artiste_id=eq.${artisteId}` +
+    '&order=ordre.asc&limit=200'
+  const rows = await supaFetch<Oeuvre[]>(path)
+  return rows ?? []
+})
+
 /**
  * Retourne la prochaine expo à venir (date_install > today).
  * Utile pour annoncer « bientôt : X » quand on est dans la période morte.

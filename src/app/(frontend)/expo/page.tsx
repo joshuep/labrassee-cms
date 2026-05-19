@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import ExpoActuelle from '@/frontend/components/expo/ExpoActuelle'
 import {
   getExpoActuelle,
+  getOeuvresArtiste,
   mursImageUrl,
   mursPhotosUrls,
 } from '@/frontend/lib/surnosmurs-data'
@@ -21,10 +22,16 @@ export default async function ExpoPage() {
   const artiste = await getExpoActuelle()
   const photosUrls = mursPhotosUrls(artiste?.photos_oeuvres_paths)
   const portraitUrl = mursImageUrl(artiste?.photo_artiste_path)
+  const oeuvres = artiste?.id ? await getOeuvresArtiste(artiste.id) : []
 
   return (
     <main style={{ width: '100%', background: 'var(--color-dark)' }}>
-      <ExpoActuelle artiste={artiste} photosUrls={photosUrls} portraitUrl={portraitUrl} />
+      <ExpoActuelle
+        artiste={artiste}
+        photosUrls={photosUrls}
+        portraitUrl={portraitUrl}
+        oeuvres={oeuvres}
+      />
     </main>
   )
 }
