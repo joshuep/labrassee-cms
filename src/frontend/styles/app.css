@@ -186,6 +186,32 @@ body {
   box-sizing: border-box;
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   LIQUID GLASS : LOGO PERMANENT + SECTIONS SEMI-TRANSPARENTES
+   ═══════════════════════════════════════════════════════════════════
+
+   Le composant <BigLogoBackground> dépose un gros logo La Brassée fixed,
+   centré sur la viewport, derrière TOUT le contenu (z-index 0).
+
+   Pour qu'il reste visible quand la page défile, on rend les sections de
+   contenu semi-transparentes avec backdrop-filter : le logo apparaît alors
+   flouté + assombri à travers le contenu (effet Apple « liquid glass »),
+   et net dans les espaces ouverts (transitions, marges de page).
+
+   - body bg = opaque var(--color-dark) → garantit qu'on a toujours un fond
+     sombre même si le logo ne charge pas.
+   - main est l'unique enfant avec z-index 1 → passe devant le logo.
+   - sections natives à l'intérieur de main → fond rgba semi-transparent +
+     backdrop-filter blur 28px + saturate 170% → effet glass.
+   - exception : .no-glass (sur le hero qui a sa propre image de fond, etc.)
+   ─────────────────────────────────────────────────────────────────── */
+
+main section:not(.no-glass) {
+  background-color: rgba(16, 15, 9, 0.72) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(170%);
+  backdrop-filter: blur(28px) saturate(170%);
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
