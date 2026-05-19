@@ -225,15 +225,6 @@ const LoadingScreen = ({ minDuration = 800 }) => {
 
     const { body, documentElement } = document;
     const lockScrollY = window.scrollY;
-    const previousBodyOverflow = body.style.overflow;
-    const previousBodyTouchAction = body.style.touchAction;
-    const previousBodyPosition = body.style.position;
-    const previousBodyTop = body.style.top;
-    const previousBodyLeft = body.style.left;
-    const previousBodyRight = body.style.right;
-    const previousBodyWidth = body.style.width;
-    const previousHtmlOverflow = documentElement.style.overflow;
-    const previousHtmlOverscroll = documentElement.style.overscrollBehavior;
 
     const preventScroll = (event) => {
       event.preventDefault();
@@ -269,23 +260,36 @@ const LoadingScreen = ({ minDuration = 800 }) => {
     window.addEventListener('keydown', preventScrollKeys, { passive: false });
     window.addEventListener('scroll', keepScrollPosition, { passive: true });
 
+    // Safe-guard : si après 5 sec le loading est toujours visible (event
+    // route-loading-done perdu, animation bloquée, etc.) on force la
+    // libération. Évite le bug iPhone « scroll mort après nav ».
+    const failsafe = setTimeout(() => {
+      setIsVisible(false);
+    }, 5000);
+
     return () => {
+      clearTimeout(failsafe);
       window.removeEventListener('wheel', preventScroll);
       window.removeEventListener('touchmove', preventScroll);
       window.removeEventListener('keydown', preventScrollKeys);
       window.removeEventListener('scroll', keepScrollPosition);
 
+      // RESET (pas restore) au cleanup. Restorer les valeurs capturées au
+      // mount provoquait un bug iPhone : en cas de re-mount du LoadingScreen
+      // pendant une navigation (App Router), les « previousBody* » capturaient
+      // les valeurs DÉJÀ bloquantes du cycle précédent, et le cleanup les
+      // restaurait → scroll resté bloqué.
       body.classList.remove('app-loading');
       documentElement.classList.remove('app-loading');
-      body.style.overflow = previousBodyOverflow;
-      body.style.touchAction = previousBodyTouchAction;
-      body.style.position = previousBodyPosition;
-      body.style.top = previousBodyTop;
-      body.style.left = previousBodyLeft;
-      body.style.right = previousBodyRight;
-      body.style.width = previousBodyWidth;
-      documentElement.style.overflow = previousHtmlOverflow;
-      documentElement.style.overscrollBehavior = previousHtmlOverscroll;
+      body.style.overflow = '';
+      body.style.touchAction = '';
+      body.style.position = '';
+      body.style.top = '';
+      body.style.left = '';
+      body.style.right = '';
+      body.style.width = '';
+      documentElement.style.overflow = '';
+      documentElement.style.overscrollBehavior = '';
       window.scrollTo(0, lockScrollY);
     };
   }, [isVisible, mounted]);
