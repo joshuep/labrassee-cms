@@ -161,6 +161,48 @@ const DatesBande = styled.div`
   }
 `
 
+/**
+ * Bandeau emphase « Viens rencontrer l'artiste · dim. X · galerie 5 à 7 ».
+ * Affiché uniquement si date_vernissage est dans le futur. Fond jaune brand
+ * fort pour ressortir sur la photo hero, pas du tout discret.
+ */
+const BannerVernissage = styled.div`
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 18px 24px;
+  margin-top: 18px;
+  background: var(--color-brand);
+  color: var(--color-dark);
+  border-radius: 14px;
+  box-shadow: 0 12px 36px rgba(247, 209, 53, 0.35);
+  max-width: 560px;
+
+  .titre {
+    font-family: var(--font-din);
+    font-size: clamp(20px, 2.6vw, 28px);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+  }
+
+  .pitch {
+    font-family: var(--font-din);
+    font-size: clamp(13px, 1.4vw, 16px);
+    font-weight: 400;
+    line-height: 1.4;
+    opacity: 0.85;
+  }
+
+  .pitch strong {
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
+`
+
 // ─────────────────────────────────────────────────────────────────────
 // BIO
 // ─────────────────────────────────────────────────────────────────────
@@ -496,6 +538,25 @@ function formaterDate(iso) {
   return `${JOURS[dt.getDay()]} ${d} ${MOIS[m - 1]} ${y}`
 }
 
+/** Format court pour le bandeau vernissage : « dim. 24 mai ». */
+function formaterDateCourte(iso) {
+  if (!iso) return ''
+  const [y, m, d] = iso.split('-').map(Number)
+  const dt = new Date(y, m - 1, d)
+  const jourCourt = JOURS[dt.getDay()].slice(0, 3) + '.'
+  return `${jourCourt} ${d} ${MOIS[m - 1].replace('.', '')}`
+}
+
+/** True si la date ISO est aujourd'hui ou dans le futur (Montréal local). */
+function estDansFutur(iso) {
+  if (!iso) return false
+  const [y, m, d] = iso.split('-').map(Number)
+  const evt = new Date(y, m - 1, d)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  return evt.getTime() >= today.getTime()
+}
+
 function normaliserInsta(input) {
   if (!input) return null
   const v = input.trim()
@@ -585,6 +646,17 @@ export default function ExpoActuelle({ artiste, photosUrls = [], portraitUrl = n
               </div>
             )}
           </DatesBande>
+
+          {artiste.date_vernissage && estDansFutur(artiste.date_vernissage) && (
+            <BannerVernissage>
+              <span className="titre">
+                Viens rencontrer l'artiste · {formaterDateCourte(artiste.date_vernissage)}
+              </span>
+              <span className="pitch">
+                La Brassée se transforme en <strong>galerie de quARTier</strong> · 5 à 7
+              </span>
+            </BannerVernissage>
+          )}
         </HeroContent>
       </Hero>
 
