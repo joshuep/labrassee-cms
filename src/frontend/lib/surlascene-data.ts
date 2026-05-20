@@ -77,6 +77,7 @@ type RawConcertRow = {
   description_publique: string | null
   statut: string
   fb_event_url: string | null
+  cover_image_url: string | null
   concerts_artistes?: Array<{ ordre: number; artistes_scene: SurlasceneArtiste }>
 }
 
@@ -98,7 +99,10 @@ const concertToEvent = (row: RawConcertRow): FrontendEvent => {
   const arts = (row.concerts_artistes || []).slice().sort((a, b) => a.ordre - b.ordre)
   const artiste = arts[0]?.artistes_scene || null
   const photoPath = artiste?.photo_artiste_path || artiste?.photos_hd_paths?.[0] || null
-  const photoFull = surlasceneImageUrl(photoPath)
+  // Priorité image card :
+  // 1. cover_image_url (image de l'event Facebook aspirée → spécifique à ce show)
+  // 2. photo HD artiste depuis l'EPK
+  const photoFull = row.cover_image_url || surlasceneImageUrl(photoPath)
   const titre = artiste?.nom_artiste || row.titre_show || 'À confirmer'
   // Heure formatée "19h30"
   const hr = row.heure_debut?.slice(0, 5).replace(':', 'h') || null
@@ -219,6 +223,8 @@ type RawConcertDetailRow = {
   titre_show: string | null
   description_publique: string | null
   statut: string
+  fb_event_url: string | null
+  cover_image_url: string | null
   concerts_artistes?: Array<{ ordre: number; artistes_scene: SurlasceneArtiste }>
 }
 
@@ -246,6 +252,8 @@ export const getUpcomingShowDetails = cache(
         description_publique: r.description_publique,
         statut: r.statut,
         artiste: arts[0]?.artistes_scene || null,
+        coverImage: r.cover_image_url || null,
+        facebookLink: r.fb_event_url || null,
       }
     })
   },
