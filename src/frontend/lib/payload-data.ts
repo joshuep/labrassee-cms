@@ -533,10 +533,14 @@ export const getSceneAgendaShows = cache(
     }
     return shows.map((s) => {
       const matched = payloadByDate.get(s.date_show.slice(0, 10))
+      // Priorité Supabase (= source de vérité live, alimentée par bulk
+      // aspiration FB ou updates manuels) > Payload (CMS catch-all en retard).
+      // Si Supabase a déjà rempli coverImage/facebookLink dans
+      // getUpcomingShowDetails, on les garde. Sinon, Payload sert de fallback.
       return {
         ...s,
-        coverImage: matched?.image || null,
-        facebookLink: matched?.facebookLink || null,
+        coverImage: s.coverImage || matched?.image || null,
+        facebookLink: s.facebookLink || matched?.facebookLink || null,
       }
     })
   },
