@@ -76,6 +76,7 @@ type RawConcertRow = {
   titre_show: string | null
   description_publique: string | null
   statut: string
+  fb_event_url: string | null
   concerts_artistes?: Array<{ ordre: number; artistes_scene: SurlasceneArtiste }>
 }
 
@@ -121,7 +122,7 @@ const concertToEvent = (row: RawConcertRow): FrontendEvent => {
     date: row.date_show,
     time: hr,
     image: photoFull, // photo HD si dispo → rendu identique aux cards Payload
-    facebookLink: null,
+    facebookLink: row.fb_event_url || null,
     genre,
     hasOfficialPoster: false,
     description: undefined,
