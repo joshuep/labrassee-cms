@@ -22,7 +22,7 @@ export const ABSENT_SLIDES = [
 ];
 
 export const PENDING_SLIDE = {
-  e: "🤔", t: "En cours d'évaluation", m: "Pas encore assez de votes aujourd'hui. Soyez le premier."
+  e: "🤔", t: "En attente du premier vote", m: "Soyez le premier à juger l'humeur du boss aujourd'hui."
 };
 
 export async function getDeviceHash() {
@@ -70,7 +70,7 @@ export function currentSlide(status) {
     return { kind: "absent", ...ABSENT_SLIDES[idx], votes: null };
   }
   const nb = status?.stats?.nb_votes || 0;
-  if (nb < 3) {
+  if (nb < 1) {
     return { kind: "pending", ...PENDING_SLIDE, votes: nb };
   }
   const median = Number(status?.stats?.median_vote);
