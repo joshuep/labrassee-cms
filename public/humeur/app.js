@@ -1,4 +1,4 @@
-// Humeur du boss — client commun (vote, statut, device hash, slides rotation)
+// Humeur du boss — client commun (vote, statut, device hash, pioche aléatoire stable par jour)
 // Apollon-Marketing 2026-05-21
 
 export const SUPABASE_URL = "https://xjlpttrziisldlclhsth.supabase.co";
@@ -7,8 +7,7 @@ export const SUPABASE_KEY = "sb_publishable_qG5XGinXYpNpGbmUyjej-Q_-eADJKcW";
 // Cloudflare redirige humeur.labrassee.cafe → labrassee.cafe/humeur/
 export const VOTE_URL = "https://humeur.labrassee.cafe/";
 
-// 35 variantes — 7 par niveau (rotation jour de la semaine, dim→sam)
-// Le label/copy change, l'identité du niveau reste reconnaissable via emoji et couleur.
+// 35 variantes — 7 par niveau, pioche aléatoire stable par jour (cf. pickToday plus bas)
 export const VARIANTS = [
   // Niveau 0 — La pire (autodérision crue, ours grognon assumé)
   [
@@ -114,10 +113,15 @@ export async function getStatus() {
   return await res.json().catch(() => ({ ok: false }));
 }
 
-// Jour de la semaine (0 dim, 6 sam) en heure Montréal — sélectionne la variante stable du jour
-function dayOfWeekMtl() {
+// Pioche pseudo-aléatoire stable par jour (Mtl) — chaque jour, chaque niveau a sa variante
+// Stable durant la journée, change à minuit (heure Mtl)
+function pickToday(lvl) {
   const mtl = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Toronto" }));
-  return mtl.getDay();
+  const ymd = mtl.getFullYear() * 10000 + (mtl.getMonth() + 1) * 100 + mtl.getDate();
+  // LCG avec seed combinant date + niveau (offsets premiers pour décorréler les niveaux)
+  let seed = (ymd ^ (lvl * 2654435761)) >>> 0;
+  seed = (Math.imul(seed, 1103515245) + 12345 + lvl * 7919) >>> 0;
+  return seed % VARIANTS[lvl].length;
 }
 
 export function currentSlide(status) {
@@ -131,7 +135,7 @@ export function currentSlide(status) {
   }
   const median = Number(status?.stats?.median_vote);
   const lvl = Math.max(0, Math.min(4, Math.round(median)));
-  const variant = VARIANTS[lvl][dayOfWeekMtl()];
+  const variant = VARIANTS[lvl][pickToday(lvl)];
   return { kind: "humeur", lvl, ...variant, votes: nb };
 }
 
