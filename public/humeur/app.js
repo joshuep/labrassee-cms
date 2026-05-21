@@ -1,4 +1,4 @@
-// Humeur du boss — client commun (vote, statut, device hash)
+// Humeur du boss — client commun (vote, statut, device hash, slides rotation)
 // Apollon-Marketing 2026-05-21
 
 export const SUPABASE_URL = "https://xjlpttrziisldlclhsth.supabase.co";
@@ -7,13 +7,63 @@ export const SUPABASE_KEY = "sb_publishable_qG5XGinXYpNpGbmUyjej-Q_-eADJKcW";
 // Cloudflare redirige humeur.labrassee.cafe → labrassee.cafe/humeur/
 export const VOTE_URL = "https://humeur.labrassee.cafe/";
 
-export const SLIDES = [
-  { lvl: 0, e: "🐻", t: "Mode ours",    m: "Approchez en silence. Café déjà prêt. Bonne chance." },
-  { lvl: 1, e: "😤", t: "Pas parlable", m: "Sourire poli, paiement rapide. À demain." },
-  { lvl: 2, e: "⚡", t: "Trop speed",   m: "Soyez bref. Soyez précis. Il déborde." },
-  { lvl: 3, e: "😎", t: "Cool",         m: "Conditions normales d'exploitation. Profitez." },
-  { lvl: 4, e: "🤩", t: "Euphorique",   m: "Demandez-lui n'importe quoi. C'est le jour." }
+// 35 variantes — 7 par niveau (rotation jour de la semaine, dim→sam)
+// Le label/copy change, l'identité du niveau reste reconnaissable via emoji et couleur.
+export const VARIANTS = [
+  // Niveau 0 — La pire (autodérision crue, ours grognon assumé)
+  [
+    { e: "🐻",   t: "Mode ours",                m: "Approchez en silence. Café déjà prêt. Bonne chance." },
+    { e: "🐻",   t: "Hibernation interrompue",  m: "Il a perdu le sommeil. Vous, gardez le vôtre." },
+    { e: "☁️",  t: "Avant le premier café",    m: "Aucun mot prononcé ce matin. C'est intentionnel." },
+    { e: "⛈️",  t: "Petite tempête",           m: "Petits cafés, gros nuages. C'est sous contrôle." },
+    { e: "🚧",  t: "Code rouge",               m: "L'humain est temporairement hors service. Reprise demain." },
+    { e: "😶",  t: "Pas envie",                m: "Lui non plus." },
+    { e: "🙈",  t: "Évitez le contact visuel", m: "Survivez, payez, partez. On vous aime quand même." }
+  ],
+  // Niveau 1 — Pas parlable (sec, fonctionnel, sans cordialité superflue)
+  [
+    { e: "😤",  t: "Pas parlable",              m: "Sourire poli, paiement rapide. À demain." },
+    { e: "😐",  t: "Communication minimale",    m: "Oui. Non. Merci. C'est tout pour aujourd'hui." },
+    { e: "📡",  t: "Signal faible",             m: "Le réseau humain est en zone blanche aujourd'hui." },
+    { e: "✂️",  t: "Sec et efficace",           m: "Comme une bonne ristretto. Sans les éloges." },
+    { e: "💭",  t: "En conférence intérieure",  m: "Il discute avec lui-même. Vous attendez votre tour." },
+    { e: "🎯",  t: "Mode autopilote",           m: "Il reconnaît votre commande. Pas votre tête." },
+    { e: "🔇",  t: "Muet activé",               m: "Il vous entend très bien. Il préfère ne pas répondre." }
+  ],
+  // Niveau 2 — Trop speed (énergie haute, exigence implicite)
+  [
+    { e: "⚡",   t: "Trop speed",                m: "Soyez bref. Soyez précis. Il déborde." },
+    { e: "☕",  t: "200 % caféine",             m: "Il a goûté trois espresso ce matin. Pour vérifier." },
+    { e: "🚀",  t: "Hyperdrive engagé",         m: "Ne posez pas deux questions à la suite." },
+    { e: "🎪",  t: "Multitâche maximal",        m: "Votre café, la commande des deux autres, sa pensée. Tout en parallèle." },
+    { e: "🌪️", t: "Tornade contrôlée",         m: "Tout va vite. Tout est bon. Tenez bon." },
+    { e: "🏎️", t: "Croisière + 80 km/h",       m: "Restez calme. Lui, non. Mais ça avance." },
+    { e: "🔥",  t: "Énergie nucléaire",         m: "Le café est rapide. Lui aussi. Suivez le rythme." }
+  ],
+  // Niveau 3 — Cool (état nominal, le but de la marque)
+  [
+    { e: "😎",  t: "Cool",                      m: "Conditions normales d'exploitation. Profitez." },
+    { e: "🎼",  t: "Mode classique",            m: "Pas trop, pas trop peu. Juste bien." },
+    { e: "🙂",  t: "À l'aise",                  m: "Aujourd'hui, on peut tout demander. Presque." },
+    { e: "🧘",  t: "Centre d'équilibre",        m: "Niveau zen atteint. Sans le yoga." },
+    { e: "🌊",  t: "Bonne onde",                m: "Café réussi. Humeur idem. Pas plus compliqué." },
+    { e: "👋",  t: "Mode disponible",           m: "Il vous reconnaît, vous parle, vous sourit. Trio rare." },
+    { e: "✨",  t: "Pleinement présent",        m: "Vous êtes au bon endroit, au bon moment." }
+  ],
+  // Niveau 4 — Euphorique (bonus rare, célébration)
+  [
+    { e: "🤩",  t: "Euphorique",                m: "Demandez-lui n'importe quoi. C'est le jour." },
+    { e: "🎁",  t: "Mode bonus",                m: "Sourires gratuits avec chaque commande." },
+    { e: "🏆",  t: "Conditions exceptionnelles",m: "Profitez tant que ça dure. Stocks limités." },
+    { e: "🐝",  t: "Heureux comme Maïa",        m: "Même l'abeille en parle. C'est dire." },
+    { e: "🎰",  t: "Triple combo",              m: "Bon café, bon karma, bonne humeur. Jackpot." },
+    { e: "📈",  t: "Phase ascendante",          m: "Il rit. Il rit fort. Il rit encore." },
+    { e: "🌟",  t: "Mode bénédiction",          m: "Tout le monde repart avec un sourire en bonus." }
+  ]
 ];
+
+// Compat : SLIDES exporté en single-variant (1ère de chaque niveau) pour la page de vote (thanks panel)
+export const SLIDES = VARIANTS.map((v, lvl) => ({ lvl, ...v[0] }));
 
 export const ABSENT_SLIDES = [
   { e: "🎉", t: "Il est pas là.",     m: "Vous pouvez venir !!" },
@@ -64,6 +114,12 @@ export async function getStatus() {
   return await res.json().catch(() => ({ ok: false }));
 }
 
+// Jour de la semaine (0 dim, 6 sam) en heure Montréal — sélectionne la variante stable du jour
+function dayOfWeekMtl() {
+  const mtl = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Toronto" }));
+  return mtl.getDay();
+}
+
 export function currentSlide(status) {
   if (status?.etat?.absent) {
     const idx = Math.floor(Date.now() / 8000) % ABSENT_SLIDES.length;
@@ -75,7 +131,8 @@ export function currentSlide(status) {
   }
   const median = Number(status?.stats?.median_vote);
   const lvl = Math.max(0, Math.min(4, Math.round(median)));
-  return { kind: "humeur", lvl, ...SLIDES[lvl], votes: nb };
+  const variant = VARIANTS[lvl][dayOfWeekMtl()];
+  return { kind: "humeur", lvl, ...variant, votes: nb };
 }
 
 export function qrImgUrl(target, size) {
