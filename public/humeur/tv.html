@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>L'humeur du boss — TV cuisine · La Brassée</title>
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { height:100vh; overflow:hidden; font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",system-ui,sans-serif; -webkit-font-smoothing:antialiased; background:#000; }
+  .stage { width:100vw; height:100vh; display:grid; grid-template-rows:auto 1fr auto; text-align:center; transition:background 1s ease, color 1s ease; position:relative; padding: 3vh 4vw; }
+  .titre { font-size: clamp(56px, 10vw, 180px); font-weight:900; letter-spacing:-.03em; line-height:.9; text-transform:uppercase; margin-top:1vh; text-shadow:0 5px 0 rgba(0,0,0,.1); }
+  .titre .small { display:block; font-size: clamp(15px, 1.8vw, 26px); font-weight:800; letter-spacing:.3em; opacity:.7; margin-bottom:1.2vh; text-transform:uppercase; }
+  .mid { display:grid; grid-template-columns:1fr auto; gap:3vw; align-items:center; padding:0 2vw; }
+  .center { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5vh; }
+  .emoji { font-size: clamp(80px, 14vw, 220px); line-height:1; animation: bounce 4s ease-in-out infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-12px);} }
+  .label { font-size: clamp(36px, 6.5vw, 100px); font-weight:900; letter-spacing:-.025em; line-height:1; text-transform:uppercase; }
+  .msg { font-size: clamp(16px, 2.4vw, 34px); font-weight:500; line-height:1.25; max-width:55vw; opacity:.92; margin-top:1vh; }
+  .bee-logo { position:absolute; top:3vh; left:5vw; width:clamp(40px,4vw,64px); height:clamp(40px,4vw,64px); border-radius:50%; background:currentColor; display:flex; align-items:center; justify-content:center; font-size:clamp(22px,2.4vw,38px); opacity:.9; }
+  .bee-logo::after { content:"🐝"; filter:grayscale(1) brightness(0); }
+  .qr-card { background:#FFFFFF; color:#1A1A1A; border:6px solid #1A1A1A; border-radius:22px; padding:22px 24px 20px; display:flex; flex-direction:column; align-items:center; gap:14px; box-shadow:0 12px 32px rgba(0,0,0,.3), 8px 8px 0 #FFD500, 8px 8px 0 3px #1A1A1A; animation: pulseQR 2.4s ease-in-out infinite; flex-shrink:0; }
+  @keyframes pulseQR { 0%,100%{transform:scale(1);} 50%{transform:scale(1.025);} }
+  .qr-card img { width: clamp(180px, 16vw, 280px); height: clamp(180px, 16vw, 280px); display:block; }
+  .qr-card .cta { text-align:center; font-weight:900; letter-spacing:-.02em; line-height:.95; display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .qr-card .cta .big { font-size: clamp(26px, 2.8vw, 48px); text-transform:uppercase; line-height:1; }
+  .qr-card .cta .small { font-size: clamp(13px, 1.2vw, 20px); font-weight:700; opacity:.75; letter-spacing:.02em; }
+  .qr-card .cta .arrow { background:#FFD500; color:#1A1A1A; padding:8px 16px; border-radius:10px; font-size:clamp(13px,1.2vw,18px); font-weight:900; letter-spacing:.12em; text-transform:uppercase; border:3px solid #1A1A1A; }
+  .footer { display:flex; justify-content:space-between; align-items:center; padding:0 2vw; margin-top:2vh; font-size:clamp(14px,1.2vw,20px); opacity:.65; font-weight:600; }
+  .lvl-0 { background:#1A1A1A; color:#FFD500; }
+  .lvl-1 { background:#B22222; color:#FFFFFF; }
+  .lvl-2 { background:#FF6B00; color:#1A1A1A; }
+  .lvl-3 { background:#FFD500; color:#1A1A1A; }
+  .lvl-4 { background: radial-gradient(circle at 50% 40%, #FFE680 0%, #FFB800 60%, #E58F00 100%); color:#1A1A1A; }
+  .lvl-absent { background: linear-gradient(135deg, #87CEEB 0%, #98D8E8 50%, #FFB6C1 100%); color:#1A1A1A; }
+  .lvl-pending { background:#FAF7F0; color:#1A1A1A; }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <div class="bee-logo"></div>
+  <div class="titre">
+    <span class="small" id="date">—</span>
+    L'humeur du boss
+  </div>
+  <div class="mid">
+    <div class="center">
+      <div class="emoji" id="emoji">🐝</div>
+      <div class="label" id="label">Chargement…</div>
+      <div class="msg" id="msg">—</div>
+    </div>
+    <div class="qr-card">
+      <img id="qr-img" alt="Scannez pour voter">
+      <div class="cta">
+        <span class="big">Votez<br>maintenant</span>
+        <span class="small" id="qr-url">labrassee.cafe/humeur</span>
+        <span class="arrow">📱 Scannez ici</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div id="votes">— votes aujourd'hui</div>
+    <div id="time">—</div>
+  </div>
+</div>
+
+<script type="module">
+  import { getStatus, currentSlide, qrImgUrl, VOTE_URL } from "./app.js";
+
+  document.getElementById("qr-img").src = qrImgUrl(VOTE_URL, 400);
+  document.getElementById("qr-url").textContent = VOTE_URL.replace("https://", "").replace(/\/$/, "");
+
+  function classOf(slide) {
+    if (slide.kind === "absent") return "lvl-absent";
+    if (slide.kind === "pending") return "lvl-pending";
+    return "lvl-" + slide.lvl;
+  }
+
+  function render(slide) {
+    const stage = document.getElementById("stage");
+    stage.className = "stage " + classOf(slide);
+    document.getElementById("emoji").textContent = slide.e;
+    document.getElementById("label").textContent = slide.t.toUpperCase();
+    document.getElementById("msg").textContent = slide.m;
+    document.getElementById("votes").textContent = slide.votes !== null
+      ? `${slide.votes} vote${slide.votes>1?"s":""} aujourd'hui`
+      : "Boss en congé";
+  }
+
+  function updateTime() {
+    const d = new Date();
+    document.getElementById("date").textContent = d.toLocaleDateString("fr-CA", { weekday: "long", day: "numeric", month: "long", timeZone: "America/Toronto" });
+    document.getElementById("time").textContent = "Mis à jour à " + d.toLocaleTimeString("fr-CA", { hour: "2-digit", minute: "2-digit", timeZone: "America/Toronto" });
+  }
+
+  let lastStatus = null;
+  async function tick() {
+    try {
+      const status = await getStatus();
+      lastStatus = status;
+      render(currentSlide(status));
+      updateTime();
+    } catch (e) { /* keep last render */ }
+  }
+
+  setInterval(() => {
+    if (lastStatus?.etat?.absent) {
+      render(currentSlide(lastStatus));
+      updateTime();
+    }
+  }, 4000);
+
+  tick();
+  setInterval(tick, 20000);
+</script>
+
+</body>
+</html>
