@@ -3,7 +3,9 @@
 
 export const SUPABASE_URL = "https://xjlpttrziisldlclhsth.supabase.co";
 export const SUPABASE_KEY = "sb_publishable_qG5XGinXYpNpGbmUyjej-Q_-eADJKcW";
-export const VOTE_URL = "https://labrassee.cafe/humeur/";
+// URL courte client-facing (encodée dans QR + posts).
+// Cloudflare redirige humeur.labrassee.cafe → labrassee.cafe/humeur/
+export const VOTE_URL = "https://humeur.labrassee.cafe/";
 
 export const SLIDES = [
   { lvl: 0, e: "🐻", t: "Mode ours",    m: "Approchez en silence. Café déjà prêt. Bonne chance." },
