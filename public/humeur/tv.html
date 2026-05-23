@@ -45,7 +45,7 @@
   </div>
   <div class="mid">
     <div class="center">
-      <div class="emoji" id="emoji">🐝</div>
+      <div class="emoji" id="emoji" style="opacity:0;">…</div>
       <div class="label" id="label">Chargement…</div>
       <div class="msg" id="msg">—</div>
     </div>
@@ -79,7 +79,9 @@
   function render(slide) {
     const stage = document.getElementById("stage");
     stage.className = "stage " + classOf(slide);
-    document.getElementById("emoji").textContent = slide.e;
+    const emojiEl = document.getElementById("emoji");
+    emojiEl.textContent = slide.e;
+    emojiEl.style.opacity = "1";  // révèle l'emoji uniquement quand on a l'humeur (anti-flash 🐝)
     document.getElementById("label").textContent = slide.t.toUpperCase();
     document.getElementById("msg").textContent = slide.m;
     document.getElementById("votes").textContent = slide.votes !== null
