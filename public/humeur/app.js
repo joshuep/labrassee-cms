@@ -65,9 +65,10 @@ export const VARIANTS = [
 export const SLIDES = VARIANTS.map((v, lvl) => ({ lvl, ...v[0] }));
 
 export const ABSENT_SLIDES = [
-  { e: "🎉", t: "Il est pas là.",     m: "Vous pouvez venir !!" },
-  { e: "☀️", t: "Bulletin du jour",   m: "Risque d'humeur : 0 %. Profitez du soleil intérieur." },
-  { e: "📣", t: "Communiqué spécial", m: "Le patron a pris congé. La fête commence à votre arrivée." }
+  { e: "🎉", t: "Le boss est en congé", m: "Aujourd'hui, c'est jour de fête !" },
+  { e: "🎊", t: "Jour de fête",         m: "Le patron a pris congé. La fête commence à votre arrivée." },
+  { e: "☀️", t: "Bulletin du jour",    m: "Risque d'humeur : 0 %. Profitez du soleil intérieur." },
+  { e: "📣", t: "Communiqué spécial",  m: "Boss en off. Vous pouvez venir tranquilles." }
 ];
 
 export const PENDING_SLIDE = {
