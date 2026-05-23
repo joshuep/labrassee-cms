@@ -23,7 +23,7 @@
 <body>
 
 <a href="https://humeur.labrassee.cafe/" target="_top" class="card" id="card">
-  <span class="em" id="em">🐝</span>
+  <span class="em" id="em" style="opacity:0;">…</span>
   <div class="body">
     <div class="super">L'humeur du boss aujourd'hui</div>
     <div class="label" id="label">Chargement…</div>
@@ -36,7 +36,9 @@
   import { getStatus, currentSlide } from "./app.js";
   const status = await getStatus();
   const slide = currentSlide(status);
-  document.getElementById("em").textContent = slide.e;
+  const emEl = document.getElementById("em");
+  emEl.textContent = slide.e;
+  emEl.style.opacity = "1";
   document.getElementById("label").textContent = slide.t;
   document.getElementById("msg").textContent = slide.m;
   if (slide.kind === "absent") document.getElementById("card").classList.add("absent");
