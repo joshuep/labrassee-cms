@@ -50,6 +50,24 @@ const partenaires = [
     url: 'https://lagrenouillerouge.com',
     logo: '/images/partenaires/grenouille-rouge.png',
   },
+  {
+    slug: 'jg-rive-sud',
+    nom: 'JG Rive-Sud',
+    role: 'Distribution alimentaire',
+    description:
+      'Distributeur régional qui approvisionne La Brassée en produits frais et épicerie fine, avec une approche axée sur les producteurs d\'ici.',
+    url: 'https://jgrivesud.com',
+    logo: '/images/partenaires/jg-rive-sud.png',
+  },
+  {
+    slug: 'fermes-valens',
+    nom: 'Fermes Valens',
+    role: 'Maraîchage local',
+    description:
+      'Ferme maraîchère qui cultive des légumes de saison avec soin. Leurs récoltes composent une bonne partie de notre cuisine.',
+    url: 'https://fermesvalens.com',
+    logo: '/images/partenaires/fermes-valens.png',
+  },
 ]
 
 /* ── Styled components ── */
