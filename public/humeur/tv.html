@@ -6,8 +6,8 @@
 <title>L'humeur du boss — TV cuisine · La Brassée</title>
 <style>
   * { box-sizing:border-box; margin:0; padding:0; }
-  html, body { height:100vh; overflow:hidden; font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",system-ui,sans-serif; -webkit-font-smoothing:antialiased; background:#000; }
-  .stage { width:100vw; height:100vh; display:grid; grid-template-rows:auto 1fr auto; text-align:center; transition:background 1s ease, color 1s ease; position:relative; padding: 3vh 4vw; }
+  html, body { height:100vh; overflow:hidden; font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",system-ui,sans-serif; -webkit-font-smoothing:antialiased; background:#1A1A1A; }
+  .stage { width:100vw; height:100vh; display:grid; grid-template-rows:auto 1fr auto; text-align:center; transition:background .6s ease, color .6s ease; position:relative; padding: 3vh 4vw; background:#1A1A1A; color:#FFD500; }
   .titre { font-size: clamp(56px, 10vw, 180px); font-weight:900; letter-spacing:-.03em; line-height:.9; text-transform:uppercase; margin-top:1vh; text-shadow:0 5px 0 rgba(0,0,0,.1); }
   .titre .small { display:block; font-size: clamp(15px, 1.8vw, 26px); font-weight:800; letter-spacing:.3em; opacity:.7; margin-bottom:1.2vh; text-transform:uppercase; }
   .mid { display:grid; grid-template-columns:1fr auto; gap:3vw; align-items:center; padding:0 2vw; }
@@ -16,8 +16,7 @@
   @keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-12px);} }
   .label { font-size: clamp(36px, 6.5vw, 100px); font-weight:900; letter-spacing:-.025em; line-height:1; text-transform:uppercase; }
   .msg { font-size: clamp(16px, 2.4vw, 34px); font-weight:500; line-height:1.25; max-width:55vw; opacity:.92; margin-top:1vh; }
-  .maia-logo { position:absolute; top:3vh; left:4vw; width:clamp(100px,9vw,160px); height:clamp(100px,9vw,160px); z-index:5; }
-  .maia-logo img { width:100%; height:100%; object-fit:contain; display:block; }
+  .lb-logo { position:absolute; top:3vh; left:5vw; height:clamp(36px,4.5vw,68px); opacity:.75; filter: brightness(0) invert(1); }
   .qr-card { background:#FFFFFF; color:#1A1A1A; border:6px solid #1A1A1A; border-radius:22px; padding:22px 24px 20px; display:flex; flex-direction:column; align-items:center; gap:14px; box-shadow:0 12px 32px rgba(0,0,0,.3), 8px 8px 0 #FFD500, 8px 8px 0 3px #1A1A1A; animation: pulseQR 2.4s ease-in-out infinite; flex-shrink:0; }
   @keyframes pulseQR { 0%,100%{transform:scale(1);} 50%{transform:scale(1.025);} }
   .qr-card img { width: clamp(180px, 16vw, 280px); height: clamp(180px, 16vw, 280px); display:block; }
@@ -38,7 +37,7 @@
 <body>
 
 <div class="stage" id="stage">
-  <div class="maia-logo"><img src="logo-maia.png" alt="La Brassée"></div>
+  <img class="lb-logo" src="https://labrassee.cafe/images/brand/picto_outlined_white.svg" alt="La Brassée">
   <div class="titre">
     <span class="small" id="date">—</span>
     L'humeur du boss
@@ -81,7 +80,7 @@
     stage.className = "stage " + classOf(slide);
     const emojiEl = document.getElementById("emoji");
     emojiEl.textContent = slide.e;
-    emojiEl.style.opacity = "1";  // révèle l'emoji uniquement quand on a l'humeur (anti-flash 🐝)
+    emojiEl.style.opacity = "1";
     document.getElementById("label").textContent = slide.t.toUpperCase();
     document.getElementById("msg").textContent = slide.m;
     document.getElementById("votes").textContent = slide.votes !== null
