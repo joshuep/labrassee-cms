@@ -6,7 +6,7 @@ const SUPABASE_URL = 'https://xjlpttrziisldlclhsth.supabase.co'
 const SUPABASE_ANON_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqbHB0dHJ6aWlzbGRsY2xoc3RoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjkyODMsImV4cCI6MjA5MjA0NTI4M30.JpkTnJF1ZP08ybzFdM8fFUJOTiKYx8ltTe2nxiDPk24'
 
-const MIN_COUNT_TO_SHOW = 3
+const MIN_COUNT_TO_SHOW = 1
 
 const CurieuxLine = styled.span`
   font-size: 11px;
@@ -45,7 +45,7 @@ export function trackEventView(concertKey) {
         apikey: SUPABASE_ANON_KEY,
         Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
         'Content-Type': 'application/json',
-        Prefer: 'return=minimal,resolution=ignore-duplicates',
+        Prefer: 'return=minimal, resolution=ignore-duplicates',
       },
       body: JSON.stringify({ concert_key: concertKey, visitor_id: visitorId }),
       keepalive: true,
