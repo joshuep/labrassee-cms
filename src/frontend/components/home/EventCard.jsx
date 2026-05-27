@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import { EventViewCount, trackEventView } from './EventViewCount';
 
 const CardWrapper = styled(motion.a)`
   display: block;
@@ -231,6 +232,7 @@ const EventCard = ({ event, index }) => {
 
   const dayBadge = getDayBadge(event.date);
   const isSurlascene = event.surlasceneSource === 'surlascene';
+  const concertKey = event.surlasceneShowId || String(event.id);
 
   // Lien de la card :
   // 1. event.facebookLink → onglet Facebook
@@ -252,6 +254,7 @@ const EventCard = ({ event, index }) => {
       variants={cardVariants}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
+      onClick={() => trackEventView(concertKey)}
     >
       {event.image ? (
         <EventImage
@@ -274,6 +277,7 @@ const EventCard = ({ event, index }) => {
       <TextOverlay>
         <EventTitle>{event.title}</EventTitle>
         <EventDate>{formatDateTime(event.date, event.time)}</EventDate>
+        <EventViewCount concertKey={concertKey} />
       </TextOverlay>
     </CardWrapper>
   );
