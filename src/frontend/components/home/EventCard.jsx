@@ -234,15 +234,24 @@ const EventCard = ({ event, index }) => {
   const isSurlascene = event.surlasceneSource === 'surlascene';
   const concertKey = event.surlasceneShowId || String(event.id);
 
+  // Lien vers la fiche publique de l'artiste (si token_depot disponible)
+  const ficheArtisteHref =
+    isSurlascene && event.surlasceneToken
+      ? `/scene/${event.surlasceneToken}`
+      : null;
+
   // Lien de la card :
   // 1. event.facebookLink → onglet Facebook
-  // 2. Concert Surlascène sans FB → ancre interne /scene#agenda
-  // 3. Rien → ancre #agenda
+  // 2. Concert Surlascène avec token → fiche artiste
+  // 3. Concert Surlascène sans FB/token → ancre interne /scene#agenda
+  // 4. Rien → ancre #agenda
   const linkHref = event.facebookLink
     ? formatUrl(event.facebookLink)
-    : isSurlascene
-      ? '/scene#agenda'
-      : '#';
+    : ficheArtisteHref
+      ? ficheArtisteHref
+      : isSurlascene
+        ? '/scene#agenda'
+        : '#';
   const linkTarget = event.facebookLink ? '_blank' : undefined;
 
   return (
