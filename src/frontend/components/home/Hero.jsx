@@ -11,6 +11,11 @@ const HeroSection = styled.section`
   justify-content: center;
   align-items: center;
   padding: 0 0 40px 0;
+
+  @media (max-width: 768px) {
+    min-height: 52vh;
+    padding: 0 0 20px 0;
+  }
 `;
 
 const BackgroundImage = styled.img`

@@ -19,6 +19,10 @@ const Section = styled.section`
   background: var(--color-dark);
   position: relative;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    padding: 16px 0 50px;
+  }
 `
 
 const Container = styled.div`
@@ -35,6 +39,10 @@ const Eyebrow = styled.div`
   letter-spacing: 5px;
   font-size: 12px;
   margin-bottom: 12px;
+
+  @media (max-width: 768px) {
+    margin-bottom: 6px;
+  }
 `
 
 const Titre = styled.h2`
@@ -49,6 +57,11 @@ const Titre = styled.h2`
 
   .accent {
     color: var(--color-brand);
+  }
+
+  @media (max-width: 768px) {
+    margin: 0 0 18px;
+    font-size: clamp(22px, 6vw, 32px);
   }
 `
 
