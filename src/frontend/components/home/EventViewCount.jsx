@@ -69,7 +69,11 @@ export function EventViewCount({ concertKey }) {
       body: JSON.stringify({ p_key: concertKey }),
     })
       .then((r) => r.json())
-      .then((n) => { if (typeof n === 'number') setCount(n) })
+      .then((n) => {
+        // PostgREST renvoie parfois un scalaire (2) ou un tableau ([2]) selon la version
+        const val = Array.isArray(n) ? n[0] : n
+        if (typeof val === 'number' && !isNaN(val)) setCount(val)
+      })
       .catch(() => {})
   }, [concertKey])
 
