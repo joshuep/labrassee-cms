@@ -11,10 +11,13 @@ export const useLenis = () => {
       return;
     }
 
-    // Initialiser Lenis
+    // Initialiser Lenis — autoRaf:true délègue la boucle RAF à Lenis, qui
+    // l'arrête proprement au destroy(). Évite les boucles RAF orphelines qui
+    // figeaient le défilement après un remontage du composant (StrictMode/HMR).
     const lenis = new Lenis({
+      autoRaf: true,
       duration: 0.8,
-      easing: (t) => Math.min(500, 1 - Math.pow(5, -10 * t)),
+      easing: (t) => Math.min(1, 1 - Math.pow(5, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
@@ -25,14 +28,6 @@ export const useLenis = () => {
 
     // Attacher Lenis à window pour y accéder globalement
     window.lenis = lenis;
-
-    // Animation loop
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
 
     // Cleanup
     return () => {
