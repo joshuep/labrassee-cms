@@ -26,6 +26,9 @@ export type ArtistePublic = {
   duree_set_minutes: number | null
   photo_artiste_path: string | null
   photos_hd_paths: string[] | null
+  videos_paths: string[] | null
+  titre_set: string | null
+  categorie: string | null
   instagram: string | null
   site_web: string | null
   spotify_url: string | null
@@ -54,6 +57,13 @@ export type FicheArtiste = {
   photoUrl: string | null
   /** URLs de la galerie HD (jusqu'à 6 photos). */
   galerieUrls: string[]
+  /** URLs des vidéos (bucket public). */
+  videosUrls: string[]
+  /**
+   * Vrai si la soirée est une soirée-bénéfice : la vidéo met alors en avant
+   * la cause/objectif plutôt qu'une simple prestation musicale.
+   */
+  benefice: boolean
 }
 
 function todayMontrealISO(): string {
@@ -120,7 +130,7 @@ export const getArtisteParToken = cache(
     // 1. Chercher l'artiste
     const statutsFilter = STATUTS_PUBLICS.map((s) => `"${s}"`).join(',')
     const selectArtiste = encodeURIComponent(
-      'id,token_depot,nom_artiste,bio,genre,nb_personnes_scene,duree_set_minutes,photo_artiste_path,photos_hd_paths,instagram,site_web,spotify_url,bandcamp_url,youtube_url,tiktok,statut',
+      'id,token_depot,nom_artiste,bio,genre,nb_personnes_scene,duree_set_minutes,photo_artiste_path,photos_hd_paths,videos_paths,titre_set,categorie,instagram,site_web,spotify_url,bandcamp_url,youtube_url,tiktok,statut',
     )
     const pathArtiste =
       `/rest/v1/artistes_scene?select=${selectArtiste}` +
@@ -169,6 +179,14 @@ export const getArtisteParToken = cache(
       .slice(0, 6)
       .map((p) => SURLASCENE_BUCKET_URL + p)
 
-    return { artiste, prochaines, passees, photoUrl, galerieUrls }
+    // 5. Vidéos + détection soirée-bénéfice
+    const videosUrls = (artiste.videos_paths || [])
+      .slice(0, 4)
+      .map((p) => SURLASCENE_BUCKET_URL + p)
+    const benefice = [artiste.genre, artiste.titre_set]
+      .filter((v): v is string => Boolean(v))
+      .some((v) => normaliser(v).includes('benefice'))
+
+    return { artiste, prochaines, passees, photoUrl, galerieUrls, videosUrls, benefice }
   },
 )

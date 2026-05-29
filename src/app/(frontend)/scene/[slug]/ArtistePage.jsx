@@ -218,6 +218,193 @@ const GalerieImg = styled(motion.img)`
   &:hover { opacity: 0.85; }
 `
 
+/* ── VIDÉO ── */
+
+const VideoGrid = styled.div`
+  display: grid;
+  grid-template-columns: ${(p) => (p.$single ? '1fr' : 'repeat(auto-fill, minmax(280px, 1fr))')};
+  gap: 14px;
+`
+
+/* Cadre vidéo générique (paysage 16/9) */
+const VideoFrameWrap = styled.div`
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: #1a1810;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+`
+
+const PlayOverlay = styled.div`
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  pointer-events: none;
+  opacity: ${(p) => (p.$hidden ? 0 : 1)};
+  transition: opacity 0.25s;
+
+  .btn {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #f7d135;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 30px rgba(247, 209, 53, 0.5);
+  }
+  .btn::after {
+    content: '';
+    border-left: 22px solid #100f09;
+    border-top: 14px solid transparent;
+    border-bottom: 14px solid transparent;
+    margin-left: 5px;
+  }
+`
+
+const VCap = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: 30px 18px 12px;
+  font-family: var(--font-din);
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #f1efe4;
+  background: linear-gradient(to top, rgba(8, 7, 4, 0.92), rgba(8, 7, 4, 0));
+  pointer-events: none;
+`
+
+const SoundHint = styled.div`
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  font-family: var(--font-din);
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(8, 7, 4, 0.6);
+  padding: 5px 10px;
+  border-radius: 6px;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+`
+
+const Ribbon = styled.span`
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 3;
+  font-family: var(--font-din);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: #f7d135;
+  color: #100f09;
+  padding: 6px 12px;
+  border-radius: 5px;
+  pointer-events: none;
+`
+
+/* Bloc bénéfice : vidéo + objectif côte à côte */
+const BenefitGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  gap: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #15130c;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(247, 209, 53, 0.18);
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+  }
+
+  ${VideoFrameWrap} {
+    border-radius: 0;
+    box-shadow: none;
+  }
+`
+
+const ObjPanel = styled.div`
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`
+
+const ObjCause = styled.div`
+  font-family: var(--font-din);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  color: #f1efe4;
+
+  em {
+    color: #f7d135;
+    font-style: normal;
+  }
+`
+
+const ObjText = styled.p`
+  font-family: var(--font-lato, 'Lato', sans-serif);
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0 0 14px;
+  white-space: pre-line;
+`
+
+const CtaRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+`
+
+const CtaBtn = styled.a`
+  font-family: var(--font-din);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 11px 16px;
+  border-radius: 7px;
+
+  &.don {
+    background: #f7d135;
+    color: #100f09;
+  }
+  &.billet {
+    background: transparent;
+    color: #f7d135;
+    border: 1px solid rgba(247, 209, 53, 0.5);
+  }
+`
+
 /* ── LIGHTBOX ── */
 
 const LightboxOverlay = styled(motion.div)`
@@ -346,6 +533,67 @@ const RetourLien = styled.a`
 `
 
 // ─────────────────────────────────────────────────────────────────────
+// LECTEUR VIDÉO — lecture muette au survol, son au clic
+// ─────────────────────────────────────────────────────────────────────
+
+/**
+ * Vignette vidéo : démarre muette au survol, active le son au clic.
+ *
+ * @param {object} props
+ * @param {string} props.src
+ * @param {string} [props.caption]
+ * @param {React.ReactNode} [props.ribbon]
+ */
+const VideoFrame = ({ src, caption, ribbon }) => {
+  const ref = React.useRef(/** @type {HTMLVideoElement | null} */ (null))
+  const [active, setActive] = useState(false)
+
+  /** Lance la lecture muette au survol. */
+  const handleEnter = () => {
+    const v = ref.current
+    if (!v) return
+    if (!active) {
+      v.muted = true
+      v.play().catch(() => {})
+    }
+  }
+
+  /** Met en pause et rembobine quand on quitte (sauf si le son est activé). */
+  const handleLeave = () => {
+    const v = ref.current
+    if (!v || active) return
+    v.pause()
+    v.currentTime = 0
+  }
+
+  /** Active le son et lance la lecture au clic. */
+  const handleClick = () => {
+    const v = ref.current
+    if (!v) return
+    v.muted = false
+    v.play().catch(() => {})
+    setActive(true)
+  }
+
+  return (
+    <VideoFrameWrap onMouseEnter={handleEnter} onMouseLeave={handleLeave} onClick={handleClick}>
+      {ribbon}
+      <video ref={ref} src={src} playsInline loop preload="metadata" />
+      <PlayOverlay $hidden={active}>
+        <div className="btn" />
+      </PlayOverlay>
+      {!active && (
+        <SoundHint>
+          <i className="fas fa-volume-mute" />
+          Cliquer pour le son
+        </SoundHint>
+      )}
+      {caption && <VCap>{caption}</VCap>}
+    </VideoFrameWrap>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────────────
 // COMPOSANT
 // ─────────────────────────────────────────────────────────────────────
 
@@ -356,8 +604,11 @@ const RetourLien = styled.a`
  * @param {FicheArtiste} props.fiche
  */
 const ArtistePage = ({ fiche }) => {
-  const { artiste, prochaines, passees, photoUrl, galerieUrls } = fiche
+  const { artiste, prochaines, passees, photoUrl, galerieUrls, videosUrls, benefice } = fiche
   const [lightboxSrc, setLightboxSrc] = useState(null)
+
+  // Lien billet : 1re date à venir avec un événement FB (si disponible).
+  const billetUrl = prochaines.find((c) => c.fb_event_url)?.fb_event_url || null
 
   const liens = [
     artiste.site_web && { href: safeUrl(artiste.site_web), icon: 'fas fa-globe', label: 'Site web' },
@@ -417,6 +668,53 @@ const ArtistePage = ({ fiche }) => {
               <section>
                 <SectionTitle>À propos</SectionTitle>
                 <BioText>{artiste.bio}</BioText>
+              </section>
+            )}
+
+            {/* VIDÉO */}
+            {videosUrls.length > 0 && benefice && (
+              <section>
+                <SectionTitle>Pourquoi cette soirée</SectionTitle>
+                <BenefitGrid>
+                  <VideoFrame
+                    src={videosUrls[0]}
+                    caption="Soirée-bénéfice · les profs relèvent le défi"
+                    ribbon={<Ribbon>★ Soirée-bénéfice</Ribbon>}
+                  />
+                  <ObjPanel>
+                    <ObjCause>
+                      Une soirée <em>au profit d&apos;une cause</em>
+                    </ObjCause>
+                    {artiste.bio && <ObjText>{artiste.bio}</ObjText>}
+                    {billetUrl && (
+                      <CtaRow>
+                        <CtaBtn
+                          className="billet"
+                          href={safeUrl(billetUrl)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Billet concert
+                        </CtaBtn>
+                      </CtaRow>
+                    )}
+                  </ObjPanel>
+                </BenefitGrid>
+              </section>
+            )}
+
+            {videosUrls.length > 0 && !benefice && (
+              <section>
+                <SectionTitle>L&apos;artiste en live</SectionTitle>
+                <VideoGrid $single={videosUrls.length === 1}>
+                  {videosUrls.map((url, i) => (
+                    <VideoFrame
+                      key={i}
+                      src={url}
+                      caption={i === 0 ? artiste.genre || undefined : undefined}
+                    />
+                  ))}
+                </VideoGrid>
               </section>
             )}
 
