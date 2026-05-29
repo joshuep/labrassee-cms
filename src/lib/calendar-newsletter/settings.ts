@@ -46,6 +46,17 @@ export const assertGoogleConnectionConfig = (settings: CalendarNewsletterSetting
   }
 }
 
+export const assertCustomEmailSendConfig = (settings: CalendarNewsletterSettings) => {
+  const missing = []
+
+  if (!settings.fromName?.trim()) missing.push('nom expéditeur')
+  if (!settings.fromEmail?.trim()) missing.push('courriel expéditeur')
+
+  if (missing.length > 0) {
+    throw new Error(`Configuration d’envoi incomplète: ${missing.join(', ')}`)
+  }
+}
+
 export const assertNewsletterSendConfig = (payload: BasePayload, settings: CalendarNewsletterSettings) => {
   assertGoogleConnectionConfig(settings)
 

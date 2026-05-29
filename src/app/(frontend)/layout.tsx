@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import React from 'react'
 
+import Analytics from '@/frontend/components/analytics/Analytics'
 import FrontendShell from '@/frontend/components/layout/FrontendShell'
 import StyledComponentsRegistry from '@/frontend/components/layout/StyledComponentsRegistry'
 import { getBusinessInfoData } from '@/frontend/lib/payload-data'
@@ -34,6 +35,7 @@ export default async function FrontendLayout(props: { children: React.ReactNode 
         <StyledComponentsRegistry>
           <FrontendShell businessInfo={businessInfo}>{children}</FrontendShell>
         </StyledComponentsRegistry>
+        <Analytics />
       </body>
     </html>
   )

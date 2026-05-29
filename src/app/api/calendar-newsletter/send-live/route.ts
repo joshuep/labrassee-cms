@@ -7,39 +7,13 @@ import { formatMonthLabel, getPublicSiteURL } from '@/lib/calendar-newsletter/he
 import { fetchCalendarEvents } from '@/lib/calendar-newsletter/google-calendar'
 import { sendResendBatchEmails } from '@/lib/calendar-newsletter/resend'
 import { assertNewsletterSendConfig, getCalendarNewsletterSettings, mergeNewsletterSettings } from '@/lib/calendar-newsletter/settings'
+import { getSubscriberEmails } from '@/lib/calendar-newsletter/subscribers'
 import type { NewsletterOverrides } from '@/lib/calendar-newsletter/types'
 
 type SendLiveBody = NewsletterOverrides & {
   rangeEnd?: string
   rangeStart?: string
   selectedMonth?: string
-}
-
-const getSubscriberEmails = async (payload: Awaited<ReturnType<typeof requirePayloadUser>>['payload']) => {
-  const emails = new Set<string>()
-  let page = 1
-  let hasNextPage = true
-
-  while (hasNextPage) {
-    const result = await payload.find({
-      collection: 'calendar-subscribers',
-      limit: 200,
-      overrideAccess: true,
-      page,
-      sort: 'email',
-    })
-
-    for (const doc of result.docs) {
-      if (doc.email) {
-        emails.add(doc.email.toLowerCase())
-      }
-    }
-
-    hasNextPage = page < result.totalPages
-    page += 1
-  }
-
-  return Array.from(emails)
 }
 
 export async function POST(request: Request) {

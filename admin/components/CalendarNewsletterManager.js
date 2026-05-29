@@ -139,6 +139,11 @@ const CalendarNewsletterManager = () => {
   const [status, setStatus] = useState(null)
   const [isSendingTest, setIsSendingTest] = useState(false)
   const [isSendingLive, setIsSendingLive] = useState(false)
+  const [customTitle, setCustomTitle] = useState('')
+  const [customContent, setCustomContent] = useState('')
+  const [customTestEmail, setCustomTestEmail] = useState('')
+  const [isSendingCustomTest, setIsSendingCustomTest] = useState(false)
+  const [isSendingCustomLive, setIsSendingCustomLive] = useState(false)
   const monthOptions = useMemo(() => buildMonthOptions(), [])
   const googleConnectedEmail = getFieldValue(fields, 'googleConnectedEmail')
   const googleCalendarId = getFieldValue(fields, 'googleCalendarId')
@@ -153,6 +158,12 @@ const CalendarNewsletterManager = () => {
       setTestEmail(user.email)
     }
   }, [testEmail, user?.email])
+
+  useEffect(() => {
+    if (!customTestEmail && user?.email) {
+      setCustomTestEmail(user.email)
+    }
+  }, [customTestEmail, user?.email])
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -290,7 +301,100 @@ const CalendarNewsletterManager = () => {
     }
   }
 
+  const customPayload = () => ({
+    content: customContent,
+    fromEmail: getFieldValue(fields, 'fromEmail') || '',
+    fromName: getFieldValue(fields, 'fromName') || '',
+    replyToEmail: getFieldValue(fields, 'replyToEmail') || '',
+    title: customTitle,
+  })
+
+  const handleSendCustomTest = async () => {
+    if (!customTitle.trim()) {
+      setErrorStatus('Ajoute un titre au courriel personnalisé.')
+      return
+    }
+
+    if (!customContent.trim()) {
+      setErrorStatus('Ajoute du contenu au courriel personnalisé.')
+      return
+    }
+
+    setIsSendingCustomTest(true)
+    setStatus(null)
+
+    try {
+      const response = await fetch('/api/calendar-newsletter/send-custom-test', {
+        body: JSON.stringify({ ...customPayload(), testEmail: customTestEmail }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Envoi du test impossible.')
+      }
+
+      fields?.lastTestSentAt?.setValue?.(new Date().toISOString())
+      setSuccessStatus(result.message)
+    } catch (error) {
+      setErrorStatus(error instanceof Error ? error.message : 'Envoi du test impossible.')
+    } finally {
+      setIsSendingCustomTest(false)
+    }
+  }
+
+  const handleSendCustomLive = async () => {
+    if (!customTitle.trim()) {
+      setErrorStatus('Ajoute un titre au courriel personnalisé.')
+      return
+    }
+
+    if (!customContent.trim()) {
+      setErrorStatus('Ajoute du contenu au courriel personnalisé.')
+      return
+    }
+
+    const isConfirmed = window.confirm(
+      `Envoyer le courriel « ${customTitle.trim()} » à tous les abonnés ?`,
+    )
+
+    if (!isConfirmed) return
+
+    setIsSendingCustomLive(true)
+    setStatus(null)
+
+    try {
+      const response = await fetch('/api/calendar-newsletter/send-custom-live', {
+        body: JSON.stringify(customPayload()),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Envoi aux abonnés impossible.')
+      }
+
+      const now = new Date().toISOString()
+      fields?.lastCampaignSentAt?.setValue?.(now)
+      fields?.lastCampaignRecipientCount?.setValue?.(result.recipientsCount)
+      setSuccessStatus(result.message)
+    } catch (error) {
+      setErrorStatus(error instanceof Error ? error.message : 'Envoi aux abonnés impossible.')
+    } finally {
+      setIsSendingCustomLive(false)
+    }
+  }
+
   return (
+    <>
     <div style={panelStyle}>
       <h3 style={sectionTitleStyle}>Pilotage de l’infolettre calendrier</h3>
       <p style={{ color: '#4f4638', margin: '0 0 20px 0' }}>
@@ -470,6 +574,71 @@ const CalendarNewsletterManager = () => {
         </div>
       ) : null}
     </div>
+
+    <div style={panelStyle}>
+      <h3 style={sectionTitleStyle}>Courriel personnalisé (sans calendrier)</h3>
+      <p style={{ color: '#4f4638', margin: '0 0 20px 0' }}>
+        Envoie un courriel libre aux abonnés: un titre et un contenu, sans grille de calendrier. L’expéditeur et
+        l’adresse de réponse utilisent les valeurs du formulaire ci-dessus.
+      </p>
+
+      <div style={{ marginBottom: '16px' }}>
+        <label style={smallLabelStyle}>Titre du courriel</label>
+        <input
+          onChange={(event) => setCustomTitle(event.target.value)}
+          placeholder="Ex.: Fermeture exceptionnelle ce week-end"
+          style={inputStyle}
+          type="text"
+          value={customTitle}
+        />
+        <div style={{ color: '#6d634c', fontSize: '12px', marginTop: '6px' }}>
+          Le titre sert aussi de sujet du courriel.
+        </div>
+      </div>
+
+      <div style={{ marginBottom: '20px' }}>
+        <label style={smallLabelStyle}>Contenu</label>
+        <textarea
+          onChange={(event) => setCustomContent(event.target.value)}
+          placeholder="Écris ton message ici. Laisse une ligne vide pour séparer les paragraphes."
+          rows={8}
+          style={{ ...inputStyle, lineHeight: '1.5', minHeight: '160px', resize: 'vertical' }}
+          value={customContent}
+        />
+      </div>
+
+      <div
+        style={{
+          display: 'grid',
+          gap: '12px',
+          gridTemplateColumns: 'minmax(220px, 1fr) auto auto',
+        }}
+      >
+        <div>
+          <label style={smallLabelStyle}>Courriel test</label>
+          <input
+            onChange={(event) => setCustomTestEmail(event.target.value)}
+            placeholder="personne@exemple.com"
+            style={inputStyle}
+            type="email"
+            value={customTestEmail}
+          />
+        </div>
+
+        <div style={{ alignSelf: 'end' }}>
+          <button disabled={isSendingCustomTest} onClick={handleSendCustomTest} style={primaryButtonStyle} type="button">
+            {isSendingCustomTest ? 'Envoi test...' : 'Envoyer un test'}
+          </button>
+        </div>
+
+        <div style={{ alignSelf: 'end' }}>
+          <button disabled={isSendingCustomLive} onClick={handleSendCustomLive} style={secondaryButtonStyle} type="button">
+            {isSendingCustomLive ? 'Envoi en cours...' : 'Envoyer aux abonnés'}
+          </button>
+        </div>
+      </div>
+    </div>
+    </>
   )
 }
 
